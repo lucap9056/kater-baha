@@ -76,7 +76,6 @@
         const BHmenu = document.createElement('div');
         BHmenu.id = 'BH_menu';
         BHmenub.appendChild(BHmenu);
-        BHmenub.addEventListener('click',setBHmenu);
         document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
@@ -89,11 +88,17 @@
                 setTimeout(setBHmenu, 1000);
                 return;
             }
+            
             Array.prototype.slice.call(item_list).map(item => {
                 if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                     BHmenu.appendChild(item);
                     if (item.className.indexOf(location.pathname.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
-                    item.addEventListener('click',setBHmenu);
+                    item.addEventListener('click',() => {
+                        Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                            i.classList.remove('BH_itemFocus');
+                        });
+                        item.classList.add('BH_itemFocus');
+                    });
                 }
             });
 
