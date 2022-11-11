@@ -72,12 +72,19 @@
         window.app.translator.translations["core.forum.composer_discussion.title"] = "發文";
         window.app.translator.translations["core.forum.index.all_discussions_link"] = "文章列表";
         window.app.translator.translations["core.forum.index.start_discussion_button"] = "發文";
+
         const BHmenub = document.createElement('div');
         BHmenub.id = 'BH_menub';
         document.getElementById('header').appendChild(BHmenub);
+
         const BHmenu = document.createElement('div');
         BHmenu.id = 'BH_menu';
         BHmenub.appendChild(BHmenu);
+
+        const BHmenu_focus = document.createElement('div');
+        BHmenu_focus.id = 'BHmenu_focus';
+        BHmenu.appendChild(BHmenu_focus);
+
         document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
@@ -109,8 +116,26 @@
                         });
                         item.classList.add('BH_itemFocus');
                     });
+
+                    item.addEventListener('mouseenter',setFocusEnter);
+                    item.addEventListener('mouseout',setFocusOut);
                 }
             });
+
+            function setFocusEnter(e) {
+                BHmenu_focus.style.left = `${e.target.offsetLeft }px`;
+                BHmenu_focus.style.width = `${e.target.offsetWidth}px`;
+            }
+
+            function setFocusOut() {
+                const childs = BHmenu.childNodes;
+                var child = BHmenu.querySelector('.item-allDiscussions');
+                for (let i = 0; i < childs.length; i++) {
+                    if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
+                }
+                BHmenu_focus.style.left = `${child.offsetLeft }px`;
+                BHmenu_focus.style.width = `${child.offsetWidth}px`;
+            }
 
             try {
                 const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");

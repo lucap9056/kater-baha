@@ -255,3 +255,14 @@ img.Header-logo {
 	margin-left: 0;
 	margin-right: 0;
 }
+#BHmenu_focus {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 84px;
+	height: 4px;
+	background-color: #00B0B6;
+	transition-duration: 250ms;
+	box-shadow: 0 0 2px 0px #33cccc;
+	pointer-events: none;
+}
