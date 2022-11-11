@@ -89,10 +89,12 @@
             }
             
             Array.prototype.slice.call(item_list).map(item => {
-                if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
+                if (/\/|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                     item.classList.remove('active');
                     if (BHmenu.querySelector(`.${item.className.trim()}`) == null) BHmenu.appendChild(item);
-                    if (location.pathname != "/" && item.className.indexOf(location.pathname.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
+                    var path = location.pathname;
+                    if (path == '/') path += 'allDiscussions';
+                    if (item.className.indexOf(path.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
                     item.addEventListener('click',() => {
                         Array.prototype.slice.call(BHmenu.childNodes).map(i => {
                             i.classList.remove('BH_itemFocus');
