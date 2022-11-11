@@ -98,11 +98,4 @@
         BHmenu.appendChild(postBtn);
 
     })();
-
-    (function notification() {
-        const getNotification = new Worker('/notification.js');
-        getNotification.addEventListener('message',(e) => {
-            console.log(e);
-        });
-    })();
 })();
