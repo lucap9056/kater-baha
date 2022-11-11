@@ -80,7 +80,7 @@
         document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
-
+            if (BHmenu.innerHTML != "") return;
             var item_list;
             try {
                 item_list = document.querySelector('.item-nav').querySelector('.Dropdown-menu.dropdown-menu ').childNodes;
