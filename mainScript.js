@@ -102,7 +102,8 @@
                 BHmenu.appendChild(postBtn);
             }
             catch {
-
+                setTimeout(setBHmenu, 1000);
+                return;
             }
 
         };
