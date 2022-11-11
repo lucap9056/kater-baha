@@ -90,7 +90,7 @@
             
             Array.prototype.slice.call(item_list).map(item => {
                 if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-                    BHmenu.appendChild(item);
+                    if (BHmenu.querySelector(`.${item.className}`) == null) BHmenu.appendChild(item);
                     if (item.className.indexOf(location.pathname.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
                     item.addEventListener('click',() => {
                         Array.prototype.slice.call(BHmenu.childNodes).map(i => {

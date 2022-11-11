@@ -216,6 +216,9 @@ img.Header-logo {
 #BH_menu .Button-label {
 	color: #CCC;
 }
+#BH_menu li.BH_itemFocus .Button-label {
+	color: #00B0B6;
+}
 #BH_menu li.item-newDiscussion {
 	position: absolute;
 	right: 0px;
