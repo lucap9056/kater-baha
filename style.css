@@ -157,7 +157,6 @@ img.Header-logo {
 	width: calc(12.5% - 4px);
 	height: 38px;
 	border-radius: 5px;
-	display: block;
 }
 .sideNav .Dropdown--select .Dropdown-menu li.active {
 	background-color: #00B0B6;
