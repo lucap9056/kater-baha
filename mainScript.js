@@ -80,7 +80,7 @@
         document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
-            if (BHmenu.innerHTML != "") return;
+            BHmenu.innerHTML = "";
             var item_list;
             try {
                 item_list = document.querySelector('.item-nav').querySelector('.Dropdown-menu.dropdown-menu ').childNodes;
@@ -92,6 +92,8 @@
             Array.prototype.slice.call(item_list).map(item => {
                 if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                     BHmenu.appendChild(item);
+                    if (item.className.indexOf(location.pathname.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
+                    item.addEventListener('click',setBHmenu);
                 }
             });
 
