@@ -15,4 +15,5 @@
             setTimeout(getNotification,60000);
         }
     })();
+    postMessage("worker open");
 })();
