@@ -76,8 +76,11 @@
         const BHmenu = document.createElement('div');
         BHmenu.id = 'BH_menu';
         BHmenub.appendChild(BHmenu);
-
-        (function setBHmenu() {
+        BHmenub.addEventListener('click',() => {
+            if (BHmenu.innerHTML = "") setBHmenu();
+        });
+        setBHmenu();
+        function setBHmenu() {
 
             var item_list;
             try {
@@ -98,6 +101,6 @@
 
             BHmenu.appendChild(postBtn);
 
-        })();
+        };
     })();
 })();
