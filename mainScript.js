@@ -69,7 +69,9 @@
     })();
 
     (function createBHmenu() {
-
+        window.app.translator.translations["core.forum.composer_discussion.title"] = "發文";
+        window.app.translator.translations["core.forum.index.all_discussions_link"] = "文章列表";
+        window.app.translator.translations["core.forum.index.start_discussion_button"] = "發文";
         const BHmenub = document.createElement('div');
         BHmenub.id = 'BH_menub';
         document.getElementById('header').appendChild(BHmenub);
@@ -112,8 +114,6 @@
 
             try {
                 const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
-                postBtn.querySelector('button').innerText = "發文";
-
                 BHmenu.appendChild(postBtn);
             }
             catch {
