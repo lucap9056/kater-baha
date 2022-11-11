@@ -79,7 +79,6 @@
         document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
-            BHmenu.innerHTML = "";
             var item_list;
             try {
                 item_list = document.querySelector('.item-nav').querySelector('.Dropdown-menu.dropdown-menu ').childNodes;
