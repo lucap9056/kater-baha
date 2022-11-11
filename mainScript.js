@@ -90,7 +90,8 @@
             
             Array.prototype.slice.call(item_list).map(item => {
                 if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-                    if (BHmenu.querySelector(`.${item.className}`) == null) BHmenu.appendChild(item);
+                    item.classList.remove('active');
+                    if (BHmenu.querySelector(`.${item.className.trim()}`) == null) BHmenu.appendChild(item);
                     if (location.pathname != "/" && item.className.indexOf(location.pathname.replace(/\//,'item-')) > -1) item.classList.add('BH_itemFocus');
                     item.addEventListener('click',() => {
                         Array.prototype.slice.call(BHmenu.childNodes).map(i => {
