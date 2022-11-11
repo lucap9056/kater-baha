@@ -89,7 +89,7 @@
             }
             
             Array.prototype.slice.call(item_list).map(item => {
-                if (/\/|rankings|following|bookmarks|tags|separator/.test(item.className)) {
+                if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                     item.classList.remove('active');
                     if (BHmenu.querySelector(`.${item.className.trim()}`) == null) BHmenu.appendChild(item);
                     var path = location.pathname;
