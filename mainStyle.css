@@ -231,7 +231,7 @@ img.Header-logo {
     cursor: pointer;
 }
 .sideNav .ButtonGroup {
-	display: inline-table;
+	display: inline-block;
 }
 #BH_menu li.item-newDiscussion::before {
     display: none;
