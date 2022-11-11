@@ -76,9 +76,8 @@
         const BHmenu = document.createElement('div');
         BHmenu.id = 'BH_menu';
         BHmenub.appendChild(BHmenu);
-        BHmenub.addEventListener('click',() => {
-            if (BHmenu.innerHTML = "") setBHmenu();
-        });
+        BHmenub.addEventListener('click',setBHmenu);
+        document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
         setBHmenu();
         function setBHmenu() {
 
@@ -96,10 +95,15 @@
                 }
             });
 
-            const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
-            postBtn.querySelector('button').innerText = "發文";
+            try {
+                const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
+                postBtn.querySelector('button').innerText = "發文";
 
-            BHmenu.appendChild(postBtn);
+                BHmenu.appendChild(postBtn);
+            }
+            catch {
+
+            }
 
         };
     })();
