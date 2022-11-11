@@ -248,3 +248,7 @@ img.Header-logo {
 .TagsPage-nav.IndexPage-nav.sideNav {
 	display: none;
 }
+.Composer:not(.fullScreen) {
+	margin-left: 0;
+	margin-right: 0;
+}
