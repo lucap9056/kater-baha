@@ -119,7 +119,7 @@
 
                     item.addEventListener('mouseenter',(e) => {
                         BHmenu_focus.style.left = `${item.offsetLeft }px`;
-                        BHmenu_focus.style.width = `${item.offsetWidth}px`;
+                        BHmenu_focus.style.width = `${item.offsetWidth + 24}px`;
                     });
                     item.addEventListener('mouseout',setFocusOut);
                 }
