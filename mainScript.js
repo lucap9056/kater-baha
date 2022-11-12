@@ -38,6 +38,8 @@
                 menu.innerHTML = "";
             },
             discussions: () => {
+                
+                menu.appendChild(menu_focus);
                 (function setMenu() {
                     var item_list;
                     try {
@@ -94,7 +96,7 @@
             },
             user: () => {
 
-
+                menu.appendChild(menu_focus);
                 (function setMenu() {
                     const userMenu = document.querySelector('.affix-top');
                     if (userMenu) {
