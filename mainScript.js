@@ -222,22 +222,25 @@
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-        client.addEventListener('click', location.assign(`/u/${window.app.session.user.username()}`));
+
+        const clientUrl = document.createElement('a');
+        clientUrl.href = `/u/${window.app.session.user.username()}`;
+        client.appendChild(clientUrl);
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
         clientAvatar.src = window.app.session.user.data.attributes.avatarUrl;
-        client.appendChild(clientAvatar);
+        clientUrl.appendChild(clientAvatar);
 
         const clientName = document.createElement('div');
         clientName.className = 'BH_ClientName';
         clientName.innerText = window.app.session.user.data.attributes.displayName;
-        client.appendChild(clientName);
+        clientUrl.appendChild(clientName);
 
         const clientId = document.createElement('div');
         clientId.className = 'BH_ClientId';
         clientId.innerText = window.app.session.user.data.attributes.username;
-        client.appendChild(clientId);
+        clientUrl.appendChild(clientId);
 
         const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
         clientMenu.innerHTML = "";
