@@ -1,5 +1,8 @@
 (() => {
     'use strict';
+    window.onload = () => {
+        console.log(location.href);
+    }
     (function search() {
         const head = document.querySelector(".container");
         const search = document.querySelector(".item-search");
