@@ -43,7 +43,7 @@
                 },
                 set: (element) => {
                     const clone = element.cloneNode(true);
-                    clone.addEventListener('click', () => clone.querySelector('a').click());
+                    clone.addEventListener('click', () => location.assign(clone.querySelector('a').href));
                     menu.replaceChild(clone, li);
                     li = clone;
                     li.style.display = 'block';
@@ -90,8 +90,7 @@
                             item.addEventListener('click', () => {
                                 Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
                                 item.classList.add('active');
-
-                                item.querySelector('a').click();
+                                location.assign(item.querySelector('a').href);
                                 tagItem.hide();
                             });
 
@@ -109,7 +108,7 @@
                                 if (tag.style.display != 'none') {
                                     item.classList.remove('active');
                                     tag.classList.add('active');
-                                    tag.addEventListener('click', () => tag.querySelector('a').click());
+                                    tag.addEventListener('click', () => location.assign(tag.querySelector('a').href));
                                 }
                             }
                         }
@@ -144,7 +143,7 @@
                             child.addEventListener('click', () => {
                                 Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
                                 child.classList.add('active');
-                                child.querySelector('a').click();
+                                location.assign(child.querySelector('a').href);
                             });
 
                             child.addEventListener('mouseenter', () => {
