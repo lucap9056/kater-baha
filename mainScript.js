@@ -66,9 +66,10 @@
     })();
 
     (function createBHmenu() {
-        window.app.translator.translations["core.forum.composer_discussion.title"] = "發文";
-        window.app.translator.translations["core.forum.index.all_discussions_link"] = "文章列表";
-        window.app.translator.translations["core.forum.index.start_discussion_button"] = "發文";
+        const lang = window.app.translator.translations;
+        lang["core.forum.composer_discussion.title"] = lang["core.forum.composer_discussion.title"].replace("新增文章","發文");
+        lang["core.forum.index.all_discussions_link"] = lang["core.forum.index.all_discussions_link"].replace("全部文章","文章列表");
+        lang["core.forum.index.start_discussion_button"] = lang["core.forum.index.start_discussion_button"].replace("新增文章","發文");
 
         const BHmenub = document.createElement('div');
         BHmenub.id = 'BH_menub';
