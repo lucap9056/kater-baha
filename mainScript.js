@@ -27,6 +27,23 @@
                 get: () => {
                     return li;
                 },
+                find: (tagName) => {
+                    const tag = Object.values(app.store.data.tags).find(e => e.data.attributes.slug == tagName);
+                    console.log(tag);
+                    li = document.createElement('li');
+                    li.className = `item-tag${tag.data.id}`;
+                    const a = document.createElement('a');
+                    a.className = 'TagLinkButton hasIcon';
+                    a.href = `/t/${tag.data.attributes.slug}`;
+                    li.appendChild(a);
+
+                    const span = document.createElement('span');
+                    span.innerText = tag.data.attributes.name;
+                    span.className = 'Button-label';
+                    a.appendChild(span);
+
+                    li.addEventListener('click', li.querySelector('a').click);
+                },
                 set: (element) => {
                     const clone = element.cloneNode(true);
                     clone.addEventListener('click', () => clone.querySelector('a').click());
@@ -54,6 +71,7 @@
             clear: () => {
                 menu.innerHTML = "";
             },
+            setTag: tagItem.find,
             discussions: () => {
 
                 menu.appendChild(menu_focus);
@@ -146,11 +164,12 @@
         var path = location.pathname;
         if (path == temp) return;
         temp = path;
-        const mode = location.pathname.split('/')[1];
-        console.log(mode);
-        switch (mode) {
-            case "":
+        const url = location.pathname.split('/');
+        console.log(url[1]);
+        switch (url[1]) {
             case "t":
+                BHmenu.setTag(url[2]);
+            case "":
                 BHmenu.clear();
                 BHmenu.discussions();
                 break;
