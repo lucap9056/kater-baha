@@ -29,7 +29,6 @@
                 },
                 find: (tagName) => {
                     const tag = Object.values(app.store.data.tags).find(e => e.data.attributes.slug == tagName);
-                    console.log(tag);
                     li = document.createElement('li');
                     li.className = `item-tag${tag.data.id}`;
                     const a = document.createElement('a');
@@ -171,7 +170,6 @@
         if (path == temp) return;
         temp = path;
         const url = location.pathname.split('/');
-        console.log(url[1]);
         switch (url[1]) {
             case "t":
                 BHmenu.setTag(url[2]);
