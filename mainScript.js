@@ -38,7 +38,7 @@
                 menu.innerHTML = "";
             },
             discussions: () => {
-                
+
                 menu.appendChild(menu_focus);
                 (function setMenu() {
                     var item_list;
@@ -98,12 +98,13 @@
 
                 menu.appendChild(menu_focus);
                 (function setMenu() {
-                    const userMenu = document.querySelector('.affix-top');
+                    var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix');
                     if (userMenu) {
-                        const childs = userMenu.querySelector('.Dropdown-menu').childNodes;
+                        userMenu = userMenu.querySelector('.Dropdown-menu');
+                        menu.appendChild(userMenu);
+                        const childs = userMenu.childNodes;
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
-                            menu.appendChild(child);
                             child.addEventListener('click', () => {
                                 Array.prototype.slice.call(menu.childNodes).map(i => {
                                     i.classList.remove('BH_headerMenuItemFocus');
@@ -120,7 +121,6 @@
                             });
                             child.addEventListener('mouseout', setFocusOut);
                         }
-                        userMenu.style.display = 'none';
                     }
                     else setTimeout(setMenu,1000);
                 })();

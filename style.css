@@ -302,3 +302,9 @@ img.Header-logo {
 	padding: 0;
 	background: transparent;
 }
+ul.affix{
+	display: none;
+}
+ul.affix-top{
+	display: none;
+}
