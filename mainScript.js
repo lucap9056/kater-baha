@@ -52,7 +52,7 @@
 
                     Array.prototype.slice.call(item_list).map(item => {
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-
+                            menu.appendChild(item);
                             item.addEventListener('click', () => {
                                 item.querySelector('a').click();
                             });
