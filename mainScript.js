@@ -23,7 +23,7 @@
         menu.appendChild(menu_focus);
 
         function setFocusOut() {
-            const childs = menu.childNodes;
+            const childs = menu.querySelector(".Dropdown-menu").childNodes || menu.childNodes;
             var child = menu.querySelector('.item-allDiscussions') || menu.querySelector('.item-posts');
             if (child == null) return;
             for (let i = 0; i < childs.length; i++) {
