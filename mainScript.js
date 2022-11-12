@@ -52,8 +52,12 @@
 
                     Array.prototype.slice.call(item_list).map(item => {
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
+                            if (menu.querySelector(`.${item.className.replace('active').trim()}`)) return;
                             menu.appendChild(item);
                             item.addEventListener('click', () => {
+                                Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
+                                item.classList.add('active');
+
                                 item.querySelector('a').click();
                             });
 
@@ -92,6 +96,8 @@
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
                             child.addEventListener('click', () => {
+                                Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
+                                child.classList.add('active');
                                 child.querySelector('a').click();
                             });
 
@@ -104,7 +110,7 @@
                             child.addEventListener('mouseout', setFocusOut);
                         }
                     }
-                    else setTimeout(setMenu,1000);
+                    else setTimeout(setMenu, 1000);
                 })();
 
 
