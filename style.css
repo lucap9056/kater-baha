@@ -231,6 +231,10 @@ img.Header-logo {
 }
 #BH_menu li .hasIcon {
 	pointer-events: none;
+	padding: 0px;
+}
+#BH_menu .Dropdown-menu > li.active > a {
+	background: transparent;
 }
 #BH_menu .icon {
 	display: none;

@@ -87,6 +87,17 @@
             setBHmenu();
             setFocusOut();
         });
+
+        function setFocusOut() {
+            const childs = BHmenu.childNodes;
+            var child = BHmenu.querySelector('.item-allDiscussions');
+            for (let i = 0; i < childs.length; i++) {
+                if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
+            }
+            BHmenu_focus.style.left = `${child.offsetLeft }px`;
+            BHmenu_focus.style.width = `${child.offsetWidth}px`;
+        }
+        
         setBHmenu();
         function setBHmenu() {
             var item_list;
@@ -128,16 +139,6 @@
                     item.addEventListener('mouseout',setFocusOut);
                 }
             });
-
-            function setFocusOut() {
-                const childs = BHmenu.childNodes;
-                var child = BHmenu.querySelector('.item-allDiscussions');
-                for (let i = 0; i < childs.length; i++) {
-                    if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
-                }
-                BHmenu_focus.style.left = `${child.offsetLeft }px`;
-                BHmenu_focus.style.width = `${child.offsetWidth}px`;
-            }
 
             try {
                 const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
