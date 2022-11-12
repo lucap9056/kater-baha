@@ -54,10 +54,6 @@
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
 
                             item.addEventListener('click', () => {
-                                Array.prototype.slice.call(menu.childNodes).map(i => {
-                                    i.classList.remove('active');
-                                });
-                                item.classList.add('active');
                                 item.querySelector('a').click();
                             });
 
@@ -96,10 +92,6 @@
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
                             child.addEventListener('click', () => {
-                                Array.prototype.slice.call(menu.childNodes).map(i => {
-                                    i.classList.remove('BH_headerMenuItemFocus');
-                                });
-                                child.classList.add('BH_headerMenuItemFocus');
                                 child.querySelector('a').click();
                             });
 
