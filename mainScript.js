@@ -1,16 +1,16 @@
 (() => {
     'use strict';
     var temp;
-    setInterval(() => {
+    function pageCheck() {
+        setTimeout(() => window.requestAnimationFrame(pageCheck), 3000);
         var path = location.pathname;
         if (path == temp) return;
         temp = path;
         console.log(path);
+    }
+    window.requestAnimationFrame(pageCheck);
 
 
-    },1000);
-
-    
     (function search() {
         const head = document.querySelector(".container");
         const search = document.querySelector(".item-search");
@@ -78,9 +78,9 @@
 
     (function createBHmenu() {
         const lang = window.app.translator.translations;
-        lang["core.forum.composer_discussion.title"] = lang["core.forum.composer_discussion.title"].replace("新增文章","發文");
-        lang["core.forum.index.all_discussions_link"] = lang["core.forum.index.all_discussions_link"].replace("全部文章","文章列表");
-        lang["core.forum.index.start_discussion_button"] = lang["core.forum.index.start_discussion_button"].replace("新增文章","發文");
+        lang["core.forum.composer_discussion.title"] = lang["core.forum.composer_discussion.title"].replace("新增文章", "發文");
+        lang["core.forum.index.all_discussions_link"] = lang["core.forum.index.all_discussions_link"].replace("全部文章", "文章列表");
+        lang["core.forum.index.start_discussion_button"] = lang["core.forum.index.start_discussion_button"].replace("新增文章", "發文");
 
         const BHmenub = document.createElement('div');
         BHmenub.id = 'BH_menub';
@@ -94,7 +94,7 @@
         BHmenu_focus.id = 'BHmenu_focus';
         BHmenu.appendChild(BHmenu_focus);
 
-        document.querySelector('.Header-logo').addEventListener('click',() => {
+        document.querySelector('.Header-logo').addEventListener('click', () => {
             setBHmenu();
             setFocusOut();
         });
@@ -106,10 +106,10 @@
             for (let i = 0; i < childs.length; i++) {
                 if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
             }
-            BHmenu_focus.style.left = `${child.offsetLeft }px`;
+            BHmenu_focus.style.left = `${child.offsetLeft}px`;
             BHmenu_focus.style.width = `${child.offsetWidth}px`;
         }
-        
+
         setBHmenu();
         function setBHmenu() {
             var item_list;
@@ -120,21 +120,21 @@
                 setTimeout(setBHmenu, 1000);
                 return;
             }
-            
+
             Array.prototype.slice.call(item_list).map(item => {
                 if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-                    item.classList.remove('active'); 
+                    item.classList.remove('active');
 
                     var old = BHmenu.querySelector(`.${item.className.trim()}`);
                     if (old) old.classList.remove('BH_itemFocus');
                     else BHmenu.appendChild(item);
 
-                    var path = location.pathname.replace(/\//,'');
+                    var path = location.pathname.replace(/\//, '');
                     if (path == '') path = 'allDiscussions';
 
                     if (item.className.indexOf(path) > -1) item.classList.add('BH_itemFocus');
 
-                    item.addEventListener('click',() => {
+                    item.addEventListener('click', () => {
                         Array.prototype.slice.call(BHmenu.childNodes).map(i => {
                             i.classList.remove('BH_itemFocus');
                         });
@@ -142,13 +142,13 @@
                         item.querySelector('a').click();
                     });
 
-                    item.addEventListener('mouseenter',(e) => {
+                    item.addEventListener('mouseenter', (e) => {
                         setTimeout(() => {
                             BHmenu_focus.style.left = `${item.offsetLeft}px`;
                             BHmenu_focus.style.width = `${item.offsetWidth}px`;
-                        },10);
+                        }, 10);
                     });
-                    item.addEventListener('mouseout',setFocusOut);
+                    item.addEventListener('mouseout', setFocusOut);
                 }
             });
 
@@ -170,7 +170,7 @@
             for (let i = 0; i < childs.length; i++) {
                 const child = childs[i];
                 BHmenu.appendChild(child);
-                child.addEventListener('click',() => {
+                child.addEventListener('click', () => {
                     Array.prototype.slice.call(BHmenu.childNodes).map(i => {
                         i.classList.remove('BH_itemFocus');
                     });
@@ -178,13 +178,13 @@
                     child.querySelector('a').click();
                 });
 
-                child.addEventListener('mouseenter',() => {
+                child.addEventListener('mouseenter', () => {
                     setTimeout(() => {
                         BHmenu_focus.style.left = `${child.offsetLeft}px`;
                         BHmenu_focus.style.width = `${child.offsetWidth}px`;
-                    },10);
+                    }, 10);
                 });
-                child.addEventListener('mouseout',setFocusOut);
+                child.addEventListener('mouseout', setFocusOut);
             }
             userMenu.style.display = 'none';
         }
