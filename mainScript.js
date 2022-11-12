@@ -106,7 +106,14 @@
                             });
                             item.addEventListener('mouseout', setFocusOut);
 
-                            if (/allDiscussions/.test(item.className)) menu.appendChild(tagItem.get());
+                            if (/allDiscussions/.test(item.className)) {
+                                const tag = tagItem.get();
+                                menu.appendChild(tag);
+                                if (tag.className != "") {
+                                    item.classList.remove('active');
+                                    tag.classList.add('active');
+                                }
+                            }
                         }
                         else item.addEventListener('click', () => tagItem.set(item));
                     });
