@@ -229,6 +229,9 @@ img.Header-logo {
 #BH_menu li.Dropdown-separator{
     display: none;
 }
+#BH_menu li .hasIcon {
+	pointer-events: none;
+}
 #BH_menu .icon {
 	display: none;
 }

@@ -117,6 +117,7 @@
                             });
                             item.classList.add('BH_itemFocus');
                         },10);
+                        item.querySelector('a').click();
                     });
 
                     item.addEventListener('mouseenter',(e) => {
