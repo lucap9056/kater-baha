@@ -169,13 +169,13 @@
                     child.querySelector('a').click();
                 });
 
-                item.addEventListener('mouseenter',(e) => {
+                child.addEventListener('mouseenter',() => {
                     setTimeout(() => {
                         BHmenu_focus.style.left = `${child.offsetLeft}px`;
                         BHmenu_focus.style.width = `${child.offsetWidth}px`;
                     },10);
                 });
-                item.addEventListener('mouseout',setFocusOut);
+                child.addEventListener('mouseout',setFocusOut);
             }
             userMenu.style.display = 'none';
         }

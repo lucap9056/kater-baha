@@ -292,7 +292,7 @@ img.Header-logo {
 	box-shadow: 0 0 2px 0px #33cccc;
 	pointer-events: none;
 }
-#BH_menu .Dropdown-menu.dropdown-menu {
+#BH_menu .Dropdown-menu {
 	display: block;
 	top: 0px;
 	left: 0px;
