@@ -24,10 +24,10 @@
 
         function setFocusOut() {
             const childs = menu.childNodes;
-            var child = menu.querySelector('.item-allDiscussions');
+            var child = menu.querySelector('.item-allDiscussions') || menu.querySelector('.item-posts');
             if (child == null) return;
             for (let i = 0; i < childs.length; i++) {
-                if (childs[i].className.indexOf('BH_headerMenuFocus') > -1) child = childs[i];
+                if (childs[i].className.indexOf('active') > -1) child = childs[i];
             }
             menu_focus.style.left = `${child.offsetLeft}px`;
             menu_focus.style.width = `${child.offsetWidth}px`;
@@ -52,22 +52,12 @@
 
                     Array.prototype.slice.call(item_list).map(item => {
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-                            item.classList.remove('active');
-
-                            var old = menu.querySelector(`.${item.className.trim()}`);
-                            if (old) old.classList.remove('BH_headerMenuItemFocus');
-                            else menu.appendChild(item);
-
-                            var path = location.pathname.replace(/\//, '');
-                            if (path == '') path = 'allDiscussions';
-
-                            if (item.className.indexOf(path) > -1) item.classList.add('BH_headerMenuItemFocus');
 
                             item.addEventListener('click', () => {
-                                Array.prototype.slice.call(bHmenu.childNodes).map(i => {
-                                    i.classList.remove('BH_headerMenuItemFocus');
+                                Array.prototype.slice.call(menu.childNodes).map(i => {
+                                    i.classList.remove('active');
                                 });
-                                item.classList.add('BH_headerMenuItemFocus');
+                                item.classList.add('active');
                                 item.querySelector('a').click();
                             });
 

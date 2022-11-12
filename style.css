@@ -245,7 +245,7 @@ img.Header-logo {
 #BH_headerMenu .item-allDiscussions .Button-label {
 	color: #00B0B6;
 }
-#BH_headerMenu li.BH_itemFocus .Button-label {
+#BH_headerMenu li.active .Button-label {
 	color: #00B0B6;
 }
 #BH_headerMenu li.item-newDiscussion {
