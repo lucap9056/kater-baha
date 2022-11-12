@@ -18,15 +18,18 @@
         const menu_focus = document.createElement('div');
         menu_focus.id = 'BH_headerMenuFocus';
         menu.appendChild(menu_focus);
-        
+
         const tagItem = (() => {
             var li = document.createElement('li');
             li.style.display = 'none';
 
             return {
-                get: li,
+                get:() => {
+                    return li;
+                },
                 set: (element) => {
                     console.log(element);
+                    console.log(li);
                     menu.replaceChild(element,li);
                     li = element;
                     li.style.display = 'block';
@@ -84,7 +87,7 @@
                             });
                             item.addEventListener('mouseout', setFocusOut);
 
-                            if (menu.childNodes.length == 1) menu.appendChild(tagItem.get);
+                            if (/allDiscussions/.test(item.className)) menu.appendChild(tagItem.get());
                         }
                         else item.addEventListener('click', () => tagItem.set(item));
                     });
