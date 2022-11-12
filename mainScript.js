@@ -119,12 +119,12 @@
                     });
 
                     item.addEventListener('mouseenter',(e) => {
-                        BHmenu_focus.style.left = `${item.offsetLeft}px`;
-                        BHmenu_focus.style.width = `${item.offsetWidth}px`;
+                        setTimeout(() => {
+                            BHmenu_focus.style.left = `${item.offsetLeft}px`;
+                            BHmenu_focus.style.width = `${item.offsetWidth}px`;
+                        },10);
                     });
-                    item.addEventListener('mouseout',() => {
-                        setTimeout(setFocusOut,1);
-                    })
+                    item.addEventListener('mouseout',setFocusOut);
                 }
             });
 
