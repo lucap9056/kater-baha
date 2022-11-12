@@ -21,7 +21,6 @@
             return;
         }
         const itemSession = document.querySelector(".item-session");
-        console.log(itemSession);
         const itemSessionBtn = itemSession.querySelector(".Dropdown-toggle");
         const childs = itemSessionBtn.childNodes;
         for (let i = 0; i < childs.length; i++) {
@@ -62,8 +61,6 @@
         clientUrl.appendChild(clientId);
 
         const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
-        console.log(clientMenu);
-        console.log(client);
         clientMenu.innerHTML = "";
         clientMenu.appendChild(client);
     })();
@@ -85,7 +82,10 @@
         BHmenu_focus.id = 'BHmenu_focus';
         BHmenu.appendChild(BHmenu_focus);
 
-        document.querySelector('.Header-logo').addEventListener('click',setBHmenu);
+        document.querySelector('.Header-logo').addEventListener('click',() => {
+            setBHmenu();
+            setFocusOut();
+        });
         setBHmenu();
         function setBHmenu() {
             var item_list;
@@ -111,23 +111,21 @@
                     if (item.className.indexOf(path) > -1) item.classList.add('BH_itemFocus');
 
                     item.addEventListener('click',() => {
-                        setTimeout(() => {
-                            Array.prototype.slice.call(BHmenu.childNodes).map(i => {
-                                i.classList.remove('BH_itemFocus');
-                            });
-                            item.classList.add('BH_itemFocus');
-                        },10);
+                        Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                            i.classList.remove('BH_itemFocus');
+                        });
+                        item.classList.add('BH_itemFocus');
                         item.querySelector('a').click();
                     });
 
                     item.addEventListener('mouseenter',(e) => {
-                        BHmenu_focus.style.left = `${item.offsetLeft }px`;
+                        BHmenu_focus.style.left = `${item.offsetLeft}px`;
                         BHmenu_focus.style.width = `${item.offsetWidth}px`;
                     });
-                    item.addEventListener('mouseout',setFocusOut);
                 }
             });
 
+            BHmenu.addEventListener('mouseout',setFocusOut);
             function setFocusOut() {
                 const childs = BHmenu.childNodes;
                 var child = BHmenu.querySelector('.item-allDiscussions');
