@@ -106,7 +106,7 @@
                             if (/allDiscussions/.test(item.className)) {
                                 const tag = tagItem.get();
                                 menu.appendChild(tag);
-                                if (tag.className != "") {
+                                if (tag.style.display != 'none') {
                                     item.classList.remove('active');
                                     tag.classList.add('active');
                                     tag.addEventListener('click', () => tag.querySelector('a').click());
