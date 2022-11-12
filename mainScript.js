@@ -149,6 +149,13 @@
                 return;
             }
 
+
+            const userMenu = document.querySelector('.affix-top');
+            if (userMenu) {
+                BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
+                userMenu.style.display = 'none';
+            }
+
         };
     })();
 })();
