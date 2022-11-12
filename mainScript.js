@@ -1,12 +1,154 @@
 (() => {
     'use strict';
+    const BH_lang = {
+        "core.forum.composer_discussion.title": "發文",
+        "core.forum.index.all_discussions_link": "文章列表",
+        "core.forum.index.start_discussion_button": "發文"
+    };
+    Object.keys(BH_lang).map(key => {
+        window.app.translator.translations[key] = BH_lang[key];
+    });
+
+    const BHmenu = (() => {
+        const header = document.createElement('div');
+        header.id = 'BH_header';
+        document.getElementById('header').appendChild(header);
+
+        const menu = document.createElement('div');
+        menu.id = 'BH_headerMenu';
+        header.appendChild(menu);
+
+        const menu_focus = document.createElement('div');
+        menu_focus.id = 'BH_headerMenuFocus';
+        menu.appendChild(menu_focus);
+
+        function setFocusOut() {
+            const childs = menu.childNodes;
+            var child = menu.querySelector('.item-allDiscussions');
+            if (child == null) return;
+            for (let i = 0; i < childs.length; i++) {
+                if (childs[i].className.indexOf('BH_headerMenuFocus') > -1) child = childs[i];
+            }
+            menu_focus.style.left = `${child.offsetLeft}px`;
+            menu_focus.style.width = `${child.offsetWidth}px`;
+        }
+
+        return {
+            clear: () => {
+                menu.innerHTML = "";
+            },
+            discussions: () => {
+                (function setMenu() {
+                    var item_list;
+                    try {
+                        item_list = document.querySelector('.item-nav').querySelector('.Dropdown-menu.dropdown-menu ').childNodes;
+                    }
+                    catch {
+                        setTimeout(setMenu, 1000);
+                        return;
+                    }
+
+                    Array.prototype.slice.call(item_list).map(item => {
+                        if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
+                            item.classList.remove('active');
+
+                            var old = menu.querySelector(`.${item.className.trim()}`);
+                            if (old) old.classList.remove('BH_headerMenuItemFocus');
+                            else menu.appendChild(item);
+
+                            var path = location.pathname.replace(/\//, '');
+                            if (path == '') path = 'allDiscussions';
+
+                            if (item.className.indexOf(path) > -1) item.classList.add('BH_headerMenuItemFocus');
+
+                            item.addEventListener('click', () => {
+                                Array.prototype.slice.call(bHmenu.childNodes).map(i => {
+                                    i.classList.remove('BH_headerMenuItemFocus');
+                                });
+                                item.classList.add('BH_headerMenuItemFocus');
+                                item.querySelector('a').click();
+                            });
+
+                            item.addEventListener('mouseenter', (e) => {
+                                setTimeout(() => {
+                                    menu_focus.style.left = `${item.offsetLeft}px`;
+                                    menu_focus.style.width = `${item.offsetWidth}px`;
+                                }, 10);
+                            });
+                            item.addEventListener('mouseout', setFocusOut);
+                        }
+                    });
+                })();
+
+                (function setPostBtn() {
+                    try {
+                        const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
+                        postBtn.querySelector('button').style.pointerEvents = 'auto';
+                        menu.appendChild(postBtn);
+                    }
+                    catch {
+                        setTimeout(setPostBtn, 1000);
+                        return;
+                    }
+                })();
+            },
+            user: () => {
+
+
+                (function setMenu() {
+                    const userMenu = document.querySelector('.affix-top');
+                    if (userMenu) {
+                        const childs = userMenu.querySelector('.Dropdown-menu').childNodes;
+                        for (let i = 0; i < childs.length; i++) {
+                            const child = childs[i];
+                            BHmenu.appendChild(child);
+                            child.addEventListener('click', () => {
+                                Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                                    i.classList.remove('BH_headerMenuItemFocus');
+                                });
+                                child.classList.add('BH_headerMenuItemFocus');
+                                child.querySelector('a').click();
+                            });
+
+                            child.addEventListener('mouseenter', () => {
+                                setTimeout(() => {
+                                    menu_focus.style.left = `${child.offsetLeft}px`;
+                                    menu_focus.style.width = `${child.offsetWidth}px`;
+                                }, 10);
+                            });
+                            child.addEventListener('mouseout', setFocusOut);
+                        }
+                        userMenu.style.display = 'none';
+                    }
+                    else setTimeout(setMenu,1000);
+                })();
+
+
+
+
+            }
+        }
+    })();
+
     var temp;
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 3000);
         var path = location.pathname;
         if (path == temp) return;
         temp = path;
-        console.log(path);
+        const mode = location.pathname.split('/')[1];
+        console.log(mode);
+        switch (mode) {
+            case "":
+            case "t":
+                BHmenu.clear();
+                BHmenu.discussions();
+                break;
+            case "u":
+                BHmenu.clear();
+                BHmenu.user();
+                break;
+        }
     }
     window.requestAnimationFrame(pageCheck);
 
@@ -76,117 +218,4 @@
         clientMenu.appendChild(client);
     })();
 
-    (function createBHmenu() {
-        const lang = window.app.translator.translations;
-        lang["core.forum.composer_discussion.title"] = lang["core.forum.composer_discussion.title"].replace("新增文章", "發文");
-        lang["core.forum.index.all_discussions_link"] = lang["core.forum.index.all_discussions_link"].replace("全部文章", "文章列表");
-        lang["core.forum.index.start_discussion_button"] = lang["core.forum.index.start_discussion_button"].replace("新增文章", "發文");
-
-        const BHmenub = document.createElement('div');
-        BHmenub.id = 'BH_menub';
-        document.getElementById('header').appendChild(BHmenub);
-
-        const BHmenu = document.createElement('div');
-        BHmenu.id = 'BH_menu';
-        BHmenub.appendChild(BHmenu);
-
-        const BHmenu_focus = document.createElement('div');
-        BHmenu_focus.id = 'BHmenu_focus';
-        BHmenu.appendChild(BHmenu_focus);
-
-        document.querySelector('.Header-logo').addEventListener('click', () => {
-            setBHmenu();
-            setFocusOut();
-        });
-
-        function setFocusOut() {
-            const childs = BHmenu.childNodes;
-            var child = BHmenu.querySelector('.item-allDiscussions');
-            if (child == null) return;
-            for (let i = 0; i < childs.length; i++) {
-                if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
-            }
-            BHmenu_focus.style.left = `${child.offsetLeft}px`;
-            BHmenu_focus.style.width = `${child.offsetWidth}px`;
-        }
-
-        setBHmenu();
-        function setBHmenu() {
-            var item_list;
-            try {
-                item_list = document.querySelector('.item-nav').querySelector('.Dropdown-menu.dropdown-menu ').childNodes;
-            }
-            catch {
-                setTimeout(setBHmenu, 1000);
-                return;
-            }
-
-            Array.prototype.slice.call(item_list).map(item => {
-                if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
-                    item.classList.remove('active');
-
-                    var old = BHmenu.querySelector(`.${item.className.trim()}`);
-                    if (old) old.classList.remove('BH_itemFocus');
-                    else BHmenu.appendChild(item);
-
-                    var path = location.pathname.replace(/\//, '');
-                    if (path == '') path = 'allDiscussions';
-
-                    if (item.className.indexOf(path) > -1) item.classList.add('BH_itemFocus');
-
-                    item.addEventListener('click', () => {
-                        Array.prototype.slice.call(BHmenu.childNodes).map(i => {
-                            i.classList.remove('BH_itemFocus');
-                        });
-                        item.classList.add('BH_itemFocus');
-                        item.querySelector('a').click();
-                    });
-
-                    item.addEventListener('mouseenter', (e) => {
-                        setTimeout(() => {
-                            BHmenu_focus.style.left = `${item.offsetLeft}px`;
-                            BHmenu_focus.style.width = `${item.offsetWidth}px`;
-                        }, 10);
-                    });
-                    item.addEventListener('mouseout', setFocusOut);
-                }
-            });
-
-            try {
-                const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
-                postBtn.querySelector('button').style.pointerEvents = 'auto';
-                BHmenu.appendChild(postBtn);
-            }
-            catch {
-                setTimeout(setBHmenu, 1000);
-                return;
-            }
-
-        };
-
-        const userMenu = document.querySelector('.affix-top');
-        if (userMenu) {
-            const childs = userMenu.querySelector('.Dropdown-menu').childNodes;
-            for (let i = 0; i < childs.length; i++) {
-                const child = childs[i];
-                BHmenu.appendChild(child);
-                child.addEventListener('click', () => {
-                    Array.prototype.slice.call(BHmenu.childNodes).map(i => {
-                        i.classList.remove('BH_itemFocus');
-                    });
-                    child.classList.add('BH_itemFocus');
-                    child.querySelector('a').click();
-                });
-
-                child.addEventListener('mouseenter', () => {
-                    setTimeout(() => {
-                        BHmenu_focus.style.left = `${child.offsetLeft}px`;
-                        BHmenu_focus.style.width = `${child.offsetWidth}px`;
-                    }, 10);
-                });
-                child.addEventListener('mouseout', setFocusOut);
-            }
-            userMenu.style.display = 'none';
-        }
-    })();
 })();
