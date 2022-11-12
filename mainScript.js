@@ -24,14 +24,14 @@
             li.style.display = 'none';
 
             return {
-                get:() => {
+                get: () => {
                     return li;
                 },
                 set: (element) => {
-                    console.log(element);
-                    console.log(li);
-                    menu.replaceChild(element,li);
-                    li = element;
+                    const clone = element.cloneNode(true);
+                    clone.addEventListener('click', () => clone.querySelector('a').click());
+                    menu.replaceChild(clone, li);
+                    li = clone;
                     li.style.display = 'block';
                 },
                 hide: () => li.style.display = 'none'
@@ -77,6 +77,7 @@
                                 item.classList.add('active');
 
                                 item.querySelector('a').click();
+                                tagItem.hide();
                             });
 
                             item.addEventListener('mouseenter', (e) => {
@@ -141,7 +142,7 @@
 
     var temp;
     function pageCheck() {
-        setTimeout(() => window.requestAnimationFrame(pageCheck), 3000);
+        setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
         var path = location.pathname;
         if (path == temp) return;
         temp = path;
