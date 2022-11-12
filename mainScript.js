@@ -122,10 +122,12 @@
                         BHmenu_focus.style.left = `${item.offsetLeft}px`;
                         BHmenu_focus.style.width = `${item.offsetWidth}px`;
                     });
+                    item.addEventListener('mouseout',() => {
+                        setTimeout(setFocusOut,1);
+                    })
                 }
             });
 
-            BHmenu.addEventListener('mouseout',setFocusOut);
             function setFocusOut() {
                 const childs = BHmenu.childNodes;
                 var child = BHmenu.querySelector('.item-allDiscussions');
