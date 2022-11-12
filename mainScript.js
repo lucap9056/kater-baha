@@ -1,8 +1,16 @@
 (() => {
     'use strict';
-    window.onload = () => {
-        console.log(location.href);
-    }
+    var temp;
+    setInterval(() => {
+        var path = location.pathname;
+        if (path == temp) return;
+        temp = path;
+        console.log(path);
+
+
+    },1000);
+
+    
     (function search() {
         const head = document.querySelector(".container");
         const search = document.querySelector(".item-search");
@@ -146,6 +154,7 @@
 
             try {
                 const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
+                postBtn.querySelector('button').style.pointerEvents = 'auto';
                 BHmenu.appendChild(postBtn);
             }
             catch {
