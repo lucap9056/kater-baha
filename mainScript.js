@@ -23,11 +23,11 @@
         menu.appendChild(menu_focus);
 
         function setFocusOut() {
-            const childs = menu.querySelector(".Dropdown-menu").childNodes || menu.childNodes;
+            const childs = menu.querySelector(".Dropdown-menu") || menu;
             var child = menu.querySelector('.item-allDiscussions') || menu.querySelector('.item-posts');
             if (child == null) return;
-            for (let i = 0; i < childs.length; i++) {
-                if (childs[i].className.indexOf('active') > -1) child = childs[i];
+            for (let i = 0; i < childs.childNodes.length; i++) {
+                if (childs.childNodes[i].className.indexOf('active') > -1) child = childs.childNodes[i];
             }
             menu_focus.style.left = `${child.offsetLeft}px`;
             menu_focus.style.width = `${child.offsetWidth}px`;
