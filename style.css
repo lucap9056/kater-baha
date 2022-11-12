@@ -333,6 +333,10 @@ img.Header-logo {
 	padding: 0;
 }
 
+#BH_headerMenu li.item-newDiscussion .Button-label {
+	color: white;
+}
+
 .item-nav .item-allDiscussions,
 .item-nav .item-rankings,
 .item-nav .item-following,
