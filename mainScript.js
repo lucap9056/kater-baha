@@ -111,10 +111,12 @@
                     if (item.className.indexOf(path) > -1) item.classList.add('BH_itemFocus');
 
                     item.addEventListener('click',() => {
-                        Array.prototype.slice.call(BHmenu.childNodes).map(i => {
-                            i.classList.remove('BH_itemFocus');
-                        });
-                        item.classList.add('BH_itemFocus');
+                        setTimeout(() => {
+                            Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                                i.classList.remove('BH_itemFocus');
+                            });
+                            item.classList.add('BH_itemFocus');
+                        },10);
                     });
 
                     item.addEventListener('mouseenter',(e) => {
