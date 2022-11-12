@@ -41,8 +41,6 @@
                     span.innerText = tag.data.attributes.name;
                     span.className = 'Button-label';
                     a.appendChild(span);
-
-                    li.addEventListener('click', li.querySelector('a').click);
                 },
                 set: (element) => {
                     const clone = element.cloneNode(true);
@@ -112,6 +110,7 @@
                                 if (tag.className != "") {
                                     item.classList.remove('active');
                                     tag.classList.add('active');
+                                    tag.addEventListener('click', () => tag.querySelector('a').click());
                                 }
                             }
                         }
