@@ -101,9 +101,9 @@
                         const childs = userMenu.querySelector('.Dropdown-menu').childNodes;
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
-                            BHmenu.appendChild(child);
+                            menu.appendChild(child);
                             child.addEventListener('click', () => {
-                                Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                                Array.prototype.slice.call(menu.childNodes).map(i => {
                                     i.classList.remove('BH_headerMenuItemFocus');
                                 });
                                 child.classList.add('BH_headerMenuItemFocus');
