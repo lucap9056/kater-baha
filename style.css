@@ -220,7 +220,7 @@ img.Header-logo {
 	content: "";
 	position: absolute;
 	top: 8px;
-	left: -12px;
+	left: 0px;
 	width: 1px;
 	bottom: 8px;
 	background-color: #555;
