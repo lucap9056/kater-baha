@@ -214,7 +214,7 @@
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    child.addEventListener('click', child.querySelector('a').click);
+                    child.addEventListener('click', () => location.assign(`/u/${window.app.session.user.username()}`));
                 }
                 itemSession.appendChild(child);
             };
