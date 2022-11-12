@@ -91,6 +91,7 @@
         function setFocusOut() {
             const childs = BHmenu.childNodes;
             var child = BHmenu.querySelector('.item-allDiscussions');
+            if (child == null) return;
             for (let i = 0; i < childs.length; i++) {
                 if (childs[i].className.indexOf('BH_itemFocus') > -1) child = childs[i];
             }
@@ -151,6 +152,7 @@
 
 
             const userMenu = document.querySelector('.affix-top');
+            console.log(userMenu);
             if (userMenu) {
                 BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
                 userMenu.style.display = 'none';
