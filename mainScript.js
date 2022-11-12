@@ -153,14 +153,13 @@
                 return;
             }
 
-
-            const userMenu = document.querySelector('.affix-top');
-            console.log(userMenu);
-            if (userMenu) {
-                BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
-                userMenu.style.display = 'none';
-            }
-
         };
+
+        const userMenu = document.querySelector('.affix-top');
+        console.log(userMenu);
+        if (userMenu) {
+            BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
+            userMenu.style.display = 'none';
+        }
     })();
 })();
