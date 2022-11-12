@@ -156,11 +156,11 @@
         };
 
         const userMenu = document.querySelector('.affix-top');
-        console.log(userMenu);
         if (userMenu) {
-            BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
-            for (let i = 0; i < userMenu.childNodes.length; i++) {
-                const child = userMenu.childNodes[i];
+            const childs = userMenu.querySelector('.Dropdown-menu').childNodes;
+            for (let i = 0; i < childs.length; i++) {
+                const child = childs[i];
+                BHmenu.appendChild(child);
                 child.addEventListener('click',() => {
                     Array.prototype.slice.call(BHmenu.childNodes).map(i => {
                         i.classList.remove('BH_itemFocus');
