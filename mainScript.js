@@ -1,12 +1,9 @@
 (() => {
     'use strict';
-    const BH_lang = {
+    flarum.core.app.translator.addTranslations({
         "core.forum.composer_discussion.title": "發文",
         "core.forum.index.all_discussions_link": "文章列表",
         "core.forum.index.start_discussion_button": "發文"
-    };
-    Object.keys(BH_lang).map(key => {
-        window.app.translator.translations[key] = BH_lang[key];
     });
 
     const BHmenu = (() => {
