@@ -336,6 +336,9 @@ img.Header-logo {
 #BH_headerMenu li.item-newDiscussion .Button-label {
 	color: white;
 }
+#BH_headerMenu li.item-newDiscussion:hover .Button-label {
+	color: white;
+}
 
 .item-nav .item-allDiscussions,
 .item-nav .item-rankings,
