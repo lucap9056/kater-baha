@@ -213,37 +213,30 @@
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    const a = document.createElement('a');
-                    a.href = `/u/${window.app.session.user.username()}`;
-                    a.appendChild(child);
-                    itemSession.appendChild(a);
+                    child.addEventListener('click', location.assign(`/u/${window.app.session.user.username()}`));
                 }
-                else itemSession.appendChild(child);
+                itemSession.appendChild(child);
             };
         }
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-
-        const clientUrl = document.createElement('a');
-        clientUrl.href = `/u/${window.app.session.user.username()}`;
-        client.appendChild(clientUrl);
-
+        client.addEventListener('click', location.assign(`/u/${window.app.session.user.username()}`));
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
         clientAvatar.src = window.app.session.user.data.attributes.avatarUrl;
-        clientUrl.appendChild(clientAvatar);
+        client.appendChild(clientAvatar);
 
         const clientName = document.createElement('div');
         clientName.className = 'BH_ClientName';
         clientName.innerText = window.app.session.user.data.attributes.displayName;
-        clientUrl.appendChild(clientName);
+        client.appendChild(clientName);
 
         const clientId = document.createElement('div');
         clientId.className = 'BH_ClientId';
         clientId.innerText = window.app.session.user.data.attributes.username;
-        clientUrl.appendChild(clientId);
+        client.appendChild(clientId);
 
         const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
         clientMenu.innerHTML = "";
