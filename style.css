@@ -318,6 +318,8 @@ img.Header-logo {
 	line-height: 32px;
 	color: #FFF;
 	cursor: pointer;
+	overflow: hidden;
+	padding: 0;
 }
 
 .sideNav .ButtonGroup {

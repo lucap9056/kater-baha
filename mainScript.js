@@ -19,6 +19,29 @@
         menu_focus.id = 'BH_headerMenuFocus';
         menu.appendChild(menu_focus);
 
+        <li class="item-rankings">
+            <a class="hasIcon" href="/rankings" active="false">
+                <i aria-hidden="true" class="icon fas fa-trophy Button-icon"></i>
+                <span class="Button-label">排名</span>
+            </a>
+        </li>
+        const tagItem = (() => {
+            var li = document.createElement('li');
+            li.style.display = 'none';
+            
+            return {
+                get: li,
+                set: (element) => {
+                    console.log(element);
+                    menu.replaceChild(element,li);
+                    li = element;
+                    li.style.display = 'block';
+                },
+                hide: () => li.style.display = 'none'
+            }
+        })();
+
+
         function setFocusOut() {
             const childs = menu.querySelector(".Dropdown-menu") || menu;
             var child = menu.querySelector('.item-allDiscussions') || menu.querySelector('.item-posts');
@@ -66,7 +89,10 @@
                                 }, 10);
                             });
                             item.addEventListener('mouseout', setFocusOut);
+
+                            if (menu.childNodes.length == 1) menu.appendChild(tagItem.get);
                         }
+                        else item.addEventListener('click', () => tagItem.set(item));
                     });
                     setFocusOut();
                 })();
