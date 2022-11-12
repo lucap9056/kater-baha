@@ -159,6 +159,24 @@
         console.log(userMenu);
         if (userMenu) {
             BHmenu.appendChild(userMenu.querySelector('.Dropdown-menu'));
+            for (let i = 0; i < userMenu.childNodes.length; i++) {
+                const child = userMenu.childNodes[i];
+                child.addEventListener('click',() => {
+                    Array.prototype.slice.call(BHmenu.childNodes).map(i => {
+                        i.classList.remove('BH_itemFocus');
+                    });
+                    child.classList.add('BH_itemFocus');
+                    child.querySelector('a').click();
+                });
+
+                item.addEventListener('mouseenter',(e) => {
+                    setTimeout(() => {
+                        BHmenu_focus.style.left = `${child.offsetLeft}px`;
+                        BHmenu_focus.style.width = `${child.offsetWidth}px`;
+                    },10);
+                });
+                item.addEventListener('mouseout',setFocusOut);
+            }
             userMenu.style.display = 'none';
         }
     })();
