@@ -117,15 +117,13 @@
                         item.classList.add('BH_itemFocus');
                     });
 
-                    item.addEventListener('mouseenter',setFocusEnter);
+                    item.addEventListener('mouseenter',(e) => {
+                        BHmenu_focus.style.left = `${item.offsetLeft }px`;
+                        BHmenu_focus.style.width = `${item.offsetWidth}px`;
+                    });
                     item.addEventListener('mouseout',setFocusOut);
                 }
             });
-
-            function setFocusEnter(e) {
-                BHmenu_focus.style.left = `${e.target.offsetLeft }px`;
-                BHmenu_focus.style.width = `${e.target.offsetWidth}px`;
-            }
 
             function setFocusOut() {
                 const childs = BHmenu.childNodes;

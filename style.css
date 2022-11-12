@@ -280,7 +280,7 @@ img.Header-logo {
 	width: 84px;
 	height: 4px;
 	background-color: #00B0B6;
-	transition-duration: 250ms;
+	transition-duration: 500ms;
 	box-shadow: 0 0 2px 0px #33cccc;
 	pointer-events: none;
 }
