@@ -54,6 +54,7 @@
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                             if (menu.querySelector(`.${item.className.replace('active').trim()}`)) return;
                             menu.appendChild(item);
+
                             item.addEventListener('click', () => {
                                 Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
                                 item.classList.add('active');
@@ -70,6 +71,7 @@
                             item.addEventListener('mouseout', setFocusOut);
                         }
                     });
+                    setFocusOut();
                 })();
 
                 (function setPostBtn() {
@@ -109,13 +111,10 @@
                             });
                             child.addEventListener('mouseout', setFocusOut);
                         }
+                        setFocusOut();
                     }
                     else setTimeout(setMenu, 1000);
                 })();
-
-
-
-
             }
         }
     })();
