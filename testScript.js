@@ -1,10 +1,17 @@
 (() => {
     'use strict';
-    flarum.core.app.translator.addTranslations({
-        "core.forum.composer_discussion.title": "發文",
-        "core.forum.index.all_discussions_link": "文章列表",
-        "core.forum.index.start_discussion_button": "發文"
-    });
+    (function setLang() {
+        try {
+            flarum.core.app.translator.addTranslations({
+                "core.forum.composer_discussion.title": "發文",
+                "core.forum.index.all_discussions_link": "文章列表",
+                "core.forum.index.start_discussion_button": "發文"
+            });
+        }
+        catch {
+            setTimeout(setLang, 1000);
+        }
+    })();
 
     const BHmenu = (() => {
         const header = document.createElement('div');
