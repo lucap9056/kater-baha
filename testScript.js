@@ -8,7 +8,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
 
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 20:20");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 20:27");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
@@ -66,6 +66,12 @@
             }
         })();
 
+        const replyBtn = document.createElement('li');
+        replyBtn.id = 'BH-replay';
+        replyBtn.innerText = app.translator.translations["core.forum.discussion_controls.reply_button"];
+        replyBtn.addEventListener('click', () => {
+            document.querySelector('.SplitDropdown-button').click();
+        });
 
         function setFocusOut() {
             const childs = menu.querySelector(".Dropdown-menu") || menu;
@@ -86,6 +92,9 @@
                 menu.innerHTML = "";
             },
             setTag: tagItem.find,
+            setReply:() => {
+                menu.appendChild(replyBtn);
+            },
             create: () => {
                 const li_list = {
                     "core.forum.index.all_discussions_link": '/',
@@ -122,18 +131,7 @@
                     menu.appendChild(li);
                 });
 
-                const reply = document.createElement('li');
-                reply.className = "item-newDiscussion App-primaryControl";
-
-                const replySpan = document.createElement('span');
-                replySpan.className = 'Button-label';
-                replySpan.innerText = app.translator.translations["core.forum.discussion_controls.reply_button"];
-                reply.appendChild(replySpan);
-                reply.addEventListener('click', () => {
-                    document.querySelector('.SplitDropdown-button').click();
-                });
-
-                menu.appendChild(reply);
+                menu.appendChild(replyBtn);
             },
             discussions: () => {
                 mode = 'd';
@@ -255,6 +253,7 @@
                     BHmenu.clear();
                     BHmenu.create();
                 }
+                else BHmenu.setReply();
                 break;
         }
         temp = path;
