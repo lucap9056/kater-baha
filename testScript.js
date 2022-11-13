@@ -227,10 +227,6 @@
         }
     })();
 
-    const previewImage = (() => {
-
-    })();
-
     var temp;
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
