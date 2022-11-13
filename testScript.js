@@ -210,6 +210,7 @@
         const itemSessionBtn = itemSession.querySelector(".Dropdown-toggle");
         const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
         const clientUrl = clientMenu.querySelector('a');
+        clientUrl.style.display = 'none';
         const childs = itemSessionBtn.childNodes;
         for (let i = 0; i < childs.length; i++) {
             const child = childs[i];
