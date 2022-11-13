@@ -421,3 +421,94 @@ ul.affix-top {
 	height: 320px;
     margin-bottom: -24px;
 }
+#BH_adminList {
+	position: absolute;
+	top: 80px;
+	left: calc(50% + 550px);
+	background-color: #222;
+	padding: 4px 8px;
+}
+#BH_adminList::before {
+    content: "版務人員:";
+    position: relative;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+}
+.BH_adminItem {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+	float: left;
+    box-shadow: 0 0 1px white;
+}
+.BH_adminItemImg {
+	width: 30px;
+	height: 30px;
+	border-radius: 3px;
+}
+.BH_adminItemBlock {
+	position: absolute;
+	top: 100%;
+	right: -20px;
+	width: 500px;
+	height: 0px;
+	background-color: #25272A;
+	border-radius: 7px;
+	overflow: hidden;
+	opacity: 0;
+	pointer-events: none;
+	transition-duration: 150ms;
+}
+.BH_adminItem:hover .BH_adminItemBlock {
+	opacity: 1;
+	pointer-events: all;
+	height: 160px;
+}
+.BH_adminItemCover {
+	width: 500px;
+	height: 100px;
+	object-fit: cover;
+}
+.BH_adminItemAvatar {
+	position: absolute;
+	top: 50px;
+	left: 20px;
+	width: 100px;
+	height: 100px;
+	background-color: #EEE;
+	border: solid 3px white;
+	border-radius: 3px;
+}
+.BH_adminItemName {
+	position: absolute;
+	top: 100px;
+	left: 120px;
+	right: 0px;
+	color: white;
+	height: 24px;
+	padding-left: 10px;
+	font-size: 16px;
+	line-height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.BH_adminItemId {
+	position: absolute;
+	top: 120px;
+	left: 120px;
+	right: 0px;
+	color: #00B0B6;
+	height: 18px;
+	padding-left: 10px;
+	font-size: 12px;
+	line-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

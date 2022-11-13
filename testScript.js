@@ -1,6 +1,78 @@
 (() => {
     'use strict';
 
+    const admin = (() => {
+        const admin_list = document.createElement('div');
+        admin_list.id = 'BH_adminList';
+
+        (function getAdmin(id_list) {
+            console.log(id_list);
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `/api/users?filter[group]=${id_list.shift()}`);
+            xhr.onload = () => {
+                if (id_list.length <= 0) append();
+                else getAdmin(id_list);
+
+                const users = JSON.parse(xhr.response).data;
+
+                users.map(user => {
+                    const div = document.createElement('div');
+                    div.className = 'BH_adminItem';
+
+                    const img = document.createElement('img');
+                    img.className = 'BH_adminItemImg';
+                    img.src = user.attributes.avatarUrl || "";
+                    img.addEventListener('error', () => img.style.display = "none");
+                    div.appendChild(img);
+
+                    const userBlock = document.createElement('div');
+                    userBlock.className = 'BH_adminItemBlock';
+                    div.appendChild(userBlock);
+
+                    const userCover = document.createElement('img');
+                    userCover.className = 'BH_adminItemCover';
+                    userCover.src = user.attributes.cover_thumbnail || "";
+                    userCover.addEventListener('error', () => userCover.style.display = 'none');
+                    userBlock.appendChild(userCover);
+
+                    const userAvatar = document.createElement('img');
+                    userAvatar.className = 'BH_adminItemAvatar';
+                    userAvatar.src = user.attributes.avatarUrl || "";
+                    userAvatar.addEventListener('error', () => userCover.style.display = 'none');
+                    userBlock.appendChild(userAvatar);
+
+                    const userName = document.createElement('div');
+                    userName.className = 'BH_adminItemName';
+                    userName.innerText = user.attributes.displayName;
+                    userBlock.appendChild(userName);
+
+                    const userId = document.createElement('div');
+                    userId.className = 'BH_adminItemId';
+                    userBlock.appendChild(userId);
+
+                    const a = document.createElement('a');
+                    a.innerText = user.attributes.username;
+                    a.href = `/u/${user.attributes.username}`;
+                    userId.appendChild(a);
+
+                    admin_list.appendChild(div);
+                });
+
+            }
+            xhr.send();
+        })(['1', '4']);
+
+        function append() {
+            const path = location.pathname;
+            if (path != "/" && !/^\/d\//.test(path)) return;
+            const parent = document.querySelector('.IndexPage .container') || document.querySelector('.Hero .container');
+            parent.appendChild(admin_list);
+        }
+        return {
+            append: append
+        }
+    })();
+
     const BHmenu = (() => {
         var mode = "";
 
@@ -222,9 +294,9 @@
 
         return {
             append: () => {
-                if (location.pathname.replace(/\//,'') != "") return;
+                if (location.pathname.replace(/\//, '') != "") return;
                 const home = document.querySelector('.IndexPage .container');
-                if (home == null) return;
+                if (home == null || home.querySelector('.BH_welcomeImage')) return;
                 home.insertBefore(img, home.querySelector('div'));
             }
         }
@@ -243,6 +315,7 @@
             case "":
                 BHmenu.clear();
                 BHmenu.discussions();
+                admin.append();
                 break;
             case "u":
                 BHmenu.clear();
@@ -254,6 +327,7 @@
                     BHmenu.create();
                 }
                 else BHmenu.setReply();
+                admin.append();
                 break;
         }
         temp = path;
