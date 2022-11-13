@@ -1,22 +1,5 @@
 (() => {
     'use strict';
-    (function setLang() {
-        try {
-            flarum.core.app.translator.addTranslations({
-                "core.forum.composer_discussion.title": "發文",
-                "core.forum.index.all_discussions_link": "文章列表",
-                "core.forum.index.start_discussion_button": "發文"
-            });
-
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 20:50");
-            setTimeout(() => {
-                app.alerts.clear(alertId);
-            }, 3000);
-        }
-        catch {
-            setTimeout(setLang, 1000);
-        }
-    })();
 
     const BHmenu = (() => {
         var mode = "";
@@ -68,7 +51,6 @@
 
         const replyBtn = document.createElement('li');
         replyBtn.id = 'BH-replay';
-        replyBtn.innerText = app.translator.translations["core.forum.discussion_controls.reply_button"];
         replyBtn.addEventListener('click', () => {
             document.querySelector('.SplitDropdown-button').click();
         });
@@ -92,7 +74,11 @@
                 menu.innerHTML = "";
             },
             setTag: tagItem.find,
-            setReply:() => {
+            setReply: (e) => {
+                if (e) {
+                    replyBtn.innerText = e;
+                    return;
+                }
                 menu.appendChild(replyBtn);
             },
             create: () => {
@@ -256,6 +242,24 @@
     }
     window.requestAnimationFrame(pageCheck);
 
+
+    (function setLang() {
+        try {
+            flarum.core.app.translator.addTranslations({
+                "core.forum.composer_discussion.title": "發文",
+                "core.forum.index.all_discussions_link": "文章列表",
+                "core.forum.index.start_discussion_button": "發文"
+            });
+            BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 21:46");
+            setTimeout(() => {
+                app.alerts.clear(alertId);
+            }, 3000);
+        }
+        catch {
+            setTimeout(setLang, 1000);
+        }
+    })();
 
     (function search() {
         const head = document.querySelector(".container");
