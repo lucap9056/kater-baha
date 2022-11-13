@@ -176,11 +176,6 @@
                 BHmenu.clear();
                 BHmenu.discussions();
                 break;
-            case "d":
-                if (/\/t\//.test(temp) || temp == '/') return;
-                BHmenu.clear();
-                BHmenu.discussions();
-                break;
             case "u":
                 BHmenu.clear();
                 BHmenu.user();
