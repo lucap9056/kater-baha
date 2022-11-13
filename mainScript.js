@@ -1,6 +1,5 @@
 (() => {
     'use strict';
-
     (function setLang() {
         try {
             flarum.core.app.translator.addTranslations({
@@ -8,6 +7,11 @@
                 "core.forum.index.all_discussions_link": "文章列表",
                 "core.forum.index.start_discussion_button": "發文"
             });
+
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 21:03");
+            setTimeout(() => {
+                app.alerts.clear(alertId);
+            }, 3000);
         }
         catch {
             setTimeout(setLang, 1000);
@@ -15,6 +19,8 @@
     })();
 
     const BHmenu = (() => {
+        var mode = "";
+
         const header = document.createElement('div');
         header.id = 'BH_header';
         document.getElementById('header').appendChild(header);
@@ -60,6 +66,12 @@
             }
         })();
 
+        const replyBtn = document.createElement('li');
+        replyBtn.id = 'BH-replay';
+        replyBtn.innerText = app.translator.translations["core.forum.discussion_controls.reply_button"];
+        replyBtn.addEventListener('click', () => {
+            document.querySelector('.SplitDropdown-button').click();
+        });
 
         function setFocusOut() {
             const childs = menu.querySelector(".Dropdown-menu") || menu;
@@ -73,12 +85,56 @@
         }
 
         return {
+            get: () => {
+                return mode;
+            },
             clear: () => {
                 menu.innerHTML = "";
             },
             setTag: tagItem.find,
-            discussions: () => {
+            setReply:() => {
+                menu.appendChild(replyBtn);
+            },
+            create: () => {
+                const li_list = {
+                    "core.forum.index.all_discussions_link": '/',
+                    "fof-gamification.forum.nav.name": '/rankings',
+                    "flarum-subscriptions.forum.badge.following_tooltip": '/following',
+                    "clarkwinkelmann-bookmarks.forum.badge": '/bookmarks',
+                    "flarum-tags.forum.index.tags_link": '/tags',
+                };
+                mode = 'd';
+                menu.appendChild(menu_focus);
+                Object.keys(li_list).map((id, i) => {
+                    const li = document.createElement('li');
+                    if (i == 0) li.className = 'item-allDiscussions active';
 
+                    const a = document.createElement('a');
+                    a.href = li_list[id];
+                    li.appendChild(a);
+
+                    const span = document.createElement('span');
+                    span.className = 'Button-label';
+                    span.innerText = app.translator.translations[id];
+                    a.appendChild(span);
+
+                    li.addEventListener('click', () => a.click());
+
+                    li.addEventListener('mouseenter', () => {
+                        setTimeout(() => {
+                            menu_focus.style.left = `${li.offsetLeft}px`;
+                            menu_focus.style.width = `${li.offsetWidth}px`;
+                        }, 10);
+                    });
+                    li.addEventListener('mouseout', setFocusOut);
+
+                    menu.appendChild(li);
+                });
+
+                menu.appendChild(replyBtn);
+            },
+            discussions: () => {
+                mode = 'd';
                 menu.appendChild(menu_focus);
                 (function setMenu() {
                     var item_list;
@@ -139,7 +195,7 @@
                 })();
             },
             user: () => {
-
+                mode = 'u';
                 menu.appendChild(menu_focus);
                 (function setMenu() {
                     var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix');
@@ -171,6 +227,10 @@
         }
     })();
 
+    const previewImage = (() => {
+
+    })();
+
     var temp;
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
@@ -187,6 +247,13 @@
             case "u":
                 BHmenu.clear();
                 BHmenu.user();
+                break;
+            case "d":
+                if (BHmenu.get() != 'd') {
+                    BHmenu.clear();
+                    BHmenu.create();
+                }
+                else BHmenu.setReply();
                 break;
         }
         temp = path;
