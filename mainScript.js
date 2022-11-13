@@ -5,63 +5,59 @@
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
 
-        (function getAdmin(id_list) {
-            console.log(id_list);
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", `/api/users?filter[group]=${id_list.shift()}`);
-            xhr.onload = () => {
-                if (id_list.length <= 0) append();
-                else getAdmin(id_list);
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `/api/users?filter[group]=1,4`);
+        xhr.onload = () => {
 
-                const users = JSON.parse(xhr.response).data;
+            const users = JSON.parse(xhr.response).data;
 
-                users.map(user => {
-                    const div = document.createElement('div');
-                    div.className = 'BH_adminItem';
+            users.map(user => {
+                const div = document.createElement('div');
+                div.className = 'BH_adminItem';
 
-                    const img = document.createElement('img');
-                    img.className = 'BH_adminItemImg';
-                    img.src = user.attributes.avatarUrl || "";
-                    img.addEventListener('error', () => img.style.display = "none");
-                    div.appendChild(img);
+                const img = document.createElement('img');
+                img.className = 'BH_adminItemImg';
+                img.src = user.attributes.avatarUrl || "";
+                img.addEventListener('error', () => img.style.display = "none");
+                div.appendChild(img);
 
-                    const userBlock = document.createElement('div');
-                    userBlock.className = 'BH_adminItemBlock';
-                    div.appendChild(userBlock);
+                const userBlock = document.createElement('div');
+                userBlock.className = 'BH_adminItemBlock';
+                div.appendChild(userBlock);
 
-                    const userCover = document.createElement('img');
-                    userCover.className = 'BH_adminItemCover';
-                    userCover.src = user.attributes.cover_thumbnail || "";
-                    userCover.addEventListener('error', () => userCover.style.display = 'none');
-                    userBlock.appendChild(userCover);
+                const userCover = document.createElement('img');
+                userCover.className = 'BH_adminItemCover';
+                userCover.src = user.attributes.cover_thumbnail || "";
+                userCover.addEventListener('error', () => userCover.style.display = 'none');
+                userBlock.appendChild(userCover);
 
-                    const userAvatar = document.createElement('img');
-                    userAvatar.className = 'BH_adminItemAvatar';
-                    userAvatar.src = user.attributes.avatarUrl || "";
-                    userAvatar.addEventListener('error', () => userCover.style.display = 'none');
-                    userBlock.appendChild(userAvatar);
+                const userAvatar = document.createElement('img');
+                userAvatar.className = 'BH_adminItemAvatar';
+                userAvatar.src = user.attributes.avatarUrl || "";
+                userAvatar.addEventListener('error', () => userCover.style.display = 'none');
+                userBlock.appendChild(userAvatar);
 
-                    const userName = document.createElement('div');
-                    userName.className = 'BH_adminItemName';
-                    userName.innerText = user.attributes.displayName;
-                    userBlock.appendChild(userName);
+                const userName = document.createElement('div');
+                userName.className = 'BH_adminItemName';
+                userName.innerText = user.attributes.displayName;
+                userBlock.appendChild(userName);
 
-                    const userId = document.createElement('div');
-                    userId.className = 'BH_adminItemId';
-                    userBlock.appendChild(userId);
+                const userId = document.createElement('div');
+                userId.className = 'BH_adminItemId';
+                userBlock.appendChild(userId);
 
-                    const a = document.createElement('a');
-                    a.innerText = user.attributes.username;
-                    a.href = `/u/${user.attributes.username}`;
-                    userId.appendChild(a);
-                    userAvatar.addEventListener('click',() => a.click());
+                const a = document.createElement('a');
+                a.innerText = user.attributes.username;
+                a.href = `/u/${user.attributes.username}`;
+                userId.appendChild(a);
+                userAvatar.addEventListener('click', () => a.click());
 
-                    admin_list.appendChild(div);
-                });
-
-            }
-            xhr.send();
-        })(['1', '4']);
+                admin_list.appendChild(div);
+            });
+            
+            append();
+        }
+        xhr.send();
 
         function append() {
             const path = location.pathname;
@@ -344,7 +340,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 07:20");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 07:25");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
