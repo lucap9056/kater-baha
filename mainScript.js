@@ -168,7 +168,6 @@
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
         var path = location.pathname;
         if (path == temp) return;
-        temp = path;
         const url = location.pathname.split('/');
         switch (url[1]) {
             case "t":
@@ -177,11 +176,17 @@
                 BHmenu.clear();
                 BHmenu.discussions();
                 break;
+            case "d":
+                if (!/\/t\//.test(temp) && temp != '/') return;
+                BHmenu.clear();
+                BHmenu.discussions();
+                break;
             case "u":
                 BHmenu.clear();
                 BHmenu.user();
                 break;
         }
+        temp = path;
     }
     window.requestAnimationFrame(pageCheck);
 
