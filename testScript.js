@@ -208,13 +208,14 @@
         }
         const itemSession = document.querySelector(".item-session");
         const itemSessionBtn = itemSession.querySelector(".Dropdown-toggle");
+        const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
         const childs = itemSessionBtn.childNodes;
         for (let i = 0; i < childs.length; i++) {
             const child = childs[i];
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    child.addEventListener('click', () => location.assign(`/u/${window.app.session.user.username()}`));
+                    child.addEventListener('click', () => clientMenu.querySelector('a').click());
                 }
                 itemSession.appendChild(child);
             };
@@ -222,28 +223,24 @@
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-
-        const clientUrl = document.createElement('a');
-        clientUrl.href = `/u/${window.app.session.user.username()}`;
-        client.appendChild(clientUrl);
+        client.addEventListener('click', () => clientMenu.querySelector('a').click());
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
         clientAvatar.src = window.app.session.user.data.attributes.avatarUrl;
-        clientUrl.appendChild(clientAvatar);
+        client.appendChild(clientAvatar);
 
         const clientName = document.createElement('div');
         clientName.className = 'BH_ClientName';
         clientName.innerText = window.app.session.user.data.attributes.displayName;
-        clientUrl.appendChild(clientName);
+        client.appendChild(clientName);
 
         const clientId = document.createElement('div');
         clientId.className = 'BH_ClientId';
         clientId.innerText = window.app.session.user.data.attributes.username;
-        clientUrl.appendChild(clientId);
+        client.appendChild(clientId);
 
-        const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
-        clientMenu.innerHTML = "";
+        clientMenu.querySelector('a').innerHTML = "";
         clientMenu.appendChild(client);
     })();
 
