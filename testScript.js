@@ -54,6 +54,7 @@
                     a.innerText = user.attributes.username;
                     a.href = `/u/${user.attributes.username}`;
                     userId.appendChild(a);
+                    userAvatar.addEventListener('click',() => a.click());
 
                     admin_list.appendChild(div);
                 });
@@ -343,7 +344,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 06:57");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 07:10");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);

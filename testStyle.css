@@ -457,7 +457,7 @@ ul.affix-top {
 	right: -20px;
 	width: 500px;
 	height: 0px;
-	background-color: #25272A;
+    background-color: #F9FAFE;
 	border-radius: 7px;
 	overflow: hidden;
 	opacity: 0;
@@ -489,14 +489,15 @@ ul.affix-top {
 	top: 100px;
 	left: 120px;
 	right: 0px;
-	color: white;
+	color: black;
 	height: 24px;
 	padding-left: 10px;
 	font-size: 16px;
 	line-height: 24px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-weight: bold;
 }
 .BH_adminItemId {
 	position: absolute;
@@ -508,7 +509,7 @@ ul.affix-top {
 	padding-left: 10px;
 	font-size: 12px;
 	line-height: 18px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
