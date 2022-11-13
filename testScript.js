@@ -105,6 +105,8 @@
                     a.appendChild(span);
 
                     li.addEventListener('click',() => a.click());
+
+                    menu.appendChild(li);
                 });
 
                 const reply = document.createElement('li');
@@ -117,6 +119,8 @@
                 reply.addEventListener('click',() => {
                     document.querySelector('.SplitDropdown-button').click();
                 });
+
+                menu.appendChild(reply);
             },
             discussions: () => {
                 mode = 'd';
