@@ -209,13 +209,14 @@
         const itemSession = document.querySelector(".item-session");
         const itemSessionBtn = itemSession.querySelector(".Dropdown-toggle");
         const clientMenu = itemSession.querySelector('.Dropdown-menu').querySelector('.item-profile');
+        const clientUrl = clientMenu.querySelector('a');
         const childs = itemSessionBtn.childNodes;
         for (let i = 0; i < childs.length; i++) {
             const child = childs[i];
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    child.addEventListener('click', () => clientMenu.querySelector('a').click());
+                    child.addEventListener('click', () => clientUrl.click());
                 }
                 itemSession.appendChild(child);
             };
@@ -223,7 +224,7 @@
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-        client.addEventListener('click', () => clientMenu.querySelector('a').click());
+        client.addEventListener('click', () => clientUrl.click());
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
