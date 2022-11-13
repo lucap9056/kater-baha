@@ -126,7 +126,7 @@
                             menu_focus.style.width = `${li.offsetWidth}px`;
                         }, 10);
                     });
-                    item.addEventListener('mouseout', setFocusOut);
+                    li.addEventListener('mouseout', setFocusOut);
 
                     menu.appendChild(li);
                 });
