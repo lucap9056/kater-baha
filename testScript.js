@@ -8,7 +8,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
 
-            const alertId = app.alerts.show("卡特-巴哈模式使用中");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 20:20");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
