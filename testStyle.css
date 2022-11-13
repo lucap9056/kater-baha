@@ -281,7 +281,7 @@ img.Header-logo {
 	display: none;
 }
 
-#BH_headerMenu li .hasIcon {
+#BH_headerMenu li a {
 	pointer-events: none;
 	padding: 0px;
 }
