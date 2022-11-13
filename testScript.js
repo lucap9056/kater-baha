@@ -111,6 +111,14 @@
 
                     li.addEventListener('click', () => a.click());
 
+                    li.addEventListener('mouseenter', () => {
+                        setTimeout(() => {
+                            menu_focus.style.left = `${li.offsetLeft}px`;
+                            menu_focus.style.width = `${li.offsetWidth}px`;
+                        }, 10);
+                    });
+                    item.addEventListener('mouseout', setFocusOut);
+
                     menu.appendChild(li);
                 });
 
