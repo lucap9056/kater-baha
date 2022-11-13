@@ -519,3 +519,6 @@ ul.affix-top {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+.BH_adminItemId a {
+	color: #00B0B6;
+}
