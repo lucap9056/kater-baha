@@ -177,7 +177,7 @@
                 BHmenu.discussions();
                 break;
             case "d":
-                if (!/\/t\//.test(temp) && temp != '/') return;
+                if (/\/t\//.test(temp) || temp == '/') return;
                 BHmenu.clear();
                 BHmenu.discussions();
                 break;
