@@ -7,6 +7,11 @@
                 "core.forum.index.all_discussions_link": "文章列表",
                 "core.forum.index.start_discussion_button": "發文"
             });
+
+            const alertId = app.alerts.show("卡特-巴哈模式使用中");
+            setTimeout(() => {
+                app.alerts.clear(alertId);
+            }, 3000);
         }
         catch {
             setTimeout(setLang, 1000);
@@ -91,7 +96,7 @@
                 };
                 mode = 'd';
                 menu.appendChild(menu_focus);
-                Object.keys(li_list).map((id,i) => {
+                Object.keys(li_list).map((id, i) => {
                     const li = document.createElement('li');
                     if (i == 0) li.className = 'item-allDiscussions active';
 
@@ -104,19 +109,19 @@
                     span.innerText = app.translator.translations[id];
                     a.appendChild(span);
 
-                    li.addEventListener('click',() => a.click());
+                    li.addEventListener('click', () => a.click());
 
                     menu.appendChild(li);
                 });
 
                 const reply = document.createElement('li');
                 reply.className = "item-newDiscussion App-primaryControl";
-                
+
                 const replySpan = document.createElement('span');
                 replySpan.className = 'Button-label';
                 replySpan.innerText = app.translator.translations["core.forum.discussion_controls.reply_button"];
                 reply.appendChild(replySpan);
-                reply.addEventListener('click',() => {
+                reply.addEventListener('click', () => {
                     document.querySelector('.SplitDropdown-button').click();
                 });
 
