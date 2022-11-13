@@ -234,6 +234,7 @@
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
         var path = location.pathname;
+        welcomeImage.append();
         if (path == temp) return;
         const url = location.pathname.split('/');
         switch (url[1]) {
@@ -242,7 +243,6 @@
             case "":
                 BHmenu.clear();
                 BHmenu.discussions();
-                welcomeImage.append();
                 break;
             case "u":
                 BHmenu.clear();
@@ -269,7 +269,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 00:18");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 00:44");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
