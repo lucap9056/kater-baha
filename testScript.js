@@ -222,6 +222,7 @@
 
         return {
             append: () => {
+                if (location.pathname.replace(/\//,'') == "") return;
                 const home = document.querySelector('.IndexPage .container');
                 if (home == null) return;
                 home.insertBefore(img, home.querySelector('div'));
