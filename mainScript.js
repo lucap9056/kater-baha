@@ -213,6 +213,22 @@
         }
     })();
 
+    const welcomeImage = (() => {
+        const img = document.createElement('img');
+        img.className = "BH_welcomeImage";
+        img.width = 1100;
+        img.height = 320;
+        img.src = "https://p2.bahamut.com.tw/FORUM/welcome/60076_1_1668294299.GIF?v=1668294300";
+
+        return {
+            append: () => {
+                const home = document.querySelector('.IndexPage .container');
+                if (home == null) return;
+                home.insertBefore(img, home.querySelector('div'));
+            }
+        }
+    })();
+
     var temp;
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
@@ -225,6 +241,7 @@
             case "":
                 BHmenu.clear();
                 BHmenu.discussions();
+                welcomeImage.append();
                 break;
             case "u":
                 BHmenu.clear();
@@ -251,7 +268,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 21:46");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 00:08");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);

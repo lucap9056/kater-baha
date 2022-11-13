@@ -221,10 +221,10 @@
         img.src = "https://p2.bahamut.com.tw/FORUM/welcome/60076_1_1668294299.GIF?v=1668294300";
 
         return {
-            append:() => {
+            append: () => {
                 const home = document.querySelector('.IndexPage .container');
                 if (home == null) return;
-                home.insertBefore(img,home.querySelector('div'));
+                home.insertBefore(img, home.querySelector('div'));
             }
         }
     })();
@@ -268,7 +268,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/13 23:57");
+            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 00:08");
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
