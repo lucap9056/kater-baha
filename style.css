@@ -427,6 +427,11 @@ ul.affix-top {
 	left: calc(50% + 550px);
 	background-color: #222;
 	padding: 4px 8px;
+	color: white;
+	text-align: left;
+}
+.Hero #BH_adminList {
+    top: 240px;
 }
 #BH_adminList::before {
     content: "版務人員:";
@@ -457,12 +462,13 @@ ul.affix-top {
 	right: -20px;
 	width: 500px;
 	height: 0px;
-    background-color: #F9FAFE;
+	background-color: #25272A;
 	border-radius: 7px;
 	overflow: hidden;
 	opacity: 0;
 	pointer-events: none;
 	transition-duration: 150ms;
+	z-index: 3;
 }
 .BH_adminItem:hover .BH_adminItemBlock {
 	opacity: 1;
