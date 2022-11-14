@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 20:45";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 05:15";
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -462,6 +462,118 @@
 
         clientMenu.querySelector('a').innerHTML = "";
         clientMenu.appendChild(client);
+    })();
+
+
+    (function notifications() {
+        if (document.querySelector('.item-notifications') == null) {
+            setTimeout(notifications, 1000);
+            return;
+        }
+        var notifications_list = {};
+        var notifications_num = 0;
+        const notificationsTable = document.createElement('div');
+        notificationsTable.id = 'BH_notificationsTable';
+
+        const notificationBtn = document.createElement('li');
+        notificationBtn.id = 'BH_notificationBtn';
+
+        const notificationsLi = document.createElement('li');
+        notificationsLi.id = 'BH_notificationLi';
+        notificationsLi.appendChild(notificationBtn);
+        notificationsLi.appendChild(notificationsTable);
+
+        const headerNotification = document.querySelector('.item-notifications');
+        headerNotification.parentNode.insertBefore(notificationsLi, headerNotification);
+        headerNotification.style.display = 'none';
+
+        notificationBtn.addEventListener('click', () => {
+
+
+            const read = new XMLHttpRequest();
+            read.open("POST", "/api/notifications/read");
+            read.send();
+        });
+
+        getNotification("/api/notifications?page[limit]=20", (res) => {
+
+            res.data.map(data => {
+                if (data.attributes.contentType != 'postMentioned') {
+                    const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
+                    if (notifications_list[id]) return;
+                }
+
+                if (!data.attributes.isRead) notifications_num++;
+
+                const notificationItem = document.createElement('div');
+                notificationItem.className = 'BH_notificationItem';
+
+                const fromUser = app.store.data.users[data.relationships.fromUser.data.id];
+                const notificationFromUser = document.createElement('img');
+                notificationFromUser.className = 'BH_notificationFromUser';
+                notificationFromUser.src = fromUser.data.attributes.avatarUrl;
+                notificationItem.appendChild(notificationFromUser);
+
+                const notificationText = document.createElement('div');
+                notificationText.className = 'BH_notificationText';
+                notificationItem.appendChild(notificationText);
+
+                var url = "";
+                var post;
+                var discussion;
+                switch (data.relationships.subject.data.type) {
+                    case "posts":
+                        post = app.store.data.posts[data.relationships.subject.data.id];
+                        discussion = app.store.data.discussions[post.data.relationships.discussion.data.id];
+                        url = `/d/${discussion.id}/${post.id}`;
+                        break;
+                    case "discussions":
+                        discussion = app.store.data.discussions[data.relationships.subject.data.id];
+                        url = `/d/${discussion.id}`;
+                        break;
+                }
+
+                const discussionTitle = discussion.data.attributes.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                switch (data.attributes.contentType) {
+                    case "vote":
+                        notificationText.innerHTML = `在 <p class="BH_notificationLinkText">${discussionTitle}</p> 中獲得了推`;
+                        break;
+                    case "newPost":
+                        notificationText.innerHTML = `在 <p class="BH_notificationLinkText">${discussionTitle}</p> 中有了新的回應`;
+                        break;
+                    case "postMentioned":
+                        notificationText.innerHTML = `<p class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</p> 在回覆中提到了你`;
+                        break;
+                }
+
+                const notificationTime = document.createElement('span');
+                notificationTime.className = 'BH_notificationTime';
+
+                notificationsTable.appendChild(notificationItem);
+                notificationItem.addEventListener('click', () => {
+                    if (url != "") location.assign(url);
+                });
+            });
+        });
+
+        function getNotification(url, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.onload = () => {
+                const res = JSON.parse(xhr.response);
+                res.included.map(item => {
+                    app.store.data[item.type][item.id] = {
+                        data: item,
+                        freshness: new Date(),
+                        exists: true,
+                        store: app.store
+                    }
+                });
+                callback(res);
+            }
+            xhr.send();
+        }
     })();
 
 })();

@@ -599,6 +599,27 @@ div.BH_previewImage {
     display: none;
 }
 
+#BH_notificationBtn {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 36px;
+    height: 36px;
+    background-image: url("https://i2.bahamut.com.tw/navicon_notification_dark.png");
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    cursor: pointer;
+}
+
+#BH_notificationsTable {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+}
 
 div.BH_previewImageTag1 {
     border-color: #0471A6;
