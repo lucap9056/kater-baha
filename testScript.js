@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 07:25";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 07:45";
     var BH_store = {
         data: {
             discussions: {},
@@ -521,7 +521,11 @@
         }
 
         document.addEventListener('click', () => {
-            notificationsTable.style.display = 'none';
+            if (notificationsTable.style.display != 'none') {
+                notificationsTable.style.display = 'none';
+                const noRead = notificationsTable.getElementsByClassName('BH_noRead');
+                for (let i = 0; i < noRead.length; i++) noRead[i].classList.remove('BH_noRead');
+            }
         });
         getNotification("/api/notifications?page[limit]=20", (res) => {
             res.data.map(data => {
@@ -582,7 +586,6 @@
                         break;
                     case "postMentioned":
                         notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
-                        console.log(post);
                         break;
                 }
 

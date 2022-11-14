@@ -643,6 +643,14 @@ div.BH_previewImage {
     height: 64px;
 }
 
+.BH_noRead {
+	background-color: #343537;
+}
+
+.BH_notificationItem:hover {
+	background-color: #15171A;
+}
+
 .BH_notificationItem::before {
     content: "";
     position: absolute;
@@ -671,17 +679,17 @@ div.BH_previewImage {
 }
 
 .BH_notificationText {
-    position: absolute;
-    top: 7px;
-    left: 66px;
-    right: 10px;
-    bottom: 7px;
-    color: #EEE;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 14px;
-    line-height: 16px;
-    cursor: default;
+	position: absolute;
+	top: 5px;
+	left: 66px;
+	right: 10px;
+	bottom: 5px;
+	color: #EEE;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 14px;
+	line-height: 18px;
+	cursor: default;
 }
 
 div.BH_previewImageTag1 {
