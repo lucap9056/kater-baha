@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:30";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 07:15";
     var BH_store = {
         data: {
             discussions: {},
@@ -480,11 +480,15 @@
         }
         var notifications_list = {};
         var notifications_num = 0;
+        const notificationNoreadNum = document.createElement('span');
+        notificationNoreadNum.id = 'BH_notificationNoreadNum';
+
         const notificationsTable = document.createElement('div');
         notificationsTable.id = 'BH_notificationsTable';
 
         const notificationBtn = document.createElement('li');
         notificationBtn.id = 'BH_notificationBtn';
+        notificationBtn.appendChild(notificationNoreadNum);
 
         const notificationsLi = document.createElement('li');
         notificationsLi.id = 'BH_notificationLi';
@@ -496,11 +500,11 @@
         headerNotification.style.display = 'none';
 
         notificationBtn.addEventListener('click', () => {
-            notificationsTable.style.display = 'block';
             notifications_num = 0;
+            notificationNoreadNum.style.display = 'none';
+            setTimeout(() => notificationsTable.style.display = 'block', 10);
 
-
-            document.querySelector('.NotificationList .App-primaryControl button').click();
+            allRead();
         });
 
         function allRead(e = false) {
@@ -528,10 +532,15 @@
                     notifications_list[id] = data;
                 }
 
-                if (!data.attributes.isRead) notifications_num++;
+
 
                 const notificationItem = document.createElement('div');
                 notificationItem.className = 'BH_notificationItem';
+
+                if (!data.attributes.isRead) {
+                    notifications_num++;
+                    notificationItem.classList.add('BH_noRead');
+                }
 
                 const userID = data.relationships.fromUser.data.id;
                 const fromUser = BH_store.data.users[userID] || app.store.data.users[userID];
@@ -551,11 +560,11 @@
                     case "posts":
                         post = BH_store.data.posts[data.relationships.subject.data.id];
                         discussion = BH_store.data.discussions[post.data.relationships.discussion.data.id];
-                        url = `/d/${discussion.id}/${post.id}`;
+                        url = `/d/${discussion.data.id}/${post.data.attributes.number}`;
                         break;
                     case "discussions":
                         discussion = BH_store.data.discussions[data.relationships.subject.data.id];
-                        url = `/d/${discussion.id}`;
+                        url = `/d/${discussion.data.id}`;
                         break;
                 }
 
@@ -581,6 +590,11 @@
                     if (url != "") location.assign(url);
                 });
             });
+
+            if (notifications_num > 0) {
+                notificationNoreadNum.innerText = (notifications_num > 99) ? '99+' : notifications_num;
+                notificationNoreadNum.style.display = 'block';
+            }
         });
 
         function getNotification(url, callback) {
