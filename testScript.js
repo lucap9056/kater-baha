@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 20:10";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 20:17";
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -356,10 +356,9 @@
                 app.store.data.discussions[id].data.content = (div.innerText.length > 100) ? div.innerText.substr(0, 100) + '...' : div.innerText;
                 app.store.data.discussions[id].data.preview = (img) ? img.src : "";
                 setPreviewImage(Discussion, id);
-
-                nextPreview();
             }
             xhr.send();
+            nextPreview();
 
             function nextPreview() {
                 if (waitGetImage.length > 0) getPreviewIamge();
