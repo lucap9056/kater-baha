@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:06";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:10";
     var BH_store = {
         data: {
             discussions: {},
@@ -505,9 +505,11 @@
         });
         getNotification("/api/notifications?page[limit]=20", (res) => {
             res.data.map(data => {
+
                 if (data.attributes.contentType != 'postMentioned') {
                     const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
                     if (notifications_list[id]) return;
+                    notifications_list[id] = data;
                 }
 
                 if (!data.attributes.isRead) notifications_num++;
