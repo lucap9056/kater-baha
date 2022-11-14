@@ -1,6 +1,14 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 05:15";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:00";
+    var BH_store = {
+        data: {
+            discussions: {},
+            posts: {},
+            users: {}
+        }
+    };
+
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -494,9 +502,7 @@
             read.open("POST", "/api/notifications/read");
             read.send();
         });
-
         getNotification("/api/notifications?page[limit]=20", (res) => {
-
             res.data.map(data => {
                 if (data.attributes.contentType != 'postMentioned') {
                     const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
@@ -508,7 +514,8 @@
                 const notificationItem = document.createElement('div');
                 notificationItem.className = 'BH_notificationItem';
 
-                const fromUser = app.store.data.users[data.relationships.fromUser.data.id];
+                const userID = data.relationships.fromUser.data.id;
+                const fromUser = BH_store.data.users[userID] || app.store.data.users[userID];
                 const notificationFromUser = document.createElement('img');
                 notificationFromUser.className = 'BH_notificationFromUser';
                 notificationFromUser.src = fromUser.data.attributes.avatarUrl;
@@ -523,12 +530,12 @@
                 var discussion;
                 switch (data.relationships.subject.data.type) {
                     case "posts":
-                        post = app.store.data.posts[data.relationships.subject.data.id];
-                        discussion = app.store.data.discussions[post.data.relationships.discussion.data.id];
+                        post = BH_store.data.posts[data.relationships.subject.data.id];
+                        discussion = BH_store.data.discussions[post.data.relationships.discussion.data.id];
                         url = `/d/${discussion.id}/${post.id}`;
                         break;
                     case "discussions":
-                        discussion = app.store.data.discussions[data.relationships.subject.data.id];
+                        discussion = BH_store.data.discussions[data.relationships.subject.data.id];
                         url = `/d/${discussion.id}`;
                         break;
                 }
@@ -537,13 +544,13 @@
 
                 switch (data.attributes.contentType) {
                     case "vote":
-                        notificationText.innerHTML = `在 <p class="BH_notificationLinkText">${discussionTitle}</p> 中獲得了推`;
+                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推`;
                         break;
                     case "newPost":
-                        notificationText.innerHTML = `在 <p class="BH_notificationLinkText">${discussionTitle}</p> 中有了新的回應`;
+                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
                         break;
                     case "postMentioned":
-                        notificationText.innerHTML = `<p class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</p> 在回覆中提到了你`;
+                        notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
                         break;
                 }
 
@@ -563,17 +570,11 @@
             xhr.onload = () => {
                 const res = JSON.parse(xhr.response);
                 res.included.map(item => {
-                    app.store.data[item.type][item.id] = {
-                        data: item,
-                        freshness: new Date(),
-                        exists: true,
-                        store: app.store
-                    }
+                    BH_store.data[item.type][item.id] = { data: item };
                 });
                 callback(res);
             }
             xhr.send();
         }
     })();
-
 })();

@@ -613,12 +613,46 @@ div.BH_previewImage {
 }
 
 #BH_notificationsTable {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 0px;
-    height: 0px;
-    overflow: hidden;
+	position: absolute;
+	width: 400px;
+	height: 480px;
+	overflow-y: scroll;
+	background-color: #222;
+	padding-left: 0;
+	z-index: 1;
+}
+
+.BH_notificationItem {
+	position: relative;
+	width: 100%;
+	height: 64px;
+}
+
+.BH_notificationFromUser {
+	position: relative;
+	width: 50px;
+	height: 50px;
+	margin: 7px;
+	border-radius: 100%;
+}
+
+.BH_notificationLinkText {
+	margin: 0 2px;
+	color: #4CC;
+}
+
+.BH_notificationText {
+	position: absolute;
+	top: 7px;
+	left: 66px;
+	right: 10px;
+	bottom: 7px;
+	color: #EEE;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 14px;
+	line-height: 16px;
+	cursor: default;
 }
 
 div.BH_previewImageTag1 {
