@@ -421,25 +421,32 @@ ul.affix-top {
 	height: 320px;
     margin-bottom: -24px;
 }
+.DiscussionPage-nav > ul {
+	margin-top: 90px;
+}
 #BH_adminList {
 	position: absolute;
 	top: 80px;
 	left: calc(50% + 550px);
-	background-color: #222;
 	padding: 4px 8px;
 	color: white;
 	text-align: left;
+	background: #1b2028;
+	border: solid 1px #333;
+	border-radius: 3px;
 }
 .Hero #BH_adminList {
-    top: 240px;
+	top: 240px;
+	left: calc(50% + 385px);
 }
 #BH_adminList::before {
-    content: "板務人員:";
-    position: relative;
-    float: left;
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
+	content: "板務人員:";
+	position: relative;
+	float: left;
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+	padding: 0 4px;
 }
 .BH_adminItem {
 	position: relative;
