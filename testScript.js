@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:10";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 06:30";
     var BH_store = {
         data: {
             discussions: {},
@@ -498,9 +498,25 @@
         notificationBtn.addEventListener('click', () => {
             notificationsTable.style.display = 'block';
             notifications_num = 0;
+
+
             document.querySelector('.NotificationList .App-primaryControl button').click();
         });
-        document.addEventListener('click',() => {
+
+        function allRead(e = false) {
+            const readBtn = document.querySelector('.NotificationList .App-primaryControl button');
+            if (readBtn) readBtn.click();
+            else {
+                if (e) return;
+                const nBtn = document.querySelector('.item-notifications button');
+                if (nBtn) {
+                    nBtn.click();
+                    setTimeout(() => allRead(true), 10);
+                }
+            }
+        }
+
+        document.addEventListener('click', () => {
             notificationsTable.style.display = 'none';
         });
         getNotification("/api/notifications?page[limit]=20", (res) => {
