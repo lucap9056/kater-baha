@@ -333,13 +333,12 @@
             }
             catch {
 
-                if (waitGetImage.length > 0) setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
+                if (waitGetImage.length > 0) getPreviewIamge();
                 else loadingState = false;
 
             }
 
             const pvimg = app.store.data.discussions[id].data.preview || null;
-            console.log(pvimg);
             if (pvimg != null) {
                 setPreviewImage(Discussion, id);
                 nextPreview();
@@ -363,7 +362,7 @@
             xhr.send();
 
             function nextPreview() {
-                if (waitGetImage.length > 0) setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
+                if (waitGetImage.length > 0) getPreviewIamge();
                 else loadingState = false;
             }
 

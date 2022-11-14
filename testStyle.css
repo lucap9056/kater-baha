@@ -414,141 +414,157 @@ ul.affix-top {
 }
 
 .BH_welcomeImage {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 320px;
-	margin-bottom: -24px;
-	margin-top: 8px;
-	object-fit: contain;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 320px;
+    margin-bottom: -24px;
+    margin-top: 8px;
+    object-fit: contain;
 }
-.DiscussionPage-nav > ul {
-	margin-top: 90px;
+
+.DiscussionPage-nav>ul {
+    margin-top: 90px;
 }
+
 #BH_adminList {
-	position: absolute;
-	top: 80px;
-	left: calc(50% + 550px);
-	padding: 4px 8px;
-	color: white;
-	text-align: left;
-	background: #1b2028;
-	border: solid 1px #333;
-	border-radius: 3px;
+    position: absolute;
+    top: 80px;
+    left: calc(50% + 550px);
+    padding: 4px 8px;
+    color: white;
+    text-align: left;
+    background: #1b2028;
+    border: solid 1px #333;
+    border-radius: 3px;
 }
+
 .Hero #BH_adminList {
-	top: 240px;
-	left: calc(50% + 385px);
+    top: 240px;
+    left: calc(50% + 385px);
 }
+
 #BH_adminList::before {
-	content: "板務人員:";
-	position: relative;
-	float: left;
-	height: 40px;
-	line-height: 40px;
-	font-size: 14px;
-	padding: 0 4px;
+    content: "板務人員:";
+    position: relative;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    padding: 0 4px;
 }
+
 .BH_adminItem {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	width: 30px;
-	height: 30px;
-	margin: 5px;
-	float: left;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    float: left;
     box-shadow: 0 0 1px white;
 }
+
 .BH_adminItemImg {
-	width: 30px;
-	height: 30px;
-	border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
 }
+
 .BH_adminItemBlock {
-	position: absolute;
-	top: 100%;
-	right: -20px;
-	width: 500px;
-	height: 0px;
-	background-color: #F9FAFE;
-	border-radius: 7px;
-	overflow: hidden;
-	opacity: 0;
-	pointer-events: none;
-	transition-duration: 150ms;
-	z-index: 3;
+    position: absolute;
+    top: 100%;
+    right: -20px;
+    width: 500px;
+    height: 0px;
+    background-color: #F9FAFE;
+    border-radius: 7px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: 150ms;
+    z-index: 3;
 }
+
 .BH_adminItem:hover .BH_adminItemBlock {
-	opacity: 1;
-	pointer-events: all;
-	height: 160px;
+    opacity: 1;
+    pointer-events: all;
+    height: 160px;
 }
+
 .BH_adminItemCover {
-	width: 500px;
-	height: 100px;
-	object-fit: cover;
+    width: 500px;
+    height: 100px;
+    object-fit: cover;
 }
+
 .BH_adminItemAvatar {
-	position: absolute;
-	top: 50px;
-	left: 20px;
-	width: 100px;
-	height: 100px;
-	background-color: #EEE;
-	border: solid 3px white;
-	border-radius: 3px;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    background-color: #EEE;
+    border: solid 3px white;
+    border-radius: 3px;
 }
+
 .BH_adminItemName {
-	position: absolute;
-	top: 100px;
-	left: 120px;
-	right: 0px;
-	color: black;
-	height: 24px;
-	padding-left: 10px;
-	font-size: 16px;
-	line-height: 24px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-weight: bold;
+    position: absolute;
+    top: 100px;
+    left: 120px;
+    right: 0px;
+    color: black;
+    height: 24px;
+    padding-left: 10px;
+    font-size: 16px;
+    line-height: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
 }
+
 .BH_adminItemId {
-	position: absolute;
-	top: 120px;
-	left: 120px;
-	right: 0px;
-	color: #00B0B6;
-	height: 18px;
-	padding-left: 10px;
-	font-size: 12px;
-	line-height: 18px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+    position: absolute;
+    top: 120px;
+    left: 120px;
+    right: 0px;
+    color: #00B0B6;
+    height: 18px;
+    padding-left: 10px;
+    font-size: 12px;
+    line-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 .BH_adminItemId a {
-	color: #00B0B6;
+    color: #00B0B6;
 }
+
 .BH_DiscussionListItem {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 120px;
-	margin: 10px 0;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 120px;
+    margin: 10px 0;
 }
+
 .BH_previewImage {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 240px;
-	height: 120px;
-	object-fit: cover;
-	border-radius: 7px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 240px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 7px;
 }
-div.BH_previewImage{
+
+div.BH_previewImage {
     background-color: #21272A;
     border: dashed 2px white;
     text-align: center;
@@ -557,25 +573,397 @@ div.BH_previewImage{
 }
 
 .BH_DiscussionListItem .DiscussionListItem-content {
-	position: absolute;
-	top: 0px;
-	left: 240px;
-	right: 0px;
-	bottom: 0px;
-	padding-left: 20px;
-	padding-right: 80px;
+    position: absolute;
+    top: 0px;
+    left: 240px;
+    right: 0px;
+    bottom: 0px;
+    padding-left: 20px;
+    padding-right: 80px;
 }
+
 .BH_DiscussionListItem .DiscussionListItem-author {
-	margin-left: 0px;
+    margin-left: 0px;
 }
+
 .BH_DiscussionListItem .Avatar {
-	margin-right: 10px;
+    margin-right: 10px;
 }
+
 .BH_DiscussionListItem .DiscussionListItem-badges {
-	position: absolute;
-	top: -5px;
-	left: 20px;
+    position: absolute;
+    top: -5px;
 }
+
 .BH_DiscussionListItem .ButtonGroup {
-	display: none;
+    display: none;
+}
+
+.BH_previewImageTag1 {
+    border-color: "#0471A6";
+    color: "#0471A6";
+}
+
+.BH_previewImageTag1::before {
+    content: "綜合";
+}
+
+.BH_previewImageTag2 {
+    border-color: "#417B5A";
+    color: "#417B5A";
+}
+
+.BH_previewImageTag2::before {
+    content: "動漫";
+}
+
+.BH_previewImageTag3 {
+    border-color: "#1E555C";
+    color: "#1E555C";
+}
+
+.BH_previewImageTag3::before {
+    content: "遊戲";
+}
+
+.BH_previewImageTag6 {
+    border-color: "#26408B";
+    color: "#26408B";
+}
+
+.BH_previewImageTag6::before {
+    content: "八卦";
+}
+
+.BH_previewImageTag19 {
+    border-color: "#9E0059";
+    color: "#9E0059";
+}
+
+.BH_previewImageTag19::before {
+    content: "真人成人";
+}
+
+.BH_previewImageTag20 {
+    border-color: "#575D90";
+    color: "#575D90";
+}
+
+.BH_previewImageTag20::before {
+    content: "站方";
+}
+
+.BH_previewImageTag23 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag23::before {
+    content: "網站建議/回報";
+}
+
+.BH_previewImageTag24 {
+    border-color: "#3A445D";
+    color: "#3A445D";
+}
+
+.BH_previewImageTag24::before {
+    content: "音樂";
+}
+
+.BH_previewImageTag26 {
+    border-color: "#15AABF";
+    color: "#15AABF";
+}
+
+.BH_previewImageTag26::before {
+    content: "廢文";
+}
+
+.BH_previewImageTag27 {
+    border-color: "#37718E";
+    color: "#37718E";
+}
+
+.BH_previewImageTag27::before {
+    content: "閒聊";
+}
+
+.BH_previewImageTag28 {
+    border-color: "#FD7E19";
+    color: "#FD7E19";
+}
+
+.BH_previewImageTag28::before {
+    content: "戲劇";
+}
+
+.BH_previewImageTag34 {
+    border-color: "#F783AC";
+    color: "#F783AC";
+}
+
+.BH_previewImageTag34::before {
+    content: "推坑";
+}
+
+.BH_previewImageTag36 {
+    border-color: "#BE4BDB";
+    color: "#BE4BDB";
+}
+
+.BH_previewImageTag36::before {
+    content: "集中串";
+}
+
+.BH_previewImageTag38 {
+    border-color: "#51BBFE";
+    color: "#51BBFE";
+}
+
+.BH_previewImageTag38::before {
+    content: "【成人】BL";
+}
+
+.BH_previewImageTag39 {
+    border-color: "#DB6C79";
+    color: "#DB6C79";
+}
+
+.BH_previewImageTag39::before {
+    content: "【成人】GL";
+}
+
+.BH_previewImageTag40 {
+    border-color: "#038030";
+    color: "#038030";
+}
+
+.BH_previewImageTag40::before {
+    content: "新聞";
+}
+
+.BH_previewImageTag41 {
+    border-color: "#A85102";
+    color: "#A85102";
+}
+
+.BH_previewImageTag41::before {
+    content: "政治";
+}
+
+.BH_previewImageTag42 {
+    border-color: "#FF5505";
+    color: "#FF5505";
+}
+
+.BH_previewImageTag42::before {
+    content: "影音";
+}
+
+.BH_previewImageTag44 {
+    border-color: "#9E0059";
+    color: "#9E0059";
+}
+
+.BH_previewImageTag44::before {
+    content: "二次元成人";
+}
+
+.BH_previewImageTag45 {
+    border-color: "#51BBFE";
+    color: "#51BBFE";
+}
+
+.BH_previewImageTag45::before {
+    content: "【成人】二次元BL";
+}
+
+.BH_previewImageTag46 {
+    border-color: "#DB6C79";
+    color: "#DB6C79";
+}
+
+.BH_previewImageTag46::before {
+    content: "【成人】二次元GL";
+}
+
+.BH_previewImageTag51 {
+    border-color: "#5BC3EB";
+    color: "#5BC3EB";
+}
+
+.BH_previewImageTag51::before {
+    content: "認真";
+}
+
+.BH_previewImageTag52 {
+    border-color: "#CC3363";
+    color: "#CC3363";
+}
+
+.BH_previewImageTag52::before {
+    content: "創作";
+}
+
+.BH_previewImageTag54 {
+    border-color: "#2C497F";
+    color: "#2C497F";
+}
+
+.BH_previewImageTag54::before {
+    content: "程式";
+}
+
+.BH_previewImageTag56 {
+    border-color: "#4C70ED";
+    color: "#4C70ED";
+}
+
+.BH_previewImageTag56::before {
+    content: "Web";
+}
+
+.BH_previewImageTag64 {
+    border-color: "#F50853";
+    color: "#F50853";
+}
+
+.BH_previewImageTag64::before {
+    content: "教學";
+}
+
+.BH_previewImageTag68 {
+    border-color: "#86219C";
+    color: "#86219C";
+}
+
+.BH_previewImageTag68::before {
+    content: "版務爭議";
+}
+
+.BH_previewImageTag69 {
+    border-color: "#FBB200";
+    color: "#FBB200";
+}
+
+.BH_previewImageTag69::before {
+    content: "精華";
+}
+
+.BH_previewImageTag73 {
+    border-color: "#FF5000";
+    color: "#FF5000";
+}
+
+.BH_previewImageTag73::before {
+    content: "懲處名單";
+}
+
+.BH_previewImageTag74 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag74::before {
+    content: "電腦";
+}
+
+.BH_previewImageTag76 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag76::before {
+    content: "Switch";
+}
+
+.BH_previewImageTag78 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag78::before {
+    content: "PS";
+}
+
+.BH_previewImageTag79 {
+    border-color: "#3A445D";
+    color: "#3A445D";
+}
+
+.BH_previewImageTag79::before {
+    content: "寶拉";
+}
+
+.BH_previewImageTag81 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag81::before {
+    content: "輔導級內容";
+}
+
+.BH_previewImageTag82 {
+    border-color: "#AC2949";
+    color: "#AC2949";
+}
+
+.BH_previewImageTag82::before {
+    content: "心情";
+}
+
+.BH_previewImageTag83 {
+    border-color: "#d45150";
+    color: "#d45150";
+}
+
+.BH_previewImageTag83::before {
+    content: "問題";
+}
+
+.BH_previewImageTag84 {
+    border-color: "#034C3C";
+    color: "#034C3C";
+}
+
+.BH_previewImageTag84::before {
+    content: "大學";
+}
+
+.BH_previewImageTag86 {
+    border-color: "";
+    color: "";
+}
+
+.BH_previewImageTag86::before {
+    content: "管理組";
+}
+
+.BH_previewImageTag89 {
+    border-color: "#0AA19E";
+    color: "#0AA19E";
+}
+
+.BH_previewImageTag89::before {
+    content: "納入考量";
+}
+
+.BH_previewImageTag90 {
+    border-color: "#BD2020";
+    color: "#BD2020";
+}
+
+.BH_previewImageTag90::before {
+    content: "否決";
+}
+
+.BH_previewImageTag92 {
+    border-color: "#58BC82";
+    color: "#58BC82";
+}
+
+.BH_previewImageTag92::before {
+    content: "個版";
 }
