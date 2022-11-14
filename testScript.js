@@ -337,10 +337,11 @@
                 else loadingState = false;
 
             }
-            
+
             const pvimg = app.store.data.discussions[id].data.preview || null;
+            console.log(pvimg);
             if (pvimg != null) {
-                setPreviewImage(Discussion, pvimg);
+                setPreviewImage(Discussion, id);
                 nextPreview();
                 return;
             }
@@ -353,11 +354,10 @@
                 div.innerHTML = res.data[0].attributes.contentHtml;
                 const img = div.querySelector('img');
 
-                if (img) {
-                    app.store.data.discussions[id].data.preview = img.src;
-                    setPreviewImage(Discussion, img.src);
-                }
-                else app.store.data.discussions[id].data.preview = "";
+                app.store.data.discussions[id].data.content = (div.length > 200) ? div.innerText.substr(0, 200) + '...' : div.innerText;
+                app.store.data.discussions[id].data.preview = (img) ? img.src : "";
+                setPreviewImage(Discussion, id);
+
                 nextPreview();
             }
             xhr.send();
@@ -369,11 +369,25 @@
 
         }
 
-        async function setPreviewImage(element, url) {
-            const previewImg = document.createElement('img');
-            previewImg.className = 'BH_previewImage';
-            if (url != "") previewImg.src = url;
-            element.appendChild(previewImg);
+        async function setPreviewImage(element, id) {
+            const discussion = app.store.data.discussions[id].data;
+            if (discussion.preview == "") {
+                const previewImg = document.createElement('div');
+                previewImg.className = 'BH_previewImage';
+                previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
+                element.appendChild(previewImg);
+            }
+            else {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImage';
+                previewImg.src = discussion.preview;
+                element.appendChild(previewImg);
+            }
+
+            const previewContent = document.createElement('div');
+            previewContent.className = 'BH_previewContent';
+            previewContent.innerText = discussion.content.replace(/\n/g,'');
+            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
         }
     })();
 

@@ -548,6 +548,14 @@ ul.affix-top {
 	object-fit: cover;
 	border-radius: 7px;
 }
+div.BH_previewImage{
+    background-color: #21272A;
+    border: dashed 2px white;
+    text-align: center;
+    font-size: 20px;
+    line-height: 116px;
+}
+
 .BH_DiscussionListItem .DiscussionListItem-content {
 	position: absolute;
 	top: 0px;
