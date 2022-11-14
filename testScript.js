@@ -300,8 +300,6 @@
     })();
 
     (function previewImage() {
-        var waitGetImage = [];
-        var loadingState = false;
 
         (function getDiscussionTimer() {
             setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
@@ -312,79 +310,45 @@
                 if (discussion) {
                     discussion.classList.remove('DiscussionListItem');
                     discussion.classList.add('BH_DiscussionListItem');
-                    waitGetImage.push(discussion);
+                    try {
+                        const id = discussion.parentNode.dataset.id;
+                        setPreviewImage(discussion, id);
+                    }
+                    catch {
+
+                    }
                     getDiscussion();
                 }
                 else return;
             })();
-
-            if (loadingState) return;
-            if (waitGetImage.length > 0) getPreviewIamge();
         })();
-
-
-        function getPreviewIamge() {
-            loadingState = true;
-            const Discussion = waitGetImage.shift();
-            const xhr = new XMLHttpRequest();
-            var id;
-            try {
-                id = Discussion.parentNode.dataset.id;
-            }
-            catch {
-
-                if (waitGetImage.length > 0) getPreviewIamge();
-                else loadingState = false;
-
-            }
-
-            const pvimg = app.store.data.discussions[id].data.preview || null;
-            if (pvimg != null) {
-                setPreviewImage(Discussion, id);
-                nextPreview();
-                return;
-            }
-            //*/
-
-            xhr.open("GET", `https://kater.me/api/posts?filter[discussion]=${id}&page[limit]=1`);
-            xhr.onload = () => {
-                const res = JSON.parse(xhr.response);
-                const div = document.createElement('div');
-                div.innerHTML = res.data[0].attributes.contentHtml;
-                const img = div.querySelector('img');
-
-                app.store.data.discussions[id].data.content = (div.innerText.length > 100) ? div.innerText.substr(0, 100) + '...' : div.innerText;
-                app.store.data.discussions[id].data.preview = (img) ? img.src : "";
-                setPreviewImage(Discussion, id);
-            }
-            xhr.send();
-            nextPreview();
-
-            function nextPreview() {
-                if (waitGetImage.length > 0) getPreviewIamge();
-                else loadingState = false;
-            }
-
-        }
 
         async function setPreviewImage(element, id) {
             const discussion = app.store.data.discussions[id].data;
-            if (discussion.preview == "") {
+            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
+
+            const div = document.createElement('div');
+            div.innerHTML = post.data.attributes.contentHtml;
+            const img = div.querySelector('img');
+
+            if (img) {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImage';
+                previewImg.src = img.src;
+                element.appendChild(previewImg);
+            }
+            else {
                 const previewImg = document.createElement('div');
                 previewImg.className = 'BH_previewImage';
                 previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
                 element.appendChild(previewImg);
             }
-            else {
-                const previewImg = document.createElement('img');
-                previewImg.className = 'BH_previewImage';
-                previewImg.src = discussion.preview;
-                element.appendChild(previewImg);
-            }
 
+            var content = div.innerText.replace(/\n/g, '');
+            if (content.length > 100) content = content.substring(0, 100) + '...';
             const previewContent = document.createElement('div');
             previewContent.className = 'BH_previewContent';
-            previewContent.innerText = discussion.content.replace(/\n/g, '');
+            previewContent.innerText = content;
             element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
         }
     })();

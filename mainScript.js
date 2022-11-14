@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 20:45";
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -54,7 +54,7 @@
 
                 admin_list.appendChild(div);
             });
-            
+
             append();
         }
         xhr.send();
@@ -63,7 +63,7 @@
             const path = location.pathname;
             if (path != "/" && !/^\/d\//.test(path)) return;
             const parent = document.querySelector('.IndexPage .container') || document.querySelector('.Hero .container');
-            parent.appendChild(admin_list);
+            if (parent) parent.appendChild(admin_list);
         }
         return {
             append: append
@@ -299,6 +299,60 @@
         }
     })();
 
+    (function previewImage() {
+
+        (function getDiscussionTimer() {
+            setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
+            const path = location.pathname;
+            if (!/^\/t\//.test(path) && path != "/") return;
+            (function getDiscussion() {
+                const discussion = document.querySelector('.DiscussionListItem');
+                if (discussion) {
+                    discussion.classList.remove('DiscussionListItem');
+                    discussion.classList.add('BH_DiscussionListItem');
+                    try {
+                        const id = discussion.parentNode.dataset.id;
+                        setPreviewImage(discussion, id);
+                    }
+                    catch {
+
+                    }
+                    getDiscussion();
+                }
+                else return;
+            })();
+        })();
+
+        async function setPreviewImage(element, id) {
+            const discussion = app.store.data.discussions[id].data;
+            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
+
+            const div = document.createElement('div');
+            div.innerHTML = post.data.attributes.contentHtml;
+            const img = div.querySelector('img');
+
+            if (img) {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImage';
+                previewImg.src = img.src;
+                element.appendChild(previewImg);
+            }
+            else {
+                const previewImg = document.createElement('div');
+                previewImg.className = 'BH_previewImage';
+                previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
+                element.appendChild(previewImg);
+            }
+
+            var content = div.innerText.replace(/\n/g, '');
+            if (content.length > 100) content = content.substring(0, 100) + '...';
+            const previewContent = document.createElement('div');
+            previewContent.className = 'BH_previewContent';
+            previewContent.innerText = content;
+            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
+        }
+    })();
+
     var temp;
     function pageCheck() {
         setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
@@ -340,7 +394,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 15:22");
+            const alertId = app.alerts.show(updateTime);
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
