@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 07:15";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 07:25";
     var BH_store = {
         data: {
             discussions: {},
@@ -572,13 +572,17 @@
 
                 switch (data.attributes.contentType) {
                     case "vote":
-                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推`;
+                        const div = document.createElement('div');
+                        div.innerHTML = post.data.attributes.contentHtml;
+
+                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
                         break;
                     case "newPost":
                         notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
                         break;
                     case "postMentioned":
                         notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
+                        console.log(post);
                         break;
                 }
 

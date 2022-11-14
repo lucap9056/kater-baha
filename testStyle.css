@@ -666,6 +666,10 @@ div.BH_previewImage {
     color: #4CC;
 }
 
+.BH_notificationContentText {
+	color: #AAA;
+}
+
 .BH_notificationText {
     position: absolute;
     top: 7px;
