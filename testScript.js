@@ -54,7 +54,7 @@
 
                 admin_list.appendChild(div);
             });
-            
+
             append();
         }
         xhr.send();
@@ -63,7 +63,7 @@
             const path = location.pathname;
             if (path != "/" && !/^\/d\//.test(path)) return;
             const parent = document.querySelector('.IndexPage .container') || document.querySelector('.Hero .container');
-            parent.appendChild(admin_list);
+            if (parent) parent.appendChild(admin_list);
         }
         return {
             append: append
@@ -296,6 +296,46 @@
                 if (home == null || home.querySelector('.BH_welcomeImage')) return;
                 home.insertBefore(img, home.querySelector('div'));
             }
+        }
+    })();
+
+    (function previewImage() {
+        var waitGetImage = [];
+        var loadingState = false;
+
+        (function getDiscussionTimer() {
+            setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
+            if (!/^\/t\//.test(path) && path != "/") return;
+            (function getDiscussion() {
+                const discussion = document.querySelector('.DiscussionListItem');
+                if (discussion) {
+                    discussion.classList.remove('DiscussionListItem');
+                    discussion.classList.add('BH_DiscussionListItem');
+                    waitGetImage.push(discussion);
+                    getDiscussion();
+                }
+                else return;
+            })();
+
+            if (loadingState) return;
+            if (waitGetImage.length > 0) getPreviewIamge();
+        })();
+
+
+        function getPreviewIamge() {
+            loadingState = true;
+            const Discussion = waitGetImage.shift();
+            const xhr = new XMLHttpRequest();
+            const a = Discussion.querySelector('a.DiscussionListItem-main');
+            xhr.open("GET", `https://kater.me/api/posts?filter[discussion]=${a.href.split('/')[2]}&page[limit]=1`);
+            xhr.onload = () => {
+                console.log(JSON.parse(xhr.response).data[0]);
+                if (waitGetImage.length > 0)
+                    setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
+                else
+                    loadingState = false;
+            }
+            xhr.send();
         }
     })();
 
