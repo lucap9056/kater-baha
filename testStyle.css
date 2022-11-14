@@ -531,3 +531,34 @@ ul.affix-top {
 .BH_adminItemId a {
 	color: #00B0B6;
 }
+.BH_DiscussionListItem {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 120px;
+	margin: 10px 0;
+}
+.BH_DiscussionListItem .DiscussionListItem-content {
+	position: absolute;
+	top: 0px;
+	left: 300px;
+	right: 0px;
+	bottom: 0px;
+	padding-left: 20px;
+	padding-right: 80px;
+}
+.BH_DiscussionListItem .DiscussionListItem-author {
+	margin-left: 0px;
+}
+.BH_DiscussionListItem .Avatar {
+	margin-right: 10px;
+}
+.BH_DiscussionListItem .DiscussionListItem-badges {
+	position: absolute;
+	top: -5px;
+	left: 20px;
+}
+.BH_DiscussionListItem .ButtonGroup {
+	display: none;
+}

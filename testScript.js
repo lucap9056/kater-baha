@@ -305,6 +305,7 @@
 
         (function getDiscussionTimer() {
             setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
+            const path = location.pathname;
             if (!/^\/t\//.test(path) && path != "/") return;
             (function getDiscussion() {
                 const discussion = document.querySelector('.DiscussionListItem');
@@ -326,16 +327,53 @@
             loadingState = true;
             const Discussion = waitGetImage.shift();
             const xhr = new XMLHttpRequest();
-            const a = Discussion.querySelector('a.DiscussionListItem-main');
-            xhr.open("GET", `https://kater.me/api/posts?filter[discussion]=${a.href.split('/')[2]}&page[limit]=1`);
+            var id;
+            try {
+                id = Discussion.parentNode.dataset.id;
+            }
+            catch {
+
+                if (waitGetImage.length > 0) setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
+                else loadingState = false;
+
+            }
+            
+            const pvimg = app.store.data.discussions[id].data.preview || null;
+            if (pvimg != null) {
+                setPreviewImage(Discussion, pvimg);
+                nextPreview();
+                return;
+            }
+            //*/
+
+            xhr.open("GET", `https://kater.me/api/posts?filter[discussion]=${id}&page[limit]=1`);
             xhr.onload = () => {
-                console.log(JSON.parse(xhr.response).data[0]);
-                if (waitGetImage.length > 0)
-                    setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
-                else
-                    loadingState = false;
+                const res = JSON.parse(xhr.response);
+                const div = document.createElement('div');
+                div.innerHTML = res.data[0].attributes.contentHtml;
+                const img = div.querySelector('img');
+
+                if (img) {
+                    app.store.data.discussions[id].data.preview = img.src;
+                    setPreviewImage(Discussion, img.src);
+                }
+                else app.store.data.discussions[id].data.preview = "";
+                nextPreview();
             }
             xhr.send();
+
+            function nextPreview() {
+                if (waitGetImage.length > 0) setTimeout(() => window.requestAnimationFrame(getPreviewIamge), 1000);
+                else loadingState = false;
+            }
+
+        }
+
+        async function setPreviewImage(element, url) {
+            const previewImg = document.createElement('img');
+            previewImg.className = 'BH_previewImage';
+            if (url != "") previewImg.src = url;
+            element.appendChild(previewImg);
         }
     })();
 
