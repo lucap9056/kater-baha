@@ -539,10 +539,19 @@ ul.affix-top {
 	height: 120px;
 	margin: 10px 0;
 }
+.BH_previewImage {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 240px;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 7px;
+}
 .BH_DiscussionListItem .DiscussionListItem-content {
 	position: absolute;
 	top: 0px;
-	left: 300px;
+	left: 240px;
 	right: 0px;
 	bottom: 0px;
 	padding-left: 20px;
