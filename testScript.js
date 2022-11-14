@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 19:17";
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -418,7 +418,7 @@
                 "core.forum.index.start_discussion_button": "發文"
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
-            const alertId = app.alerts.show("卡特-巴哈模式 最後更新時間:2022/11/14 15:22");
+            const alertId = app.alerts.show(updateTime);
             setTimeout(() => {
                 app.alerts.clear(alertId);
             }, 3000);
