@@ -604,7 +604,7 @@
                 setNotificationNoreadNum();
             });
         }
-        Timer(getNotificationTimer, 60000);
+        Timer(getNotificationTimer, 300000);
 
         function setNotificationNoreadNum() {
             if (notifications_num > 0) {

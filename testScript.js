@@ -582,7 +582,7 @@
         });
 
         function getNotificationTimer() {
-            Timer(getNotificationTimer, 60000);
+            Timer(getNotificationTimer, 300000);
             getNotification('page[limit]=20&sort=-createdAt', (res) => {
                 res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
                     if (BH_store.data.notifications[data.id]) return;
