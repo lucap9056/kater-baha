@@ -623,6 +623,7 @@ div.BH_previewImage {
 	z-index: 1;
 	box-shadow: 0 0 20px 4px #0008;
 	border-radius: 3px;
+    margin-left: -50px;
 }
 
 #BH_notificationNoreadNum {
