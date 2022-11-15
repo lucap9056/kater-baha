@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 23:25";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 00:20";
     var BH_store = {
         data: {
             notifications: {},
@@ -319,6 +319,10 @@
                 if (discussion) {
                     discussion.classList.remove('DiscussionListItem');
                     discussion.classList.add('BH_DiscussionListItem');
+                    discussion.addEventListener('click',() => {
+                        const a = discussion.querySelector('a.DiscussionListItem-main');
+                        a.click();
+                    });
                     try {
                         const id = discussion.parentNode.dataset.id;
                         setPreviewImage(discussion, id);
@@ -504,22 +508,18 @@
             Object.values(notifications_list).map(item => item.updateTime());
             notifications_num = 0;
             notificationNoreadNum.style.display = 'none';
-            setTimeout(() => notificationsTable.style.display = 'block', 10);
 
+            setTimeout(() => notificationsTable.style.display = 'block', 10);
             allRead();
         });
 
-        function allRead(e = false) {
-            const readBtn = document.querySelector('.NotificationList .App-primaryControl button');
-            if (readBtn) readBtn.click();
-            else {
-                if (e) return;
-                const nBtn = document.querySelector('.item-notifications button');
-                if (nBtn) {
-                    nBtn.click();
-                    setTimeout(() => allRead(true), 10);
-                }
-            }
+        function allRead() {
+            (() => {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", `/api/notifications/read`);
+                xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                xhr.send();
+            })();
         }
 
         document.addEventListener('click', () => {
@@ -534,7 +534,7 @@
                 })();
             }
         });
-        getNotification("page[limit]=20&sort=-createdAt", (res) => {
+        getNotification("page[limit]=30&sort=-createdAt", (res) => {
             res.data.map(data => {
                 BH_store.data.notifications[data.id] = data;
                 const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;

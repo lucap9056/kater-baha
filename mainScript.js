@@ -1,6 +1,15 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/14 20:45";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 00:20";
+    var BH_store = {
+        data: {
+            notifications: {},
+            discussions: {},
+            posts: {},
+            users: {}
+        }
+    };
+
     const admin = (() => {
         const admin_list = document.createElement('div');
         admin_list.id = 'BH_adminList';
@@ -302,7 +311,7 @@
     (function previewImage() {
 
         (function getDiscussionTimer() {
-            setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
+            Timer(getDiscussionTimer, 3000);
             const path = location.pathname;
             if (!/^\/t\//.test(path) && path != "/") return;
             (function getDiscussion() {
@@ -310,6 +319,10 @@
                 if (discussion) {
                     discussion.classList.remove('DiscussionListItem');
                     discussion.classList.add('BH_DiscussionListItem');
+                    discussion.addEventListener('click',() => {
+                        const a = discussion.querySelector('a.DiscussionListItem-main');
+                        a.click();
+                    });
                     try {
                         const id = discussion.parentNode.dataset.id;
                         setPreviewImage(discussion, id);
@@ -355,7 +368,7 @@
 
     var temp;
     function pageCheck() {
-        setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
+        Timer(pageCheck, 1000);
         var path = location.pathname;
         welcomeImage.append();
         if (path == temp) return;
@@ -383,7 +396,7 @@
         }
         temp = path;
     }
-    window.requestAnimationFrame(pageCheck);
+    Timer(pageCheck);
 
 
     (function setLang() {
@@ -464,4 +477,215 @@
         clientMenu.appendChild(client);
     })();
 
+
+    (function notifications() {
+        if (document.querySelector('.item-notifications') == null) {
+            setTimeout(notifications, 1000);
+            return;
+        }
+        var notifications_list = {};
+        var notifications_num = 0;
+        const notificationNoreadNum = document.createElement('span');
+        notificationNoreadNum.id = 'BH_notificationNoreadNum';
+
+        const notificationsTable = document.createElement('div');
+        notificationsTable.id = 'BH_notificationsTable';
+
+        const notificationBtn = document.createElement('li');
+        notificationBtn.id = 'BH_notificationBtn';
+        notificationBtn.appendChild(notificationNoreadNum);
+
+        const notificationsLi = document.createElement('li');
+        notificationsLi.id = 'BH_notificationLi';
+        notificationsLi.appendChild(notificationBtn);
+        notificationsLi.appendChild(notificationsTable);
+
+        const headerNotification = document.querySelector('.item-notifications');
+        headerNotification.parentNode.insertBefore(notificationsLi, headerNotification);
+        headerNotification.style.display = 'none';
+
+        notificationBtn.addEventListener('click', () => {
+            Object.values(notifications_list).map(item => item.updateTime());
+            notifications_num = 0;
+            notificationNoreadNum.style.display = 'none';
+
+            setTimeout(() => notificationsTable.style.display = 'block', 10);
+            allRead();
+        });
+
+        function allRead() {
+            (() => {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", `/api/notifications/read`);
+                xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                xhr.send();
+            })();
+        }
+
+        document.addEventListener('click', () => {
+            if (notificationsTable.style.display == 'block') {
+                notificationsTable.style.display = 'none';
+                (function removeNoRead() {
+                    const item = notificationsTable.querySelector('.BH_noRead');
+                    if (item) {
+                        item.classList.remove('BH_noRead');
+                        removeNoRead();
+                    }
+                })();
+            }
+        });
+        getNotification("page[limit]=30&sort=-createdAt", (res) => {
+            res.data.map(data => {
+                BH_store.data.notifications[data.id] = data;
+                const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
+
+                if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) return;
+
+                const notification = createNotificationItem(data);
+                if (!data.attributes.isRead) {
+                    notifications_num++;
+                    notification.item.classList.add('BH_noRead');
+                }
+                notifications_list[id] = notification;
+                notificationsTable.appendChild(notification.a);
+            });
+
+            setNotificationNoreadNum();
+        });
+
+        function getNotificationTimer() {
+            Timer(getNotificationTimer, 60000);
+            getNotification('page[limit]=20&sort=-createdAt', (res) => {
+                console.log(notifications_num);
+                res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
+                    if (BH_store.data.notifications[data.id]) return;
+                    BH_store.data.notifications[data.id] = data;
+
+                    const notification = createNotificationItem(data);
+                    notifications_num++;
+                    notification.item.classList.add('BH_noRead');
+
+
+                    const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
+                    if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) {
+                        notifications_list[id].a.parentNode.removeChild(notifications_list[id].a);
+                        notifications_list[id] = notification;
+                    }
+
+                    notificationsTable.insertBefore(notification.a, notificationsTable.firstChild);
+                });
+                setNotificationNoreadNum();
+            });
+        }
+        Timer(getNotificationTimer, 60000);
+
+        function setNotificationNoreadNum() {
+            if (notifications_num > 0) {
+                notificationNoreadNum.innerText = (notifications_num > 99) ? '99+' : notifications_num;
+                notificationNoreadNum.style.display = 'block';
+            }
+            else notificationNoreadNum.style.display = 'none';
+        }
+
+        function createNotificationItem(data) {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'BH_notificationItem';
+
+            const userID = data.relationships.fromUser.data.id;
+            const fromUser = BH_store.data.users[userID] || app.store.data.users[userID];
+            const notificationFromUser = document.createElement('img');
+            notificationFromUser.className = 'BH_notificationFromUser';
+            notificationFromUser.src = fromUser.data.attributes.avatarUrl;
+            notificationItem.appendChild(notificationFromUser);
+
+            const notificationText = document.createElement('div');
+            notificationText.className = 'BH_notificationText';
+            notificationItem.appendChild(notificationText);
+
+            var url = "";
+            var post;
+            var discussion;
+            switch (data.relationships.subject.data.type) {
+                case "posts":
+                    post = BH_store.data.posts[data.relationships.subject.data.id];
+                    discussion = BH_store.data.discussions[post.data.relationships.discussion.data.id];
+                    url = `/d/${discussion.data.id}/${post.data.attributes.number}`;
+                    break;
+                case "discussions":
+                    discussion = BH_store.data.discussions[data.relationships.subject.data.id];
+                    url = `/d/${discussion.data.id}`;
+                    break;
+            }
+
+            const discussionTitle = discussion.data.attributes.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            switch (data.attributes.contentType) {
+                case "vote":
+                    const div = document.createElement('div');
+                    div.innerHTML = post.data.attributes.contentHtml;
+
+                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
+                    break;
+                case "newPost":
+                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
+                    break;
+                case "postMentioned":
+                    notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
+                    break;
+            }
+
+            const notificationTime = document.createElement('span');
+            notificationTime.className = 'BH_notificationTime';
+            notificationTime.innerText = getTime(data.attributes.createdAt);
+            notificationItem.appendChild(notificationTime);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.appendChild(notificationItem);
+
+            return {
+                a: a,
+                item: notificationItem,
+                updateTime: () => {
+                    notificationTime.innerText = getTime(data.attributes.createdAt);
+                }
+            };
+        }
+
+        function getTime(timeText) {
+            const time = new Date(timeText);
+            const ms = parseInt(new Date() - time);
+            const s = ms / 1000;
+            const m = s / 60;
+            const h = m / 60;
+            const d = h / 24;
+            const t = [d, h, m, s];
+            const f = ["天", "小時", "分鐘", "秒"];
+
+
+            for (let i = 0; i < t.length; i++) {
+                if (Math.floor(t[i]) > 0) return `${Math.floor(t[i])}${f[i]}前`;
+            }
+            return "";
+        }
+
+        async function getNotification(url, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `/api/notifications?${url}`);
+            xhr.onload = () => {
+                const res = JSON.parse(xhr.response);
+                res.included.map(item => {
+                    BH_store.data[item.type][item.id] = { data: item };
+                });
+                if (callback) callback(res);
+            }
+            xhr.send();
+        }
+    })();
+
+    function Timer(call, t) {
+        if (t == null) window.requestAnimationFrame(call);
+        else setTimeout(() => window.requestAnimationFrame(call), t);
+    }
 })();
