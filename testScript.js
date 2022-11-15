@@ -506,7 +506,7 @@
             notificationNoreadNum.style.display = 'none';
             setTimeout(() => notificationsTable.style.display = 'block', 10);
 
-            //allRead();
+            allRead();
         });
 
         function allRead(e = false) {
