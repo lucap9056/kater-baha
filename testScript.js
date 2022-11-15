@@ -501,6 +501,7 @@
         headerNotification.style.display = 'none';
 
         notificationBtn.addEventListener('click', () => {
+            Object.values(notifications_list).map(item => item.updateTime());
             notifications_num = 0;
             notificationNoreadNum.style.display = 'none';
             setTimeout(() => notificationsTable.style.display = 'block', 10);
@@ -522,98 +523,135 @@
         }
 
         document.addEventListener('click', () => {
-            if (notificationsTable.style.display != 'none') {
+            if (notificationsTable.style.display == 'block') {
                 notificationsTable.style.display = 'none';
-                const noRead = notificationsTable.getElementsByClassName('BH_noRead');
-                for (let i = 0; i < noRead.length; i++) noRead[i].classList.remove('BH_noRead');
+                (function removeNoRead() {
+                    const item = notificationsTable.querySelector('.BH_noRead');
+                    if (item) {
+                        item.classList.remove('BH_noRead');
+                        removeNoRead();
+                    }
+                })();
             }
         });
-        getNotification("page[limit]=20", (res) => {
+        getNotification("page[limit]=20&sort=-createdAt", (res) => {
             res.data.map(data => {
-                if (data.attributes.contentType != 'postMentioned') {
-                    const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
-                    if (notifications_list[id]) return;
-                    notifications_list[id] = data;
-                }
+                BH_store.data.notifications[data.id] = data;
+                const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
 
-                const notificationItem = document.createElement('div');
-                notificationItem.className = 'BH_notificationItem';
+                if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) return;
 
+                const notification = createNotificationItem(data);
                 if (!data.attributes.isRead) {
                     notifications_num++;
-                    notificationItem.classList.add('BH_noRead');
+                    notification.item.classList.add('BH_noRead');
                 }
-
-                const userID = data.relationships.fromUser.data.id;
-                const fromUser = BH_store.data.users[userID] || app.store.data.users[userID];
-                const notificationFromUser = document.createElement('img');
-                notificationFromUser.className = 'BH_notificationFromUser';
-                notificationFromUser.src = fromUser.data.attributes.avatarUrl;
-                notificationItem.appendChild(notificationFromUser);
-
-                const notificationText = document.createElement('div');
-                notificationText.className = 'BH_notificationText';
-                notificationItem.appendChild(notificationText);
-
-                var url = "";
-                var post;
-                var discussion;
-                switch (data.relationships.subject.data.type) {
-                    case "posts":
-                        post = BH_store.data.posts[data.relationships.subject.data.id];
-                        discussion = BH_store.data.discussions[post.data.relationships.discussion.data.id];
-                        url = `/d/${discussion.data.id}/${post.data.attributes.number}`;
-                        break;
-                    case "discussions":
-                        discussion = BH_store.data.discussions[data.relationships.subject.data.id];
-                        url = `/d/${discussion.data.id}`;
-                        break;
-                }
-
-                const discussionTitle = discussion.data.attributes.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-                switch (data.attributes.contentType) {
-                    case "vote":
-                        const div = document.createElement('div');
-                        div.innerHTML = post.data.attributes.contentHtml;
-
-                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
-                        break;
-                    case "newPost":
-                        notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
-                        break;
-                    case "postMentioned":
-                        notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
-                        break;
-                }
-
-                const notificationTime = document.createElement('span');
-                notificationTime.className = 'BH_notificationTime';
-                notificationTime.innerText = getTime(data.attributes.createdAt);
-                notificationItem.appendChild(notificationTime);
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.appendChild(notificationItem);
-
-                notificationsTable.appendChild(a);
+                notifications_list[id] = notification;
+                notificationsTable.appendChild(notification.a);
             });
 
+            setNotificationNoreadNum();
+        });
+
+        function getNotificationTimer() {
+            Timer(getNotificationTimer, 60000);
+            getNotification('page[limit]=20&sort=-createdAt', (res) => {
+                console.log(notifications_num);
+                res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
+                    if (BH_store.data.notifications[data.id]) return;
+                    BH_store.data.notifications[data.id] = data;
+
+                    const notification = createNotificationItem(data);
+                    notifications_num++;
+                    notification.item.classList.add('BH_noRead');
+
+
+                    const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
+                    if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) {
+                        notifications_list[id].a.parentNode.removeChild(notifications_list[id].a);
+                        notifications_list[id] = notification;
+                    }
+
+                    notificationsTable.insertBefore(notification.a, notificationsTable.firstChild);
+                });
+                setNotificationNoreadNum();
+            });
+        }
+        Timer(getNotificationTimer, 60000);
+
+        function setNotificationNoreadNum() {
             if (notifications_num > 0) {
                 notificationNoreadNum.innerText = (notifications_num > 99) ? '99+' : notifications_num;
                 notificationNoreadNum.style.display = 'block';
             }
-        });
+            else notificationNoreadNum.style.display = 'none';
+        }
 
-        (function getNotificationTimer() {
-            Timer(getNotificationTimer, 60000);
-            getNotification('page[limit]=20', (res) => {
-                res.data.filter(e => e.attributes.isRead == false).map(item => {
-                    console.log(item);
-                });
-            });
-        })();
+        function createNotificationItem(data) {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'BH_notificationItem';
+
+            const userID = data.relationships.fromUser.data.id;
+            const fromUser = BH_store.data.users[userID] || app.store.data.users[userID];
+            const notificationFromUser = document.createElement('img');
+            notificationFromUser.className = 'BH_notificationFromUser';
+            notificationFromUser.src = fromUser.data.attributes.avatarUrl;
+            notificationItem.appendChild(notificationFromUser);
+
+            const notificationText = document.createElement('div');
+            notificationText.className = 'BH_notificationText';
+            notificationItem.appendChild(notificationText);
+
+            var url = "";
+            var post;
+            var discussion;
+            switch (data.relationships.subject.data.type) {
+                case "posts":
+                    post = BH_store.data.posts[data.relationships.subject.data.id];
+                    discussion = BH_store.data.discussions[post.data.relationships.discussion.data.id];
+                    url = `/d/${discussion.data.id}/${post.data.attributes.number}`;
+                    break;
+                case "discussions":
+                    discussion = BH_store.data.discussions[data.relationships.subject.data.id];
+                    url = `/d/${discussion.data.id}`;
+                    break;
+            }
+
+            const discussionTitle = discussion.data.attributes.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            switch (data.attributes.contentType) {
+                case "vote":
+                    const div = document.createElement('div');
+                    div.innerHTML = post.data.attributes.contentHtml;
+
+                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
+                    break;
+                case "newPost":
+                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
+                    break;
+                case "postMentioned":
+                    notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
+                    break;
+            }
+
+            const notificationTime = document.createElement('span');
+            notificationTime.className = 'BH_notificationTime';
+            notificationTime.innerText = getTime(data.attributes.createdAt);
+            notificationItem.appendChild(notificationTime);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.appendChild(notificationItem);
+
+            return {
+                a: a,
+                item: notificationItem,
+                updateTime: () => {
+                    notificationTime.innerText = getTime(data.attributes.createdAt);
+                }
+            };
+        }
 
         function getTime(timeText) {
             const time = new Date(timeText);
@@ -637,11 +675,9 @@
             xhr.open("GET", `/api/notifications?${url}`);
             xhr.onload = () => {
                 const res = JSON.parse(xhr.response);
-                BH_store.data.notifications = Object.assign(BH_store.data.notifications, res.data);
                 res.included.map(item => {
                     BH_store.data[item.type][item.id] = { data: item };
                 });
-                console.log(callback);
                 if (callback) callback(res);
             }
             xhr.send();
