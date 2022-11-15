@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 00:20";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 00:35";
     var BH_store = {
         data: {
             notifications: {},
@@ -319,7 +319,7 @@
                 if (discussion) {
                     discussion.classList.remove('DiscussionListItem');
                     discussion.classList.add('BH_DiscussionListItem');
-                    discussion.addEventListener('click',() => {
+                    discussion.addEventListener('click', () => {
                         const a = discussion.querySelector('a.DiscussionListItem-main');
                         a.click();
                     });
@@ -485,6 +485,8 @@
         }
         var notifications_list = {};
         var notifications_num = 0;
+        var notifications_next = "";
+        var notifications_state = "";
         const notificationNoreadNum = document.createElement('span');
         notificationNoreadNum.id = 'BH_notificationNoreadNum';
 
@@ -504,6 +506,31 @@
         headerNotification.parentNode.insertBefore(notificationsLi, headerNotification);
         headerNotification.style.display = 'none';
 
+        notificationsTable.addEventListener('scroll', (e) => {
+            if (notifications_state == "" && notificationsTable.scrollTop == notificationsTable.scrollTopMax) {
+                notifications_state = "loading";
+                getNotification(notifications_next, (res) => {
+                    if (res.links.next) notifications_next = res.links.next;
+                    else notifications_state = "end";
+                    res.data.map(data => {
+                        if (BH_store.data.notifications[data.id]) return;
+                        BH_store.data.notifications[data.id] = data;
+                        const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
+                        if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) return;
+
+                        const notification = createNotificationItem(data);
+                        if (!data.attributes.isRead) {
+                            notifications_num++;
+                            notification.item.classList.add('BH_noRead');
+                        }
+                        notifications_list[id] = notification;
+                        notificationsTable.appendChild(notification.a);
+                    });
+                    notifications_state = "";
+                });
+            }
+        });
+
         notificationBtn.addEventListener('click', () => {
             Object.values(notifications_list).map(item => item.updateTime());
             notifications_num = 0;
@@ -517,7 +544,7 @@
             (() => {
                 const xhr = new XMLHttpRequest();
                 xhr.open("POST", `/api/notifications/read`);
-                xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
                 xhr.send();
             })();
         }
@@ -535,6 +562,7 @@
             }
         });
         getNotification("page[limit]=30&sort=-createdAt", (res) => {
+            notifications_next = res.links.next;
             res.data.map(data => {
                 BH_store.data.notifications[data.id] = data;
                 const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
@@ -556,7 +584,6 @@
         function getNotificationTimer() {
             Timer(getNotificationTimer, 60000);
             getNotification('page[limit]=20&sort=-createdAt', (res) => {
-                console.log(notifications_num);
                 res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
                     if (BH_store.data.notifications[data.id]) return;
                     BH_store.data.notifications[data.id] = data;
@@ -671,8 +698,9 @@
         }
 
         async function getNotification(url, callback) {
+            if (!/http/.test(url)) url = `/api/notifications?${url}`;
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", `/api/notifications?${url}`);
+            xhr.open("GET", url);
             xhr.onload = () => {
                 const res = JSON.parse(xhr.response);
                 res.included.map(item => {
