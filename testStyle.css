@@ -638,9 +638,9 @@ div.BH_previewImage {
 }
 
 .BH_notificationItem {
-    position: relative;
-    width: 100%;
-    height: 64px;
+	position: relative;
+	width: 100%;
+	height: 76px;
 }
 
 .BH_noRead {
@@ -690,6 +690,15 @@ div.BH_previewImage {
 	font-size: 14px;
 	line-height: 18px;
 	cursor: default;
+}
+
+.BH_notificationTime {
+	color: #777;
+	font-size: 12px;
+	bottom: 3px;
+	position: absolute;
+	line-height: 14px;
+	right: 10px;
 }
 
 div.BH_previewImageTag1 {

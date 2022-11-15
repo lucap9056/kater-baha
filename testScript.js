@@ -3,6 +3,7 @@
     const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/15 08:00";
     var BH_store = {
         data: {
+            notifications: {},
             discussions: {},
             posts: {},
             users: {}
@@ -310,7 +311,7 @@
     (function previewImage() {
 
         (function getDiscussionTimer() {
-            setTimeout(() => window.requestAnimationFrame(getDiscussionTimer), 3000);
+            Timer(getDiscussionTimer, 3000);
             const path = location.pathname;
             if (!/^\/t\//.test(path) && path != "/") return;
             (function getDiscussion() {
@@ -363,7 +364,7 @@
 
     var temp;
     function pageCheck() {
-        setTimeout(() => window.requestAnimationFrame(pageCheck), 1000);
+        Timer(pageCheck, 1000);
         var path = location.pathname;
         welcomeImage.append();
         if (path == temp) return;
@@ -391,7 +392,7 @@
         }
         temp = path;
     }
-    window.requestAnimationFrame(pageCheck);
+    Timer(pageCheck);
 
 
     (function setLang() {
@@ -504,7 +505,7 @@
             notificationNoreadNum.style.display = 'none';
             setTimeout(() => notificationsTable.style.display = 'block', 10);
 
-            allRead();
+            //allRead();
         });
 
         function allRead(e = false) {
@@ -527,9 +528,8 @@
                 for (let i = 0; i < noRead.length; i++) noRead[i].classList.remove('BH_noRead');
             }
         });
-        getNotification("/api/notifications?page[limit]=20", (res) => {
+        getNotification("page[limit]=20", (res) => {
             res.data.map(data => {
-
                 if (data.attributes.contentType != 'postMentioned') {
                     const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
                     if (notifications_list[id]) return;
@@ -589,6 +589,8 @@
 
                 const notificationTime = document.createElement('span');
                 notificationTime.className = 'BH_notificationTime';
+                notificationTime.innerText = getTime(data.attributes.createdAt);
+                notificationItem.appendChild(notificationTime);
 
                 const a = document.createElement('a');
                 a.href = url;
@@ -604,17 +606,50 @@
             }
         });
 
-        function getNotification(url, callback) {
+        (function getNotificationTimer() {
+            Timer(getNotificationTimer, 60000);
+            getNotification('page[limit]=20', (res) => {
+                res.data.filter(e => e.attributes.isRead == false).map(item => {
+                    console.log(item);
+                });
+            });
+        })();
+
+        function getTime(timeText) {
+            const time = new Date(timeText);
+            const ms = parseInt(new Date() - time);
+            const s = ms / 1000;
+            const m = s / 60;
+            const h = m / 60;
+            const d = h / 24;
+            const t = [d, h, m, s];
+            const f = ["天", "小時", "分鐘", "秒"];
+
+
+            for (let i = 0; i < t.length; i++) {
+                if (Math.floor(t[i]) > 0) return `${Math.floor(t[i])}${f[i]}前`;
+            }
+            return "";
+        }
+
+        async function getNotification(url, callback) {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", url);
+            xhr.open("GET", `/api/notifications?${url}`);
             xhr.onload = () => {
                 const res = JSON.parse(xhr.response);
+                BH_store.data.notifications = Object.assign(BH_store.data.notifications, res.data);
                 res.included.map(item => {
                     BH_store.data[item.type][item.id] = { data: item };
                 });
-                callback(res);
+                console.log(callback);
+                if (callback) callback(res);
             }
             xhr.send();
         }
     })();
+
+    function Timer(call, t) {
+        if (t == null) window.requestAnimationFrame(call);
+        else setTimeout(() => window.requestAnimationFrame(call), t);
+    }
 })();
