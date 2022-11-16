@@ -479,6 +479,9 @@
 
 
     (function notifications() {
+        window.parent.addEventListener('close',() => {
+            console.log('close');
+        });
         if (document.querySelector('.item-notifications') == null) {
             setTimeout(notifications, 1000);
             return;
@@ -524,7 +527,7 @@
                             notification.item.classList.add('BH_noRead');
                         }
                         notifications_list[id] = notification;
-                        notificationsTable.appendChild(notification.a);
+                        notificationsTable.appendChild(notification.item);
                     });
                     notifications_state = "";
                 });
@@ -572,7 +575,7 @@
                     notification.item.classList.add('BH_noRead');
                 }
                 notifications_list[id] = notification;
-                notificationsTable.appendChild(notification.a);
+                notificationsTable.appendChild(notification.item);
             });
 
             setNotificationNoreadNum();
@@ -592,11 +595,11 @@
 
                     const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
                     if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) {
-                        notifications_list[id].a.parentNode.removeChild(notifications_list[id].a);
+                        notifications_list[id].item.parentNode.removeChild(notifications_list[id].item);
                         notifications_list[id] = notification;
                     }
 
-                    notificationsTable.insertBefore(notification.a, notificationsTable.firstChild);
+                    notificationsTable.insertBefore(notification.item, notificationsTable.firstChild);
                 });
                 setNotificationNoreadNum();
             });
@@ -663,13 +666,11 @@
             notificationTime.innerText = getTime(data.attributes.createdAt);
             notificationItem.appendChild(notificationTime);
 
-            const a = document.createElement('a');
-            a.href = url;
-            a.target = '_blank';
-            a.appendChild(notificationItem);
+            notificationItem.addEventListener('click',() => {
+                window.open(url);
+            });
 
             return {
-                a: a,
                 item: notificationItem,
                 updateTime: () => {
                     notificationTime.innerText = getTime(data.attributes.createdAt);

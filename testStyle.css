@@ -555,6 +555,15 @@ ul.affix-top {
     margin: 10px 0;
 }
 
+.BH_DiscussionListItem .DiscussionListItem-title {
+	margin-right: 90px;
+}
+
+.BH_DiscussionListItem .item-tags {
+	margin-right: -90px;
+	top: 40px;
+}
+
 .BH_previewImage {
     position: absolute;
     top: 0px;
