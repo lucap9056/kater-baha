@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 11:05";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 18:30";
     var BH_store = {
         data: {
             notifications: {},
@@ -142,9 +142,12 @@
                 element.appendChild(previewImg);
             }
             else {
+                const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
                 const previewImg = document.createElement('div');
                 previewImg.className = 'BH_previewImage';
-                previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
+                previewImg.dataset.text = tag.data.attributes.name;
+                previewImg.style.color = tag.data.attributes.color;
+                previewImg.style.borderColor = tag.data.attributes.color;
                 element.appendChild(previewImg);
             }
 

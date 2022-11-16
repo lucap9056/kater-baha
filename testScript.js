@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 11:05";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 18:30";
     var BH_store = {
         data: {
             notifications: {},
