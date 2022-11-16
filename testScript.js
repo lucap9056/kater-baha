@@ -533,20 +533,17 @@
 
         notificationBtn.addEventListener('click', () => {
             Object.values(notifications_list).map(item => item.updateTime());
+            setTimeout(() => notificationsTable.style.display = 'block', 10);
+            if (notifications_num > 0) allRead();
             notifications_num = 0;
             notificationNoreadNum.style.display = 'none';
-
-            setTimeout(() => notificationsTable.style.display = 'block', 10);
-            allRead();
         });
 
         function allRead() {
-            (() => {
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", `/api/notifications/read`);
-                xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
-                xhr.send();
-            })();
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/api/notifications/read`);
+            xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
+            xhr.send();
         }
 
         document.addEventListener('click', () => {
