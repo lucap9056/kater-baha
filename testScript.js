@@ -249,6 +249,7 @@
                     if (i == 0) li.className = 'item-allDiscussions active';
 
                     const a = document.createElement('a');
+                    a.className = 'BH_item-link';
                     a.href = li_list[id];
                     li.appendChild(a);
 
