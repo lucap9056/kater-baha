@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 09:10";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 09:25";
     var BH_store = {
         data: {
             notifications: {},
@@ -311,28 +311,26 @@
     (function previewImage() {
 
         (function getDiscussionTimer() {
-            Timer(getDiscussionTimer, 3000);
+            Timer(getDiscussionTimer, 1000);
             const path = location.pathname;
             if (!/^\/t\//.test(path) && path != "/") return;
             (function getDiscussion() {
                 const discussion = document.querySelector('.DiscussionListItem');
-                if (discussion) {
-                    discussion.classList.remove('DiscussionListItem');
-                    discussion.classList.add('BH_DiscussionListItem');
-                    discussion.addEventListener('click', () => {
-                        const a = discussion.querySelector('a.DiscussionListItem-main');
-                        a.click();
-                    });
-                    try {
-                        const id = discussion.parentNode.dataset.id;
-                        setPreviewImage(discussion, id);
-                    }
-                    catch {
-
-                    }
-                    getDiscussion();
+                if (discussion == null) return;
+                discussion.classList.remove('DiscussionListItem');
+                discussion.classList.add('BH_DiscussionListItem');
+                discussion.addEventListener('click', () => {
+                    const a = discussion.querySelector('a.DiscussionListItem-main');
+                    a.click();
+                });
+                try {
+                    const id = discussion.parentNode.dataset.id;
+                    setPreviewImage(discussion, id);
                 }
-                else return;
+                catch {
+
+                }
+                getDiscussion();
             })();
         })();
 
