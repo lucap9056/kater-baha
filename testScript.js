@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 10:45";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 11:05";
     var BH_store = {
         data: {
             notifications: {},
@@ -81,6 +81,7 @@
 
     const PreviewImage = (() => {
         var state;
+        var refreshBtn;
 
         function loadStart() {
             if (state) return;
@@ -89,6 +90,12 @@
 
                 const path = location.pathname;
                 if (!/^\/t\//.test(path) && path != "/") return;
+
+                const refresh = document.querySelector('.item-refresh button');
+                if (refresh != null && refresh != refreshBtn) {
+                    refreshBtn = refresh;
+                    refresh.addEventListener('click', loadStart);
+                }
 
                 const discussion = document.querySelector('.DiscussionListItem');
                 if (discussion == null) {
