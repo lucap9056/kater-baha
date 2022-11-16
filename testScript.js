@@ -375,6 +375,53 @@
         }
     })();
 
+    const DiscussionImage = (() => {
+        const fullScreenImageBorder = document.createElement('div');
+        fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
+
+        const fullScreenImageClose = document.createElement('div');
+        fullScreenImageClose.id = 'BH_fullScreenImageClose';
+        fullScreenImageBorder.appendChild(fullScreenImageClose);
+        fullScreenImageClose.addEventListener('click', () => document.body.removeChild(fullScreenImageBorder));
+
+        var scrollTemp;
+        var ImageTemp = new Image();
+        const fullScreenImage = document.createElement('canvas');
+        fullScreenImage.id = 'BH_fullScreenImage';
+        fullScreenImageBorder.appendChild(fullScreenImage);
+        fullScreenImage.addEventListener('scroll', (e) => {
+
+        });
+        ImageTemp.addEventListener('load', () => {
+
+        });
+
+        var url = "";
+        const fullScreenImageUrl = document.createElement('div');
+        fullScreenImageUrl.id = 'BH_fullScreenImageUrl';
+        fullScreenImageUrl.addEventListener('click', () => window.open(url));
+        fullScreenImageBorder.appendChild(fullScreenImageUrl);
+
+
+
+        document.addEventListener('click', (e) => {
+            if (!/^\/d\//.test(location.pathname)) return;
+            if (e.target.tagName != 'IMG') return;
+            e.preventDefault();
+            imgVisible(e.target);
+        });
+
+        function imgVisible(img) {
+            ImageTemp.src = img.src;
+            if (img.parentNode.tagName == 'A') {
+                url = img.parentNode.href;
+                fullScreenImageUrl.style.display = 'block';
+            }
+            else fullScreenImageUrl.style.display = 'none';
+            document.body.appendChild(fullScreenImageBorder);
+        }
+    })();
+
     var temp;
     function pageCheck() {
         Timer(pageCheck, 1000);
@@ -749,6 +796,7 @@
             xhr.send();
         }
     })();
+
 
     function Timer(call, t) {
         if (t == null) window.requestAnimationFrame(call);

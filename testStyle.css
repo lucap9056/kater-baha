@@ -726,3 +726,13 @@ div.BH_previewImage {
 div.BH_previewImage::before {
     content: attr(data-text);
 }
+
+#BH_fullScreenImageBorder {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	height: 100vh;
+	background-color: #0007;
+	z-index: 1001;
+}
