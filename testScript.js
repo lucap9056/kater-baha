@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 18:30";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 19:15";
     var BH_store = {
         data: {
             notifications: {},
@@ -79,53 +79,35 @@
         }
     })();
 
-    const PreviewImage = (() => {
-        var state;
-        var refreshBtn;
+    (function PreviewImage() {
+        
+        (function getDiscussionTimer() {
+            Timer(getDiscussionTimer, 1000);
+            const path = location.pathname;
+            const discussion = document.querySelector('.DiscussionListItem');
+            if ((!/^\/t\//.test(path) && path != "/") || discussion == null) return;
 
-        function loadStart() {
-            if (state) return;
-            state = app.alerts.show("preview image loading");
-            (function getDiscussionTimer() {
-
-                const path = location.pathname;
-                if (!/^\/t\//.test(path) && path != "/") return;
-
-                const refresh = document.querySelector('.item-refresh button');
-                if (refresh != null && refresh != refreshBtn) {
-                    refreshBtn = refresh;
-                    refresh.addEventListener('click', loadStart);
-                }
-
+            const msgID = app.alerts.show("preview image loading");
+            (function getDiscussion() {
                 const discussion = document.querySelector('.DiscussionListItem');
-                if (discussion == null) {
-                    Timer(getDiscussionTimer, 1000);
-                    return;
+                if (discussion == null) return app.alerts.clear(msgID);
+
+                discussion.classList.remove('DiscussionListItem');
+                discussion.classList.add('BH_DiscussionListItem');
+                discussion.addEventListener('click', () => {
+                    const a = discussion.querySelector('a.DiscussionListItem-main');
+                    a.click();
+                });
+                try {
+                    const id = discussion.parentNode.dataset.id;
+                    setPreviewImage(discussion, id);
                 }
+                catch {
 
-                (function getDiscussion() {
-                    const discussion = document.querySelector('.DiscussionListItem');
-                    if (discussion == null) {
-                        loadEnd();
-                        return;
-                    }
-                    discussion.classList.remove('DiscussionListItem');
-                    discussion.classList.add('BH_DiscussionListItem');
-                    discussion.addEventListener('click', () => {
-                        const a = discussion.querySelector('a.DiscussionListItem-main');
-                        a.click();
-                    });
-                    try {
-                        const id = discussion.parentNode.dataset.id;
-                        setPreviewImage(discussion, id);
-                    }
-                    catch {
-
-                    }
-                    getDiscussion();
-                })();
+                }
+                getDiscussion();
             })();
-        }
+        })();
 
         async function setPreviewImage(element, id) {
             const discussion = app.store.data.discussions[id].data;
@@ -158,21 +140,6 @@
             previewContent.innerText = content;
             element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
         }
-
-        var loadMoreBtn;
-        function loadEnd() {
-            app.alerts.clear(state);
-            state = null;
-            const loadMore = document.querySelector('.DiscussionList-loadMore button');
-            if (loadMore && loadMore != loadMoreBtn) {
-                loadMoreBtn = loadMore;
-                loadMore.addEventListener('click', loadStart);
-            }
-        }
-
-        return {
-            load: loadStart
-        }
     })();
 
     const BHmenu = (() => {
@@ -189,8 +156,6 @@
         const menu_focus = document.createElement('div');
         menu_focus.id = 'BH_headerMenuFocus';
         menu.appendChild(menu_focus);
-
-        document.getElementById('home-link').addEventListener('click', () => PreviewImage.load());
 
         const tagItem = (() => {
             var li = document.createElement('li');
@@ -337,7 +302,6 @@
                                     tag.classList.add('active');
                                     tag.addEventListener('click', () => tag.querySelector('a').click());
                                 }
-                                item.addEventListener('click', () => PreviewImage.load());
                             }
                         }
                         else item.addEventListener('click', () => tagItem.set(item));
@@ -421,7 +385,6 @@
                 BHmenu.clear();
                 BHmenu.discussions();
                 admin.append();
-                PreviewImage.load();
                 break;
             case "u":
                 BHmenu.clear();
