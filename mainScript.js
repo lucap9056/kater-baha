@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 00:35";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 09:10";
     var BH_store = {
         data: {
             notifications: {},
@@ -479,6 +479,40 @@
 
 
     (function notifications() {
+        const IconUrl = '/assets/favicon-gtoqtyic.png';
+        var IconUrl_alert;
+        const iconElement = document.createElement('link');
+        iconElement.rel = 'icon';
+        iconElement.href = IconUrl;
+        document.head.appendChild(iconElement);
+        (() => {
+            const canvas = document.createElement('canvas');
+            const icon = new Image();
+            icon.onload = () => {
+                canvas.width = icon.width;
+                canvas.height = icon.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(icon, 0, 0);
+                ctx.beginPath();
+                ctx.fillStyle = "#F00";
+                ctx.arc(52, 12, 12, 0, 2 * Math.PI);
+                ctx.fill();
+
+                const dataURL = canvas.toDataURL('image/png');
+                const base64 = atob(dataURL.split(',')[1]);
+                const array = []
+                for (let i = 0; i < base64.length; i++) {
+                    array.push(base64.charCodeAt(i))
+                }
+                const iconFile = new Blob([new Uint8Array(array)], { type: 'image/png' });
+                IconUrl_alert = URL.createObjectURL(iconFile);
+                console.log(IconUrl_alert);
+            }
+            icon.src = IconUrl;
+        })();
+
+
+
         if (document.querySelector('.item-notifications') == null) {
             setTimeout(notifications, 1000);
             return;
@@ -524,7 +558,7 @@
                             notification.item.classList.add('BH_noRead');
                         }
                         notifications_list[id] = notification;
-                        notificationsTable.appendChild(notification.a);
+                        notificationsTable.appendChild(notification.item);
                     });
                     notifications_state = "";
                 });
@@ -540,6 +574,7 @@
         });
 
         function allRead() {
+            iconElement.href = IconUrl;
             const xhr = new XMLHttpRequest();
             xhr.open("POST", `/api/notifications/read`);
             xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
@@ -572,14 +607,14 @@
                     notification.item.classList.add('BH_noRead');
                 }
                 notifications_list[id] = notification;
-                notificationsTable.appendChild(notification.a);
+                notificationsTable.appendChild(notification.item);
             });
 
             setNotificationNoreadNum();
         });
 
         function getNotificationTimer() {
-            Timer(getNotificationTimer, 60000);
+            Timer(getNotificationTimer, 300000);
             getNotification('page[limit]=20&sort=-createdAt', (res) => {
                 res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
                     if (BH_store.data.notifications[data.id]) return;
@@ -592,21 +627,22 @@
 
                     const id = `${data.attributes.contentType}${data.relationships.subject.data.type}${data.relationships.subject.data.id}`;
                     if (data.attributes.contentType != 'postMentioned' && notifications_list[id]) {
-                        notifications_list[id].a.parentNode.removeChild(notifications_list[id].a);
+                        notifications_list[id].item.parentNode.removeChild(notifications_list[id].item);
                         notifications_list[id] = notification;
                     }
 
-                    notificationsTable.insertBefore(notification.a, notificationsTable.firstChild);
+                    notificationsTable.insertBefore(notification.item, notificationsTable.firstChild);
                 });
                 setNotificationNoreadNum();
             });
         }
-        Timer(getNotificationTimer, 300000);
+        Timer(getNotificationTimer, 60000);
 
         function setNotificationNoreadNum() {
             if (notifications_num > 0) {
                 notificationNoreadNum.innerText = (notifications_num > 99) ? '99+' : notifications_num;
                 notificationNoreadNum.style.display = 'block';
+                iconElement.href = IconUrl_alert;
             }
             else notificationNoreadNum.style.display = 'none';
         }
@@ -663,13 +699,11 @@
             notificationTime.innerText = getTime(data.attributes.createdAt);
             notificationItem.appendChild(notificationTime);
 
-            const a = document.createElement('a');
-            a.href = url;
-            a.target = '_blank';
-            a.appendChild(notificationItem);
+            notificationItem.addEventListener('click', () => {
+                window.open(url);
+            });
 
             return {
-                a: a,
                 item: notificationItem,
                 updateTime: () => {
                     notificationTime.innerText = getTime(data.attributes.createdAt);
