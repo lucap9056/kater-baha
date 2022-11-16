@@ -1,15 +1,31 @@
 (function BHload() {
     'use strict';
     try {
-        var test = app.translator.translations["fof-gamification.forum.ranking.amount"]
+        var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
+        flarum.core.app.translator.addTranslations({
+            "core.forum.composer_discussion.title": "發文",
+            "core.forum.index.all_discussions_link": "文章列表",
+            "core.forum.index.start_discussion_button": "發文",
+            "kabamut.name": "卡巴姆特",
+            "kabamut.settings.preview": "顯示文章預覽"
+        });
     }
     catch {
         setTimeout(BHload, 1000);
         return;
     }
 
+    var config = {
+        preview: true
+    };
+    try {
+        config = Object.assign(config, JSON.parse(document.cookie.split('kabamut=')[1].split(';')[0]));
+    }
+    catch {
+    }
 
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 02:55";
+
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 05:05";
     var BH_store = {
         data: {
             notifications: {},
@@ -85,72 +101,6 @@
         }
         return {
             append: append
-        }
-    })();
-
-    (function PreviewImage() {
-        (function getDiscussionTimer() {
-            const path = location.pathname;
-            const discussion = document.querySelector('.DiscussionListItem');
-            if ((!/^\/t\//.test(path) && path != "/") || discussion == null) {
-                Timer(getDiscussionTimer, 1000);
-                return;
-            }
-            (function getDiscussion(msgID) {
-                const discussion = document.querySelector('.DiscussionListItem');
-                if (discussion == null) {
-                    app.alerts.clear(msgID);
-                    Timer(getDiscussionTimer, 1000);
-                    return;
-                }
-
-                discussion.classList.remove('DiscussionListItem');
-                discussion.classList.add('BH_DiscussionListItem');
-                discussion.addEventListener('click', () => {
-                    const a = discussion.querySelector('a.DiscussionListItem-main');
-                    a.click();
-                });
-                try {
-                    const id = discussion.parentNode.dataset.id;
-                    setPreviewImage(discussion, id);
-                }
-                catch {
-
-                }
-                getDiscussion(msgID);
-            })(app.alerts.show("preview image loading"));
-        })();
-
-        async function setPreviewImage(element, id) {
-            const discussion = app.store.data.discussions[id].data;
-            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
-
-            const div = document.createElement('div');
-            div.innerHTML = post.data.attributes.contentHtml;
-            const img = div.querySelector('img');
-
-            if (img) {
-                const previewImg = document.createElement('img');
-                previewImg.className = 'BH_previewImage';
-                previewImg.src = img.src;
-                element.appendChild(previewImg);
-            }
-            else {
-                const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
-                const previewImg = document.createElement('div');
-                previewImg.className = 'BH_previewImage';
-                previewImg.dataset.text = tag.data.attributes.name;
-                previewImg.style.color = tag.data.attributes.color;
-                previewImg.style.borderColor = tag.data.attributes.color;
-                element.appendChild(previewImg);
-            }
-
-            var content = div.innerText.replace(/\n/g, '');
-            if (content.length > 100) content = content.substring(0, 100) + '...';
-            const previewContent = document.createElement('div');
-            previewContent.className = 'BH_previewContent';
-            previewContent.innerText = content;
-            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
         }
     })();
 
@@ -367,6 +317,62 @@
         }
     })();
 
+    const settings = (() => {
+
+        const inputDisplay = document.createElement('div');
+        inputDisplay.className = 'Checkbox-display';
+        inputDisplay.ariaHidden = true;
+
+        const text = document.createTextNode(app.translator.translations["kabamut.settings.preview"]);
+
+        const label = document.createElement('label');
+        label.className = `Checkbox on Checkbox--switch`;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+        input.addEventListener('change', () => {
+            if (input.checked) label.className = label.className.replace(/off/, 'on');
+            else label.className = label.className.replace(/on/, 'off');
+            config.preview = input.checked;
+            saveSettings();
+        });
+        label.appendChild(input);
+        label.appendChild(inputDisplay);
+        label.appendChild(text);
+
+        if (!config.preview) {
+            input.checked = false;
+            label.className = label.className.replace(/on/, 'off');
+        }
+
+        const li = document.createElement('li');
+        li.className = 'item-previewImage';
+        li.appendChild(label);
+
+        const ul = document.createElement('ul');
+        ul.appendChild(li);
+
+        const fieldset = document.createElement('fieldset');
+        fieldset.className = 'Settings-kabamut';
+        fieldset.innerHTML = `<legend>${app.translator.translations["kabamut.name"]}</legend>`;
+        fieldset.appendChild(ul);
+
+        const item_li = document.createElement('li');
+        item_li.className = 'item-kabamut';
+        item_li.appendChild(fieldset);
+
+        function saveSettings() {
+            document.cookie = `kabamut=${JSON.stringify(config)}; expires=Thu Jan 01 2122 00:00:00 GMT`;
+        }
+
+        return {
+            load: () => {
+                document.querySelector('.SettingsPage > ul').appendChild(item_li);
+            }
+        }
+    })();
+
     const welcomeImage = (() => {
         const img = document.createElement('img');
         img.className = "BH_welcomeImage";
@@ -382,131 +388,6 @@
                 home.insertBefore(img, home.querySelector('div'));
             }
         }
-    })();
-
-    (function DiscussionElement() {
-        const DiscussionImage = (() => {
-            const fullScreenImageBorder = document.createElement('div');
-            fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
-
-            const fullScreenImageClose = document.createElement('div');
-            fullScreenImageClose.id = 'BH_fullScreenImageClose';
-            fullScreenImageBorder.appendChild(fullScreenImageClose);
-            fullScreenImageClose.addEventListener('click', () => {
-                document.body.removeChild(fullScreenImageBorder);
-                document.body.style.overflowY = 'scroll';
-            });
-
-            var ImgMove;
-            var mouseMove;
-            const fullScreenImage = document.createElement('img');
-            fullScreenImage.id = 'BH_fullScreenImage';
-            fullScreenImageBorder.appendChild(fullScreenImage);
-            fullScreenImage.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-            });
-            fullScreenImageBorder.addEventListener('mousedown', (e) => mouseMove = { x: e.clientX, y: e.clientY });
-            fullScreenImageBorder.addEventListener('mousemove', (e) => {
-                if (mouseMove) {
-                    ImgMove.x += e.clientX - mouseMove.x;
-                    ImgMove.y += e.clientY - mouseMove.y;
-                    mouseMove = {
-                        x: e.clientX,
-                        y: e.clientY
-                    };
-                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
-                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
-                }
-            });
-            fullScreenImageBorder.addEventListener('mouseup', () => {
-                mouseMove = null;
-            });
-
-            fullScreenImageBorder.addEventListener('wheel', (e) => {
-                if (e.wheelDeltaY > 0) {
-                    fullScreenImage.width *= 1.05;
-                    fullScreenImage.height *= 1.05;
-                }
-                else {
-                    fullScreenImage.width *= 0.95;
-                    fullScreenImage.height *= 0.95;
-                }
-                fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
-                fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
-            });
-
-            const fullScreenImageUrl = document.createElement('div');
-            fullScreenImageUrl.id = 'BH_fullScreenImageUrl';
-            fullScreenImageBorder.appendChild(fullScreenImageUrl);
-            fullScreenImageUrl.addEventListener('click', () => window.open(fullScreenImageUrl.dataset.url));
-
-            function imgVisible(img) {
-                fullScreenImage.style.display = 'none';
-                fullScreenImage.src = img.src;
-                const Img = new Image();
-                Img.addEventListener('error', (e) => {
-                    console.log(e);
-                });
-                Img.addEventListener('load', () => {
-                    fullScreenImage.src = img.src;
-                    const maxWidth = window.innerWidth - 100;
-                    const maxHeight = window.innerHeight - 100;
-                    const widthS = maxWidth / Img.width;
-                    const heightS = maxHeight / Img.height;
-
-                    if (widthS < 1 || heightS < 1) {
-                        if (widthS < heightS) {
-                            fullScreenImage.width = Img.width * widthS;
-                            fullScreenImage.height = Img.height * widthS;
-                        }
-                        else {
-                            fullScreenImage.width = Img.width * heightS;
-                            fullScreenImage.height = Img.height * heightS;
-                        }
-                    }
-                    else {
-                        fullScreenImage.width = Img.width;
-                        fullScreenImage.height = Img.height;
-                    }
-                    ImgMove = {
-                        x: 0,
-                        y: 0
-                    };
-                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
-                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
-                    fullScreenImage.style.display = 'block';
-                });
-                Img.src = img.src;
-                if (img.parentNode.tagName == 'A') {
-                    const url = img.parentNode.href;
-                    fullScreenImageUrl.dataset.url = url;
-                    fullScreenImageUrl.innerText = url;
-                    fullScreenImageUrl.style.display = 'block';
-                }
-                else fullScreenImageUrl.style.display = 'none';
-                document.body.appendChild(fullScreenImageBorder);
-                document.body.style.overflowY = 'hidden';
-            }
-
-            return {
-                load: imgVisible
-            }
-        })();
-
-        document.addEventListener('click', (e) => {
-            if (!/^\/d\//.test(location.pathname)) return;
-            if (e.target.id != "" || e.target.className != "") return;
-            switch (e.target.tagName) {
-                case "IMG":
-                    e.preventDefault();
-                    DiscussionImage.load(e.target);
-                    break;
-                case "A":
-                    e.preventDefault();
-                    window.open(e.target.href);
-                    break;
-            }
-        });
     })();
 
     var temp;
@@ -536,6 +417,9 @@
                 else BHmenu.setReply();
                 admin.append();
                 break;
+            case "settings":
+                settings.load();
+                break;
         }
         temp = path;
     }
@@ -544,11 +428,6 @@
 
     (function setLang() {
         try {
-            flarum.core.app.translator.addTranslations({
-                "core.forum.composer_discussion.title": "發文",
-                "core.forum.index.all_discussions_link": "文章列表",
-                "core.forum.index.start_discussion_button": "發文"
-            });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
             const alertId = app.alerts.show(updateTime);
             setTimeout(() => app.alerts.clear(alertId), 3000);
@@ -618,6 +497,71 @@
         clientMenu.appendChild(client);
     })();
 
+    (function PreviewImage() {
+        (function getDiscussionTimer() {
+            const path = location.pathname;
+            const discussion = document.querySelector('.DiscussionListItem');
+            if ((!/^\/t\//.test(path) && path != "/") || discussion == null || !config.preview) {
+                Timer(getDiscussionTimer, 1000);
+                return;
+            }
+            (function getDiscussion(msgID) {
+                const discussion = document.querySelector('.DiscussionListItem');
+                if (discussion == null) {
+                    app.alerts.clear(msgID);
+                    Timer(getDiscussionTimer, 1000);
+                    return;
+                }
+
+                discussion.classList.remove('DiscussionListItem');
+                discussion.classList.add('BH_DiscussionListItem');
+                discussion.addEventListener('click', () => {
+                    const a = discussion.querySelector('a.DiscussionListItem-main');
+                    a.click();
+                });
+                try {
+                    const id = discussion.parentNode.dataset.id;
+                    setPreviewImage(discussion, id);
+                }
+                catch {
+
+                }
+                getDiscussion(msgID);
+            })(app.alerts.show("preview image loading"));
+        })();
+
+        async function setPreviewImage(element, id) {
+            const discussion = app.store.data.discussions[id].data;
+            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
+
+            const div = document.createElement('div');
+            div.innerHTML = post.data.attributes.contentHtml;
+            const img = div.querySelector('img');
+
+            if (img) {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImage';
+                previewImg.src = img.src;
+                element.appendChild(previewImg);
+            }
+            else {
+                const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
+                const previewImg = document.createElement('div');
+                previewImg.className = 'BH_previewImage';
+                previewImg.dataset.text = tag.data.attributes.name;
+                previewImg.style.color = tag.data.attributes.color;
+                previewImg.style.borderColor = tag.data.attributes.color;
+                element.appendChild(previewImg);
+            }
+
+            var content = div.innerText.replace(/\n/g, '');
+            if (content.length > 100) content = content.substring(0, 100) + '...';
+            const previewContent = document.createElement('div');
+            previewContent.className = 'BH_previewContent';
+            previewContent.innerText = content;
+            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
+        }
+    })();
 
     (function notifications() {
         const IconUrl = '/assets/favicon-gtoqtyic.png';
@@ -884,6 +828,130 @@
         }
     })();
 
+    (function DiscussionElement() {
+        const DiscussionImage = (() => {
+            const fullScreenImageBorder = document.createElement('div');
+            fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
+
+            const fullScreenImageClose = document.createElement('div');
+            fullScreenImageClose.id = 'BH_fullScreenImageClose';
+            fullScreenImageBorder.appendChild(fullScreenImageClose);
+            fullScreenImageClose.addEventListener('click', () => {
+                document.body.removeChild(fullScreenImageBorder);
+                document.body.style.overflowY = 'scroll';
+            });
+
+            var ImgMove;
+            var mouseMove;
+            const fullScreenImage = document.createElement('img');
+            fullScreenImage.id = 'BH_fullScreenImage';
+            fullScreenImageBorder.appendChild(fullScreenImage);
+            fullScreenImage.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+            });
+            fullScreenImageBorder.addEventListener('mousedown', (e) => mouseMove = { x: e.clientX, y: e.clientY });
+            fullScreenImageBorder.addEventListener('mousemove', (e) => {
+                if (mouseMove) {
+                    ImgMove.x += e.clientX - mouseMove.x;
+                    ImgMove.y += e.clientY - mouseMove.y;
+                    mouseMove = {
+                        x: e.clientX,
+                        y: e.clientY
+                    };
+                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
+                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
+                }
+            });
+            fullScreenImageBorder.addEventListener('mouseup', () => {
+                mouseMove = null;
+            });
+
+            fullScreenImageBorder.addEventListener('wheel', (e) => {
+                if (e.wheelDeltaY > 0) {
+                    fullScreenImage.width *= 1.05;
+                    fullScreenImage.height *= 1.05;
+                }
+                else {
+                    fullScreenImage.width *= 0.95;
+                    fullScreenImage.height *= 0.95;
+                }
+                fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
+                fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
+            });
+
+            const fullScreenImageUrl = document.createElement('div');
+            fullScreenImageUrl.id = 'BH_fullScreenImageUrl';
+            fullScreenImageBorder.appendChild(fullScreenImageUrl);
+            fullScreenImageUrl.addEventListener('click', () => window.open(fullScreenImageUrl.dataset.url));
+
+            function imgVisible(img) {
+                fullScreenImage.style.display = 'none';
+                fullScreenImage.src = img.src;
+                const Img = new Image();
+                Img.addEventListener('error', (e) => {
+                    console.log(e);
+                });
+                Img.addEventListener('load', () => {
+                    fullScreenImage.src = img.src;
+                    const maxWidth = window.innerWidth - 100;
+                    const maxHeight = window.innerHeight - 100;
+                    const widthS = maxWidth / Img.width;
+                    const heightS = maxHeight / Img.height;
+
+                    if (widthS < 1 || heightS < 1) {
+                        if (widthS < heightS) {
+                            fullScreenImage.width = Img.width * widthS;
+                            fullScreenImage.height = Img.height * widthS;
+                        }
+                        else {
+                            fullScreenImage.width = Img.width * heightS;
+                            fullScreenImage.height = Img.height * heightS;
+                        }
+                    }
+                    else {
+                        fullScreenImage.width = Img.width;
+                        fullScreenImage.height = Img.height;
+                    }
+                    ImgMove = {
+                        x: 0,
+                        y: 0
+                    };
+                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
+                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
+                    fullScreenImage.style.display = 'block';
+                });
+                Img.src = img.src;
+                if (img.parentNode.tagName == 'A') {
+                    const url = img.parentNode.href;
+                    fullScreenImageUrl.dataset.url = url;
+                    fullScreenImageUrl.innerText = url;
+                    fullScreenImageUrl.style.display = 'block';
+                }
+                else fullScreenImageUrl.style.display = 'none';
+                document.body.appendChild(fullScreenImageBorder);
+                document.body.style.overflowY = 'hidden';
+            }
+
+            return {
+                load: imgVisible
+            }
+        })();
+
+        document.addEventListener('click', (e) => {
+            if (!/^\/d\//.test(location.pathname)) return;
+            if (e.target.id != "" || e.target.className != "") return;
+            switch (e.target.tagName) {
+                case "IMG":
+                    e.preventDefault();
+                    DiscussionImage.load(e.target);
+                    break;
+                case "A":
+                    e.preventDefault();
+                    window.open(e.target.href);
+                    break;
+            }
+        });
+    })();
 
     function Timer(call, t) {
         if (t == null) window.requestAnimationFrame(call);
