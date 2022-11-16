@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 10:25";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 10:45";
     var BH_store = {
         data: {
             notifications: {},
@@ -80,12 +80,11 @@
     })();
 
     const PreviewImage = (() => {
-        var state = false;
+        var state;
 
         function loadStart() {
             if (state) return;
-            state = true;
-            console.log("PreviewImage loading");
+            state = app.alerts.show("preview image loading");
             (function getDiscussionTimer() {
 
                 const path = location.pathname;
@@ -152,8 +151,8 @@
 
         var loadMoreBtn;
         function loadEnd() {
-            state = false;
-            console.log('PreviewImage loaded');
+            app.alerts.clear(state);
+            state = null;
             const loadMore = document.querySelector('.DiscussionList-loadMore button');
             if (loadMore && loadMore != loadMoreBtn) {
                 loadMoreBtn = loadMore;
@@ -441,9 +440,7 @@
             });
             BHmenu.setReply(app.translator.translations["core.forum.discussion_controls.reply_button"]);
             const alertId = app.alerts.show(updateTime);
-            setTimeout(() => {
-                app.alerts.clear(alertId);
-            }, 3000);
+            setTimeout(() => app.alerts.clear(alertId), 3000);
         }
         catch {
             setTimeout(setLang, 1000);
