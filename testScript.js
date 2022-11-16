@@ -9,7 +9,7 @@
     }
 
 
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 00:30";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 02:55";
     var BH_store = {
         data: {
             notifications: {},
@@ -89,7 +89,6 @@
     })();
 
     (function PreviewImage() {
-
         (function getDiscussionTimer() {
             const path = location.pathname;
             const discussion = document.querySelector('.DiscussionListItem');
@@ -384,117 +383,129 @@
         }
     })();
 
-    (function DiscussionImage() {
-        const fullScreenImageBorder = document.createElement('div');
-        fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
+    (function DiscussionElement() {
+        const DiscussionImage = (() => {
+            const fullScreenImageBorder = document.createElement('div');
+            fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
 
-        const fullScreenImageClose = document.createElement('div');
-        fullScreenImageClose.id = 'BH_fullScreenImageClose';
-        fullScreenImageBorder.appendChild(fullScreenImageClose);
-        fullScreenImageClose.addEventListener('click', () => {
-            document.body.removeChild(fullScreenImageBorder);
-            document.body.style.overflowY = 'scroll';
-        });
+            const fullScreenImageClose = document.createElement('div');
+            fullScreenImageClose.id = 'BH_fullScreenImageClose';
+            fullScreenImageBorder.appendChild(fullScreenImageClose);
+            fullScreenImageClose.addEventListener('click', () => {
+                document.body.removeChild(fullScreenImageBorder);
+                document.body.style.overflowY = 'scroll';
+            });
 
-        var ImgMove;
-        var mouseMove;
-        const fullScreenImage = document.createElement('img');
-        fullScreenImage.id = 'BH_fullScreenImage';
-        fullScreenImageBorder.appendChild(fullScreenImage);
-        fullScreenImage.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-        });
-        fullScreenImageBorder.addEventListener('mousedown', (e) => mouseMove = { x: e.clientX, y: e.clientY });
-        fullScreenImageBorder.addEventListener('mousemove', (e) => {
-            if (mouseMove) {
-                ImgMove.x += e.clientX - mouseMove.x;
-                ImgMove.y += e.clientY - mouseMove.y;
-                mouseMove = {
-                    x:e.clientX,
-                    y:e.clientY
-                };
+            var ImgMove;
+            var mouseMove;
+            const fullScreenImage = document.createElement('img');
+            fullScreenImage.id = 'BH_fullScreenImage';
+            fullScreenImageBorder.appendChild(fullScreenImage);
+            fullScreenImage.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+            });
+            fullScreenImageBorder.addEventListener('mousedown', (e) => mouseMove = { x: e.clientX, y: e.clientY });
+            fullScreenImageBorder.addEventListener('mousemove', (e) => {
+                if (mouseMove) {
+                    ImgMove.x += e.clientX - mouseMove.x;
+                    ImgMove.y += e.clientY - mouseMove.y;
+                    mouseMove = {
+                        x: e.clientX,
+                        y: e.clientY
+                    };
+                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
+                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
+                }
+            });
+            fullScreenImageBorder.addEventListener('mouseup', () => {
+                mouseMove = null;
+            });
+
+            fullScreenImageBorder.addEventListener('wheel', (e) => {
+                if (e.wheelDeltaY > 0) {
+                    fullScreenImage.width *= 1.05;
+                    fullScreenImage.height *= 1.05;
+                }
+                else {
+                    fullScreenImage.width *= 0.95;
+                    fullScreenImage.height *= 0.95;
+                }
                 fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
                 fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
+            });
+
+            const fullScreenImageUrl = document.createElement('div');
+            fullScreenImageUrl.id = 'BH_fullScreenImageUrl';
+            fullScreenImageBorder.appendChild(fullScreenImageUrl);
+            fullScreenImageUrl.addEventListener('click', () => window.open(fullScreenImageUrl.dataset.url));
+
+            function imgVisible(img) {
+                fullScreenImage.style.display = 'none';
+                fullScreenImage.src = img.src;
+                const Img = new Image();
+                Img.addEventListener('error', (e) => {
+                    console.log(e);
+                });
+                Img.addEventListener('load', () => {
+                    fullScreenImage.src = img.src;
+                    const maxWidth = window.innerWidth - 100;
+                    const maxHeight = window.innerHeight - 100;
+                    const widthS = maxWidth / Img.width;
+                    const heightS = maxHeight / Img.height;
+
+                    if (widthS < 1 || heightS < 1) {
+                        if (widthS < heightS) {
+                            fullScreenImage.width = Img.width * widthS;
+                            fullScreenImage.height = Img.height * widthS;
+                        }
+                        else {
+                            fullScreenImage.width = Img.width * heightS;
+                            fullScreenImage.height = Img.height * heightS;
+                        }
+                    }
+                    else {
+                        fullScreenImage.width = Img.width;
+                        fullScreenImage.height = Img.height;
+                    }
+                    ImgMove = {
+                        x: 0,
+                        y: 0
+                    };
+                    fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
+                    fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
+                    fullScreenImage.style.display = 'block';
+                });
+                Img.src = img.src;
+                if (img.parentNode.tagName == 'A') {
+                    const url = img.parentNode.href;
+                    fullScreenImageUrl.dataset.url = url;
+                    fullScreenImageUrl.innerText = url;
+                    fullScreenImageUrl.style.display = 'block';
+                }
+                else fullScreenImageUrl.style.display = 'none';
+                document.body.appendChild(fullScreenImageBorder);
+                document.body.style.overflowY = 'hidden';
             }
-        });
-        fullScreenImageBorder.addEventListener('mouseup', () => {
-            mouseMove = null;
-        });
 
-        fullScreenImageBorder.addEventListener('wheel', (e) => {
-            if (e.wheelDeltaY > 0) {
-                fullScreenImage.width *= 1.05;
-                fullScreenImage.height *= 1.05;
+            return {
+                load: imgVisible
             }
-            else {
-                fullScreenImage.width *= 0.95;
-                fullScreenImage.height *= 0.95;
-            }
-            fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
-            fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
-        });
-
-        const fullScreenImageUrl = document.createElement('div');
-        fullScreenImageUrl.id = 'BH_fullScreenImageUrl';
-        fullScreenImageBorder.appendChild(fullScreenImageUrl);
-        fullScreenImageUrl.addEventListener('click', () => window.open(fullScreenImageUrl.dataset.url));
-
-
+        })();
 
         document.addEventListener('click', (e) => {
             if (!/^\/d\//.test(location.pathname)) return;
-            if (e.target.tagName != 'IMG' || e.target.id != "" || e.target.className != "") return;
-            e.preventDefault();
-            imgVisible(e.target);
-        });
-
-        function imgVisible(img) {
-            fullScreenImage.style.display = 'none';
-            fullScreenImage.src = img.src;
-            const Img = new Image();
-            Img.addEventListener('error', (e) => {
-                console.log(e);
-            });
-            Img.addEventListener('load', () => {
-                fullScreenImage.src = img.src;
-                const maxWidth = window.innerWidth - 100;
-                const maxHeight = window.innerHeight - 100;
-                const widthS = maxWidth / Img.width;
-                const heightS = maxHeight / Img.height;
-
-                if (widthS < 1 || heightS < 1) {
-                    if (widthS < heightS) {
-                        fullScreenImage.width = Img.width * widthS;
-                        fullScreenImage.height = Img.height * widthS;
-                    }
-                    else {
-                        fullScreenImage.width = Img.width * heightS;
-                        fullScreenImage.height = Img.height * heightS;
-                    }
-                }
-                else {
-                    fullScreenImage.width = Img.width;
-                    fullScreenImage.height = Img.height;
-                }
-                ImgMove = {
-                    x: 0,
-                    y: 0
-                };
-                fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
-                fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
-                fullScreenImage.style.display = 'block';
-            });
-            Img.src = img.src;
-            if (img.parentNode.tagName == 'A') {
-                const url = img.parentNode.href;
-                fullScreenImageUrl.dataset.url = url;
-                fullScreenImageUrl.innerText = url;
-                fullScreenImageUrl.style.display = 'block';
+            if (e.target.id != "" || e.target.className != "") return;
+            switch (e.target.tagName) {
+                case "IMG":
+                    e.preventDefault();
+                    DiscussionImage.load(e.target);
+                    break;
+                case "A":
+                    e.preventDefault();
+                    window.open(e.target.href);
+                    break;
             }
-            else fullScreenImageUrl.style.display = 'none';
-            document.body.appendChild(fullScreenImageBorder);
-            document.body.style.overflowY = 'hidden';
-        }
+        });
     })();
 
     var temp;
