@@ -554,7 +554,8 @@ ul.affix-top {
 	height: 130px;
 	margin: 10px 0;
 	background-color: #5551;
-	border-radius: 3px;
+	border-radius: 7px;
+	cursor: default;
 }
 
 .BH_DiscussionListItem:hover {

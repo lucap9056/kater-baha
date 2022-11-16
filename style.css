@@ -547,12 +547,23 @@ ul.affix-top {
 }
 
 .BH_DiscussionListItem {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 120px;
-    margin: 10px 0;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 130px;
+	margin: 10px 0;
+	background-color: #5551;
+	border-radius: 7px;
+	cursor: default;
+}
+
+.BH_DiscussionListItem:hover {
+	background-color: #9991;
+}
+
+.BH_DiscussionListItem:hover a {
+	text-decoration: none;
 }
 
 .BH_DiscussionListItem .DiscussionListItem-title {
@@ -565,13 +576,13 @@ ul.affix-top {
 }
 
 .BH_previewImage {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 240px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 7px;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 240px;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 7px;
 }
 
 div.BH_previewImage {
