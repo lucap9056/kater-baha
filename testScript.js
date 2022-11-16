@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 10:45";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 10:45";
     var BH_store = {
         data: {
             notifications: {},
