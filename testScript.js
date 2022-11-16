@@ -398,15 +398,18 @@
         fullScreenImage.id = 'BH_fullScreenImage';
         fullScreenImageBorder.appendChild(fullScreenImage);
         fullScreenImage.addEventListener('scroll', (e) => {
-
+            e.preventDefault();
+            console.log(e);
         });
         fullScreenImage.addEventListener('load', (e) => {
             const maxWidth = window.innerWidth - 100;
             const maxHeight = window.innerHeight - 100;
             const widthS = maxWidth / fullScreenImage.width;
             const heightS = maxHeight / fullScreenImage.height;
+            console.log(widthS);
+            console.log(heightS);
             if (widthS < 1 || heightS < 1) {
-                if (widthS > heightS) {
+                if (widthS < heightS) {
                     fullScreenImage.width *= widthS;
                     fullScreenImage.height *= widthS;
                 }
@@ -430,6 +433,7 @@
         document.addEventListener('click', (e) => {
             if (!/^\/d\//.test(location.pathname)) return;
             if (e.target.tagName != 'IMG') return;
+            if (e.target.id == 'BH_fullScreenImage') return;
             e.preventDefault();
             imgVisible(e.target);
         });
