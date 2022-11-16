@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 19:15";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/16 19:45";
     var BH_store = {
         data: {
             notifications: {},
@@ -80,17 +80,21 @@
     })();
 
     (function PreviewImage() {
-        
+
         (function getDiscussionTimer() {
-            Timer(getDiscussionTimer, 1000);
             const path = location.pathname;
             const discussion = document.querySelector('.DiscussionListItem');
-            if ((!/^\/t\//.test(path) && path != "/") || discussion == null) return;
-
-            const msgID = app.alerts.show("preview image loading");
-            (function getDiscussion() {
+            if ((!/^\/t\//.test(path) && path != "/") || discussion == null) {
+                Timer(getDiscussionTimer, 1000);
+                return;
+            }
+            (function getDiscussion(msgID) {
                 const discussion = document.querySelector('.DiscussionListItem');
-                if (discussion == null) return app.alerts.clear(msgID);
+                if (discussion == null) {
+                    app.alerts.clear(msgID);
+                    Timer(getDiscussionTimer, 1000);
+                    return;
+                }
 
                 discussion.classList.remove('DiscussionListItem');
                 discussion.classList.add('BH_DiscussionListItem');
@@ -105,8 +109,8 @@
                 catch {
 
                 }
-                getDiscussion();
-            })();
+                getDiscussion(msgID);
+            })(app.alerts.show("preview image loading"));
         })();
 
         async function setPreviewImage(element, id) {
