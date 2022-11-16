@@ -384,7 +384,7 @@
         }
     })();
 
-    const DiscussionImage = (() => {
+(function DiscussionImage() {
         const fullScreenImageBorder = document.createElement('div');
         fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
 
