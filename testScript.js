@@ -1,6 +1,6 @@
 (() => {
     'use strict';
-    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 09:25";
+    const updateTime = "卡特-巴哈模式 最後更新時間:2022/11/16 10:25";
     var BH_store = {
         data: {
             notifications: {},
@@ -79,6 +79,93 @@
         }
     })();
 
+    const PreviewImage = (() => {
+        var state = false;
+
+        function loadStart() {
+            if (state) return;
+            state = true;
+            console.log("PreviewImage loading");
+            (function getDiscussionTimer() {
+
+                const path = location.pathname;
+                if (!/^\/t\//.test(path) && path != "/") return;
+
+                const discussion = document.querySelector('.DiscussionListItem');
+                if (discussion == null) {
+                    Timer(getDiscussionTimer, 1000);
+                    return;
+                }
+
+                (function getDiscussion() {
+                    const discussion = document.querySelector('.DiscussionListItem');
+                    if (discussion == null) {
+                        loadEnd();
+                        return;
+                    }
+                    discussion.classList.remove('DiscussionListItem');
+                    discussion.classList.add('BH_DiscussionListItem');
+                    discussion.addEventListener('click', () => {
+                        const a = discussion.querySelector('a.DiscussionListItem-main');
+                        a.click();
+                    });
+                    try {
+                        const id = discussion.parentNode.dataset.id;
+                        setPreviewImage(discussion, id);
+                    }
+                    catch {
+
+                    }
+                    getDiscussion();
+                })();
+            })();
+        }
+
+        async function setPreviewImage(element, id) {
+            const discussion = app.store.data.discussions[id].data;
+            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
+
+            const div = document.createElement('div');
+            div.innerHTML = post.data.attributes.contentHtml;
+            const img = div.querySelector('img');
+
+            if (img) {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImage';
+                previewImg.src = img.src;
+                element.appendChild(previewImg);
+            }
+            else {
+                const previewImg = document.createElement('div');
+                previewImg.className = 'BH_previewImage';
+                previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
+                element.appendChild(previewImg);
+            }
+
+            var content = div.innerText.replace(/\n/g, '');
+            if (content.length > 100) content = content.substring(0, 100) + '...';
+            const previewContent = document.createElement('div');
+            previewContent.className = 'BH_previewContent';
+            previewContent.innerText = content;
+            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
+        }
+
+        var loadMoreBtn;
+        function loadEnd() {
+            state = false;
+            console.log('PreviewImage loaded');
+            const loadMore = document.querySelector('.DiscussionList-loadMore button');
+            if (loadMore && loadMore != loadMoreBtn) {
+                loadMoreBtn = loadMore;
+                loadMore.addEventListener('click', loadStart);
+            }
+        }
+
+        return {
+            load: loadStart
+        }
+    })();
+
     const BHmenu = (() => {
         var mode = "";
 
@@ -93,6 +180,8 @@
         const menu_focus = document.createElement('div');
         menu_focus.id = 'BH_headerMenuFocus';
         menu.appendChild(menu_focus);
+
+        document.getElementById('home-link').addEventListener('click', () => PreviewImage.load());
 
         const tagItem = (() => {
             var li = document.createElement('li');
@@ -239,6 +328,7 @@
                                     tag.classList.add('active');
                                     tag.addEventListener('click', () => tag.querySelector('a').click());
                                 }
+                                item.addEventListener('click', () => PreviewImage.load());
                             }
                         }
                         else item.addEventListener('click', () => tagItem.set(item));
@@ -308,62 +398,6 @@
         }
     })();
 
-    (function previewImage() {
-
-        (function getDiscussionTimer() {
-            Timer(getDiscussionTimer, 1000);
-            const path = location.pathname;
-            if (!/^\/t\//.test(path) && path != "/") return;
-            (function getDiscussion() {
-                const discussion = document.querySelector('.DiscussionListItem');
-                if (discussion == null) return;
-                discussion.classList.remove('DiscussionListItem');
-                discussion.classList.add('BH_DiscussionListItem');
-                discussion.addEventListener('click', () => {
-                    const a = discussion.querySelector('a.DiscussionListItem-main');
-                    a.click();
-                });
-                try {
-                    const id = discussion.parentNode.dataset.id;
-                    setPreviewImage(discussion, id);
-                }
-                catch {
-
-                }
-                getDiscussion();
-            })();
-        })();
-
-        async function setPreviewImage(element, id) {
-            const discussion = app.store.data.discussions[id].data;
-            const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
-
-            const div = document.createElement('div');
-            div.innerHTML = post.data.attributes.contentHtml;
-            const img = div.querySelector('img');
-
-            if (img) {
-                const previewImg = document.createElement('img');
-                previewImg.className = 'BH_previewImage';
-                previewImg.src = img.src;
-                element.appendChild(previewImg);
-            }
-            else {
-                const previewImg = document.createElement('div');
-                previewImg.className = 'BH_previewImage';
-                previewImg.classList.add(`BH_previewImageTag${discussion.relationships.tags.data[0].id}`);
-                element.appendChild(previewImg);
-            }
-
-            var content = div.innerText.replace(/\n/g, '');
-            if (content.length > 100) content = content.substring(0, 100) + '...';
-            const previewContent = document.createElement('div');
-            previewContent.className = 'BH_previewContent';
-            previewContent.innerText = content;
-            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
-        }
-    })();
-
     var temp;
     function pageCheck() {
         Timer(pageCheck, 1000);
@@ -378,6 +412,7 @@
                 BHmenu.clear();
                 BHmenu.discussions();
                 admin.append();
+                PreviewImage.load();
                 break;
             case "u":
                 BHmenu.clear();
@@ -612,7 +647,7 @@
         });
 
         function getNotificationTimer() {
-            Timer(getNotificationTimer, 300000);
+            setTimeout(getNotificationTimer, 300000);
             getNotification('page[limit]=20&sort=-createdAt', (res) => {
                 res.data.filter(e => e.attributes.isRead == false).reverse().map(data => {
                     if (BH_store.data.notifications[data.id]) return;
@@ -634,7 +669,7 @@
                 setNotificationNoreadNum();
             });
         }
-        Timer(getNotificationTimer, 60000);
+        Timer(getNotificationTimer, 300000);
 
         function setNotificationNoreadNum() {
             if (notifications_num > 0) {
