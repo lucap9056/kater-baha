@@ -1,5 +1,6 @@
 (function BHload() {
     'use strict';
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 05:15";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -24,8 +25,6 @@
     catch {
     }
 
-
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 05:05";
     var BH_store = {
         data: {
             notifications: {},
@@ -591,7 +590,6 @@
                 }
                 const iconFile = new Blob([new Uint8Array(array)], { type: 'image/png' });
                 IconUrl_alert = URL.createObjectURL(iconFile);
-                console.log(IconUrl_alert);
             }
             icon.src = IconUrl;
         })();
@@ -886,13 +884,12 @@
 
             function imgVisible(img) {
                 fullScreenImage.style.display = 'none';
-                fullScreenImage.src = img.src;
                 const Img = new Image();
                 Img.addEventListener('error', (e) => {
                     console.log(e);
                 });
                 Img.addEventListener('load', () => {
-                    fullScreenImage.src = img.src;
+                    fullScreenImage.src = Img.src;
                     const maxWidth = window.innerWidth - 100;
                     const maxHeight = window.innerHeight - 100;
                     const widthS = maxWidth / Img.width;
@@ -920,7 +917,7 @@
                     fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
                     fullScreenImage.style.display = 'block';
                 });
-                Img.src = img.src;
+                Img.src = img.src.replace(/h\./,'.');
                 if (img.parentNode.tagName == 'A') {
                     const url = img.parentNode.href;
                     fullScreenImageUrl.dataset.url = url;
