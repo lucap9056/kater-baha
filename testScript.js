@@ -1,5 +1,14 @@
-(() => {
+(function BHload() {
     'use strict';
+    try {
+        var test = app.translator.translations["fof-gamification.forum.ranking.amount"]
+    }
+    catch {
+        setTimeout(BHload, 1000);
+        return;
+    }
+
+
     const updateTime = "卡巴姆特 最後更新時間:2022/11/16 19:45";
     var BH_store = {
         data: {
@@ -385,15 +394,29 @@
         fullScreenImageClose.addEventListener('click', () => document.body.removeChild(fullScreenImageBorder));
 
         var scrollTemp;
-        var ImageTemp = new Image();
-        const fullScreenImage = document.createElement('canvas');
+        const fullScreenImage = document.createElement('img');
         fullScreenImage.id = 'BH_fullScreenImage';
         fullScreenImageBorder.appendChild(fullScreenImage);
         fullScreenImage.addEventListener('scroll', (e) => {
 
         });
-        ImageTemp.addEventListener('load', () => {
-
+        fullScreenImage.addEventListener('load', (e) => {
+            const maxWidth = window.innerWidth - 100;
+            const maxHeight = window.innerHeight - 100;
+            const widthS = maxWidth / fullScreenImage.width;
+            const heightS = maxHeight / fullScreenImage.height;
+            if (widthS < 1 || heightS < 1) {
+                if (widthS > heightS) {
+                    fullScreenImage.width *= widthS;
+                    fullScreenImage.height *= widthS;
+                }
+                else {
+                    fullScreenImage.width *= heightS;
+                    fullScreenImage.height *= heightS;
+                }
+            }
+            fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
+            fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
         });
 
         var url = "";
@@ -412,7 +435,7 @@
         });
 
         function imgVisible(img) {
-            ImageTemp.src = img.src;
+            fullScreenImage.src = img.src;
             if (img.parentNode.tagName == 'A') {
                 url = img.parentNode.href;
                 fullScreenImageUrl.style.display = 'block';
