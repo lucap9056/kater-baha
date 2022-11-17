@@ -2,21 +2,21 @@
     (function Session() {
         var header;
         try {
-            header = document.querySelector('#header-secondary .Header-controls');
+            header = document.getElementById('header-secondary').getElementsByClassName('Header-controls')[0];
+
         }
         catch {
             setTimeout(1000, Session);
             return;
         }
-
-        const sessionItem = document.createElement('li');
-        sessionItem.className = 'BH_item-session';
-        header.appendChild(sessionItem);
-
-        const li_list = document.querySelector('.item-session .Dropdown-menu').childNodes;
-        for (let i = 0; i < li_list.length; i++) {
-            sessionItem.appendChild(li_list[i]);
+        if (document.querySelector('.item-settings') == null) {
+            setTimeout(1000, Session);
+            return;
         }
+        const sessionItem = document.querySelector('.item-session');
+        const sessionMenu = sessionItem.querySelector('.Dropdown-menu');
+        sessionMenu.className = 'BH_item-session';
+        header.appendChild(sessionMenu);
 
     })();
 })();

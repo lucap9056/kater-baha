@@ -1,5 +1,6 @@
-.item-nav .ButtonGroup button,
+.item-session,
 .item-newDiscussion,
+.item-nav .ButtonGroup button,
 .Header-controls .item-notifications,
 .Header-controls .item-locale {
     display: none;
@@ -15,4 +16,23 @@
     position: absolute;
     top: 0px;
     bottom: 0px;
+    width: 100%;
+}
+
+.BH_item-session li.Dropdown-separator {
+    height: 2px;
+    background-color: #0c3d99;
+}
+
+.BH_item-session button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+}
+
+.BH_item-session li a {
+    color: white;
 }
