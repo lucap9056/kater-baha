@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/17 05:15";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/18 06:50";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -8,7 +8,8 @@
             "core.forum.index.all_discussions_link": "文章列表",
             "core.forum.index.start_discussion_button": "發文",
             "kabamut.name": "卡巴姆特",
-            "kabamut.settings.preview": "顯示文章預覽"
+            "kabamut.settings.preview": "顯示文章預覽",
+            "kabamut.settings.notification": "卡特原版通知欄"
         });
     }
     catch {
@@ -17,7 +18,8 @@
     }
 
     var config = {
-        preview: true
+        preview: true,
+        notification: false
     };
     try {
         config = Object.assign(config, JSON.parse(document.cookie.split('kabamut=')[1].split(';')[0]));
@@ -318,39 +320,41 @@
 
     const settings = (() => {
 
-        const inputDisplay = document.createElement('div');
-        inputDisplay.className = 'Checkbox-display';
-        inputDisplay.ariaHidden = true;
-
-        const text = document.createTextNode(app.translator.translations["kabamut.settings.preview"]);
-
-        const label = document.createElement('label');
-        label.className = `Checkbox on Checkbox--switch`;
-
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.checked = true;
-        input.addEventListener('change', () => {
-            if (input.checked) label.className = label.className.replace(/off/, 'on');
-            else label.className = label.className.replace(/on/, 'off');
-            config.preview = input.checked;
-            saveSettings();
-        });
-        label.appendChild(input);
-        label.appendChild(inputDisplay);
-        label.appendChild(text);
-
-        if (!config.preview) {
-            input.checked = false;
-            label.className = label.className.replace(/on/, 'off');
-        }
-
-        const li = document.createElement('li');
-        li.className = 'item-previewImage';
-        li.appendChild(label);
-
         const ul = document.createElement('ul');
-        ul.appendChild(li);
+
+        Object.keys(config).map(configName => {
+            const inputDisplay = document.createElement('div');
+            inputDisplay.className = 'Checkbox-display';
+            inputDisplay.ariaHidden = true;
+
+            const text = document.createTextNode(app.translator.translations[`kabamut.settings.${configName}`]);
+
+            const label = document.createElement('label');
+            label.className = `Checkbox on Checkbox--switch`;
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.checked = true;
+            input.addEventListener('change', () => {
+                if (input.checked) label.className = label.className.replace(/off/, 'on');
+                else label.className = label.className.replace(/on/, 'off');
+                config[configName] = input.checked;
+                saveSettings();
+            });
+            label.appendChild(input);
+            label.appendChild(inputDisplay);
+            label.appendChild(text);
+
+            if (!config[configName]) {
+                input.checked = false;
+                label.className = label.className.replace(/on/, 'off');
+            }
+
+            const li = document.createElement('li');
+            li.className = `item-${configName}`;
+            li.appendChild(label);
+            ul.appendChild(li);
+        });
 
         const fieldset = document.createElement('fieldset');
         fieldset.className = 'Settings-kabamut';
@@ -563,6 +567,7 @@
     })();
 
     (function notifications() {
+        if (config.notification) return;
         const IconUrl = '/assets/favicon-gtoqtyic.png';
         var IconUrl_alert;
         const iconElement = document.createElement('link');
@@ -917,7 +922,7 @@
                     fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
                     fullScreenImage.style.display = 'block';
                 });
-                Img.src = img.src.replace(/h\./,'.');
+                Img.src = img.src.replace(/h\./, '.');
                 if (img.parentNode.tagName == 'A') {
                     const url = img.parentNode.href;
                     fullScreenImageUrl.dataset.url = url;
