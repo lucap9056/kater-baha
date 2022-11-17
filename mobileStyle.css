@@ -1,0 +1,18 @@
+.item-nav .ButtonGroup button,
+.item-newDiscussion,
+.Header-controls .item-notifications,
+.Header-controls .item-locale {
+    display: none;
+}
+
+#header,
+#header .container,
+#header-secondary .Header-controls {
+    height: 100%;
+}
+
+#header-secondary {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+}
