@@ -874,7 +874,7 @@
                     ImgResize += 0.1;
                     fullScreenImage.style.transformOrigin = `${e.layerX}px ${e.layerY}px`;
                 }
-                else if (ImgResize > 0) ImgResize -= 0.1;
+                else if (ImgResize > 1) ImgResize -= 0.1;
                 fullScreenImage.style.transform = `scale(${ImgResize})`;
             });
 
