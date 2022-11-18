@@ -12,14 +12,19 @@
     height: 100%;
 }
 
-#header-secondary {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    width: 100%;
+.Header-controls {
+    overflow-y: scroll;
 }
 
-.BH_item-session {
+#header-secondary {
+	position: absolute;
+	top: 40px;
+	bottom: 0px;
+	width: 100%;
+}
+
+.BH_item-session,
+.item-select {
     position: absolute;
     bottom: 0px;
     left: 0px;
@@ -27,17 +32,13 @@
     padding: 10px;
 }
 
-.BH_item-session li {
+.BH_item-session li,
+.item-select li {
     width: 100%;
     height: 32px;
     font-size: 16px;
     line-height: 32px;
     list-style: none;
-}
-
-.BH_item-session li.Dropdown-separator {
-    height: 2px;
-    background-color: #0c3d99;
 }
 
 .BH_item-session button {
@@ -49,6 +50,17 @@
     text-align: left;
 }
 
-.BH_item-session li a {
+.BH_item-session li a,
+.item-select li a {
     color: white;
+}
+
+.item-select .icon {
+    width: 16px;
+    text-align: center;
+}
+
+li.Dropdown-separator {
+    height: 2px;
+    background-color: #0c3d99;
 }
