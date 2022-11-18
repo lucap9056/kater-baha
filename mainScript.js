@@ -394,7 +394,7 @@
     })();
 
     var temp;
-    function pageCheck() {
+    (function pageCheck() {
         Timer(pageCheck, 1000);
         var path = location.pathname;
         welcomeImage.append();
@@ -425,8 +425,7 @@
                 break;
         }
         temp = path;
-    }
-    Timer(pageCheck);
+    })();
 
 
     (function setLang() {

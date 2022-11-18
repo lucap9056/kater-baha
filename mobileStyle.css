@@ -25,7 +25,7 @@
 
 .BH_item-session,
 .item-select {
-    position: absolute;
+    position: relative;
     bottom: 0px;
     left: 0px;
     right: 0px;
@@ -50,9 +50,10 @@
     text-align: left;
 }
 
-.BH_item-session li a,
-.item-select li a {
-    color: white;
+.BH_item-session li a, .item-select li a {
+	display: block;
+	color: white;
+	width: 100%;
 }
 
 .item-select .icon {
@@ -63,4 +64,9 @@
 li.Dropdown-separator {
     height: 2px;
     background-color: #0c3d99;
+}
+
+.BH_welcomeImage {
+	width: calc(100% + 20px);
+	margin: 5px -10px;
 }
