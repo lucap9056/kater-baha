@@ -16,6 +16,9 @@
         const sessionItem = document.querySelector('.item-session');
         const sessionMenu = sessionItem.querySelector('.Dropdown-menu');
         sessionMenu.className = 'BH_item-session';
+
+        const itemNav = document.querySelector('item-nav .ButtonGroup');
+        header.appendChild(itemNav);
         header.appendChild(sessionMenu);
 
     })();
