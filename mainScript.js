@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/18 06:50";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 07:30";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -845,6 +845,7 @@
 
             var ImgMove;
             var mouseMove;
+            var ImgResize = 1;
             const fullScreenImage = document.createElement('img');
             fullScreenImage.id = 'BH_fullScreenImage';
             fullScreenImageBorder.appendChild(fullScreenImage);
@@ -868,17 +869,13 @@
                 mouseMove = null;
             });
 
-            fullScreenImageBorder.addEventListener('wheel', (e) => {
+            fullScreenImage.addEventListener('wheel', (e) => {
                 if (e.wheelDeltaY > 0) {
-                    fullScreenImage.width *= 1.05;
-                    fullScreenImage.height *= 1.05;
+                    ImgResize += 0.1;
+                    fullScreenImage.style.transformOrigin = `${e.layerX}px ${e.layerY}px`;
                 }
-                else {
-                    fullScreenImage.width *= 0.95;
-                    fullScreenImage.height *= 0.95;
-                }
-                fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2 - ImgMove.y}px)`;
-                fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2 - ImgMove.x}px)`;
+                else if (ImgResize > 0) ImgResize -= 0.1;
+                fullScreenImage.style.transform = `scale(${ImgResize})`;
             });
 
             const fullScreenImageUrl = document.createElement('div');
@@ -913,12 +910,14 @@
                         fullScreenImage.width = Img.width;
                         fullScreenImage.height = Img.height;
                     }
+                    ImgResize = 1;
                     ImgMove = {
                         x: 0,
                         y: 0
                     };
                     fullScreenImage.style.top = `calc(50% - ${fullScreenImage.height / 2}px)`;
                     fullScreenImage.style.left = `calc(50% - ${fullScreenImage.width / 2}px)`;
+                    fullScreenImage.style.transform = `scale(${ImgResize})`;
                     fullScreenImage.style.display = 'block';
                 });
                 Img.src = img.src.replace(/h\./, '.');
