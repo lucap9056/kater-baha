@@ -984,9 +984,12 @@
         style.innerHTML = `
         .sideNav .Dropdown--select .Dropdown-menu > li > a,
         .sideNav .Dropdown--select .Dropdown-menu li,
+        .unread .DiscussionListItem-count,
         .DiscussionList-discussions,
         .BH_DiscussionListItem,
+        .Button,
         button,
+        input
         body,
         span,
         a {
