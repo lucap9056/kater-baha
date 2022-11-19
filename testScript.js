@@ -982,7 +982,10 @@
 
         const style = document.createElement('style');
         style.innerHTML = `
+        .sideNav .Dropdown--select .Dropdown-menu > li > a,
+        .sideNav .Dropdown--select .Dropdown-menu li,
         .DiscussionList-discussions,
+        .BH_DiscussionListItem,
         button,
         body,
         span,
