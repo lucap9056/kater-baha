@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 23:00";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 23:15";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -989,7 +989,7 @@
         .BH_DiscussionListItem,
         .Button,
         button,
-        input
+        input,
         body,
         span,
         a {
