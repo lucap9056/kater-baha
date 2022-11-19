@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 10:00";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 22:15";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -9,6 +9,7 @@
             "core.forum.index.start_discussion_button": "發文",
             "kabamut.name": "卡巴姆特",
             "kabamut.nav.froum_rule": '站規',
+            "kabamut.settings.bala_cursor": "拔辣滑鼠游標",
             "kabamut.settings.preview": "顯示文章預覽",
             "kabamut.settings.notification": "卡特原版通知欄"
         });
@@ -19,6 +20,7 @@
     }
 
     var config = {
+        bala_cursor: false,
         preview: true,
         notification: false
     };
@@ -964,6 +966,18 @@
                     window.open(e.target.href);
                     break;
             }
+        });
+    })();
+
+    (function BalaCursor() {
+        if (!config.bala_cursor) return;
+        const cursor = document.createElement('div');
+        cursor.id = 'cursor';
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.top = `${e.clientY}px`;
+            cursor.style.left = `${e.clientX}px`;
         });
     })();
 
