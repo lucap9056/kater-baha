@@ -979,6 +979,19 @@
             cursor.style.top = `${e.clientY}px`;
             cursor.style.left = `${e.clientX}px`;
         });
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .DiscussionList-discussions,
+        button,
+        body,
+        span,
+        a {
+            cursor:none;
+        }
+        `;
+
+        document.body.appendChild(style);
     })();
 
     function Timer(call, t) {
