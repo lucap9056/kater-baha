@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 23:15";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/20 07:25";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -108,6 +108,76 @@
         }
     })();
 
+    const multiImageUpload = (() => {
+        var loading = false;
+        const imgurClientID = app.forum.data.attributes["imgur-upload.client-id"];
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.multiple = true;
+
+        var uploading = false;
+        const multiImage_iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M432 112V96a48.14 48.14 0 00-48-48H64a48.14 48.14 0 00-48 48v256a48.14 48.14 0 0048 48h16" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M342.15 372.17L255 285.78a30.93 30.93 0 00-42.18-1.21L96 387.64M265.23 464l118.59-117.73a31 31 0 0141.46-1.87L496 402.91" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>`;
+        const multiImage_icon = document.createElement('button');
+        multiImage_icon.className = 'Button hasIcon imgur-multi-upload-button hasIcon';
+
+        const multiImage_li = document.createElement('li');
+        multiImage_li.className = 'item-imgur-multi-upload';
+        multiImage_li.addEventListener('click', () => {
+            if (uploading) return;
+            input.click();
+        });
+        multiImage_li.appendChild(multiImage_icon);
+
+        input.addEventListener('change', async (e) => {
+            uploading = true;
+            multiImage_icon.classList.remove('Button--icon');
+            multiImage_icon.innerText = "Uplaoding...";
+            console.log(input.files);
+            await Array.prototype.slice.call(input.files).map(Imgur);
+            multiImage_icon.innerHTML = multiImage_iconSvg;
+            uploading = false;
+        });
+
+        async function Imgur(file) {
+            const form = new FormData();
+            form.append('image', file);
+            const response = await fetch('https://api.imgur.com/3/image', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Client-ID ${imgurClientID}`
+                },
+                body: form
+            });
+            var res = await response.json();
+            const textrea = document.querySelector('.TextEditor-editor');
+            if (textrea == null || !res.success) return;
+            textrea.value += `\n[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`;
+        }
+
+        function load() {
+            const singleImage = document.querySelector('.item-imgur-upload');
+            if (!singleImage == null) {
+                setTimeout(load, 1000);
+                return;
+            }
+
+            if (document.querySelector('.item-imgur-multi-upload')) return;
+            multiImage_icon.classList.add('Button--icon');
+            multiImage_icon.innerHTML = multiImage_iconSvg;
+            singleImage.parentElement.insertBefore(multiImage_li, singleImage);
+            loading = false;
+        }
+
+        return {
+            append: () => {
+                if (loading) return;
+                loading = true;
+                load();
+            }
+        }
+    })();
+
     const BHmenu = (() => {
         var mode = "";
 
@@ -160,6 +230,7 @@
         replyBtn.id = 'BH-replay';
         replyBtn.addEventListener('click', () => {
             document.querySelector('.SplitDropdown-button').click();
+            multiImageUpload.append();
         });
 
         function setFocusOut() {
@@ -294,6 +365,7 @@
                         const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
                         postBtn.querySelector('button').style.pointerEvents = 'auto';
                         menu.appendChild(postBtn);
+                        postBtn.addEventListener('click', multiImageUpload.append);
                     }
                     catch {
                         setTimeout(setPostBtn, 1000);
@@ -391,6 +463,7 @@
             }
         }
     })();
+
 
     const welcomeImage = (() => {
         const img = document.createElement('img');

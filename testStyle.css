@@ -781,3 +781,8 @@ div.BH_previewImage::before {
     text-align: center;
     cursor: pointer;
 }
+
+.item-imgur-multi-upload svg {
+	width: 20px;
+	margin: -6px;
+}
