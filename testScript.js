@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 08:40";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 10:00";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -8,6 +8,7 @@
             "core.forum.index.all_discussions_link": "文章列表",
             "core.forum.index.start_discussion_button": "發文",
             "kabamut.name": "卡巴姆特",
+            "kabamut.nav.froum_rule": '站規',
             "kabamut.settings.preview": "顯示文章預覽",
             "kabamut.settings.notification": "卡特原版通知欄"
         });
@@ -192,6 +193,7 @@
                     "flarum-subscriptions.forum.badge.following_tooltip": '/following',
                     "clarkwinkelmann-bookmarks.forum.badge": '/bookmarks',
                     "flarum-tags.forum.index.tags_link": '/tags',
+                    "kabamut.nav.froum_rule": '/d/87762'
                 };
                 mode = 'd';
                 menu.appendChild(menu_focus);
@@ -241,6 +243,18 @@
                         if (/allDiscussions|rankings|following|bookmarks|tags|separator/.test(item.className)) {
                             if (menu.querySelector(`.${item.className.replace('active').trim()}`)) return;
                             menu.appendChild(item);
+
+                            if (/separator/.test(item.className)) {
+                                item.className = 'item-forum_rule';
+                                const span = document.createElement('span');
+                                span.className = 'Button-label';
+                                span.innerText = app.translator.translations["kabamut.nav.froum_rule"];
+
+                                const a = document.createElement('a');
+                                a.href = '/d/87762';
+                                a.appendChild(span);
+                                item.appendChild(a);
+                            }
 
                             item.addEventListener('click', () => {
                                 Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
