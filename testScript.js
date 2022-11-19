@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 07:30";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/19 08:40";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -567,6 +567,13 @@
 
     (function notifications() {
         if (config.notification) return;
+
+        const originalNotifications = document.querySelector('.item-notifications');
+        if (originalNotifications == null) {
+            setTimeout(notifications, 1000);
+            return;
+        }
+
         const IconUrl = '/assets/favicon-gtoqtyic.png';
         var IconUrl_alert;
         const iconElement = document.createElement('link');
@@ -598,12 +605,6 @@
             icon.src = IconUrl;
         })();
 
-
-
-        if (document.querySelector('.item-notifications') == null) {
-            setTimeout(notifications, 1000);
-            return;
-        }
         var notifications_list = {};
         var notifications_num = 0;
         var notifications_next = "";
@@ -623,9 +624,8 @@
         notificationsLi.appendChild(notificationBtn);
         notificationsLi.appendChild(notificationsTable);
 
-        const headerNotification = document.querySelector('.item-notifications');
-        headerNotification.parentNode.insertBefore(notificationsLi, headerNotification);
-        headerNotification.style.display = 'none';
+        originalNotifications.parentNode.insertBefore(notificationsLi, originalNotifications);
+        originalNotifications.parentNode.removeChild(originalNotifications);
 
         notificationsTable.addEventListener('scroll', (e) => {
             if (notifications_state == "" && notificationsTable.scrollTop == notificationsTable.scrollTopMax) {
@@ -760,7 +760,7 @@
                     break;
                 case "discussions":
                     discussion = BH_store.data.discussions[data.relationships.subject.data.id];
-                    url = `/d/${discussion.data.id}`;
+                    url = `/d/${discussion.data.id}/${data.attributes.content.postNumber}`;
                     break;
             }
 
@@ -874,7 +874,7 @@
                     ImgResize += 0.1;
                     fullScreenImage.style.transformOrigin = `${e.layerX}px ${e.layerY}px`;
                 }
-                else if (ImgResize > 0) ImgResize -= 0.1;
+                else if (ImgResize > 1) ImgResize -= 0.1;
                 fullScreenImage.style.transform = `scale(${ImgResize})`;
             });
 
