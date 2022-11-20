@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/20 07:25";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/20 08:35";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -129,19 +129,18 @@
         });
         multiImage_li.appendChild(multiImage_icon);
 
-        input.addEventListener('change', async (e) => {
+        input.addEventListener('change', (e) => {
             uploading = true;
             multiImage_icon.classList.remove('Button--icon');
             multiImage_icon.innerText = "Uplaoding...";
-            console.log(input.files);
-            await Array.prototype.slice.call(input.files).map(Imgur);
-            multiImage_icon.innerHTML = multiImage_iconSvg;
-            uploading = false;
+            Imgur(Array.prototype.slice.call(input.files));
         });
 
-        async function Imgur(file) {
+
+
+        async function Imgur(files) {
             const form = new FormData();
-            form.append('image', file);
+            form.append('image', files.shift());
             const response = await fetch('https://api.imgur.com/3/image', {
                 method: 'POST',
                 headers: {
@@ -151,8 +150,13 @@
             });
             var res = await response.json();
             const textrea = document.querySelector('.TextEditor-editor');
-            if (textrea == null || !res.success) return;
-            textrea.value += `\n[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`;
+            if (textrea == null) return;
+            if (res.success) textrea.value += `\n[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`;
+            if (files.length > 0) Imgur(files);
+            else {
+                multiImage_icon.innerHTML = multiImage_iconSvg;
+                uploading = false;
+            }
         }
 
         function load() {
