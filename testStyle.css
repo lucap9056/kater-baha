@@ -764,6 +764,11 @@ div.BH_previewImage::before {
     content: attr(data-text);
 }
 
+.BH_previewContent {
+	margin: 5px 0 0 -45px;
+	height: 60px;
+}
+
 #BH_fullScreenImageBorder {
     position: fixed;
     top: 0px;

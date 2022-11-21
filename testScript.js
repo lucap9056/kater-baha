@@ -89,8 +89,7 @@
                 a.href = `/u/${user.attributes.username}`;
                 userId.appendChild(a);
                 userAvatar.addEventListener('click', (e) => {
-                    if (e.ctrlKey) window.open(a.href);
-                    else a.click();
+                    if (!e.ctrlKey) a.click();
                 });
 
                 admin_list.appendChild(div);
@@ -225,8 +224,7 @@
                 set: (element) => {
                     const clone = element.cloneNode(true);
                     clone.addEventListener('click', (e) => {
-                        if (e.ctrlKey) window.open(clone.querySelector('a').href);
-                        else clone.querySelector('a').click();
+                        if (!e.ctrlKey) clone.querySelector('a').click();
                     });
                     menu.replaceChild(clone, li);
                     li = clone;
@@ -295,8 +293,7 @@
                     a.appendChild(span);
 
                     li.addEventListener('click', (e) => {
-                        if (e.ctrlKey) window.open(a.href);
-                        else a.click();
+                        if (!e.ctrlKey) a.click();
                     });
 
                     li.addEventListener('mouseenter', () => {
@@ -343,8 +340,7 @@
                             }
 
                             item.addEventListener('click', (e) => {
-                                if (e.ctrlKey) window.open(item.querySelector('a').href);
-                                else {
+                                if (!e.ctrlKey) {
                                     Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
                                     item.classList.add('active');
 
@@ -368,15 +364,13 @@
                                     item.classList.remove('active');
                                     tag.classList.add('active');
                                     tag.addEventListener('click', (e) => {
-                                        if (e.ctrlKey) window.open(tag.querySelector('a').href);
-                                        else tag.querySelector('a').click();
+                                        if (!e.ctrlKey) tag.querySelector('a').click();
                                     });
                                 }
                             }
                         }
                         else item.addEventListener('click', (e) => {
-                            if (e.ctrlKey) window.open(item.querySelector('a').href);
-                            else tagItem.set(item);
+                            if (!e.ctrlKey) tagItem.set(item);
                         });
                     });
                     setFocusOut();
@@ -407,8 +401,7 @@
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
                             child.addEventListener('click', (e) => {
-                                if (e.ctrlKey) window.open(child.querySelector('a').href);
-                                else {
+                                if (!e.ctrlKey) {
                                     Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
                                     child.classList.add('active');
                                     child.querySelector('a').click();
@@ -585,8 +578,7 @@
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
                     child.addEventListener('click', (e) => {
-                        if (e.ctrlKey) window.open(clientUrl.href);
-                        else clientUrl.click();
+                        if (!e.ctrlKey) clientUrl.click();
                     });
                 }
                 itemSession.appendChild(child);
@@ -596,8 +588,7 @@
         const client = document.createElement('div');
         client.className = "BH_Client";
         client.addEventListener('click', (e) => {
-            if (e.ctrlKey) window.open(clientUrl.href);
-            else clientUrl.click();
+            if (!e.ctrlKey) clientUrl.click();
         });
 
         const clientAvatar = document.createElement('img');
@@ -637,11 +628,6 @@
 
                 discussion.classList.remove('DiscussionListItem');
                 discussion.classList.add('BH_DiscussionListItem');
-                discussion.addEventListener('click', (e) => {
-                    const a = discussion.querySelector('a.DiscussionListItem-main');
-                    if (e.ctrlKey) window.open(a.href);
-                    else a.click();
-                });
                 try {
                     const id = discussion.parentNode.dataset.id;
                     setPreviewImage(discussion, id);
@@ -682,7 +668,7 @@
             const previewContent = document.createElement('div');
             previewContent.className = 'BH_previewContent';
             previewContent.innerText = content;
-            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
+            element.querySelector('.DiscussionListItem-main').appendChild(previewContent);
         }
     })();
 
