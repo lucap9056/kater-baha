@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 09:45";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 10:00";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -871,7 +871,7 @@
                     notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br>`;
                     const notificationContentText = document.createElement('p');
                     notificationContentText.className = 'BH_notificationContentText';
-                    notificationContentText.innerText = div.innerText;
+                    notificationContentText.innerText = div.innerText.replace(/\n/g, '');
                     notificationText.appendChild(notificationContentText);
                     break;
                 case "newPost":
