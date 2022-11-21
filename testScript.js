@@ -868,7 +868,11 @@
                     const div = document.createElement('div');
                     div.innerHTML = post.data.attributes.contentHtml;
 
-                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><p class="BH_notificationContentText">${div.innerText}</p>`;
+                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br>`;
+                    const notificationContentText = document.createElement('p');
+                    notificationContentText.className = 'BH_notificationContentText';
+                    notificationContentText.innerText = div.innerText;
+                    notificationText.appendChild(notificationContentText);
                     break;
                 case "newPost":
                     notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
