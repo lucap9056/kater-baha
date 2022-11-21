@@ -719,6 +719,11 @@ div.BH_previewImage {
     color: #4CC;
 }
 
+.BH_notificationTitleText {
+	max-height: 36px;
+	margin: 0;
+}
+
 .BH_notificationContentText {
 	color: #AAA;
 	height: 20px;
