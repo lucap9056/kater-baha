@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 11:55";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 23:50";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -88,7 +88,9 @@
                 a.innerText = user.attributes.username;
                 a.href = `/u/${user.attributes.username}`;
                 userId.appendChild(a);
-                userAvatar.addEventListener('click', () => a.click());
+                userAvatar.addEventListener('click', (e) => {
+                    if (!e.ctrlKey) a.click();
+                });
 
                 admin_list.appendChild(div);
             });
@@ -221,7 +223,9 @@
                 },
                 set: (element) => {
                     const clone = element.cloneNode(true);
-                    clone.addEventListener('click', () => clone.querySelector('a').click());
+                    clone.addEventListener('click', (e) => {
+                        if (!e.ctrlKey) clone.querySelector('a').click();
+                    });
                     menu.replaceChild(clone, li);
                     li = clone;
                     li.style.display = 'block';
@@ -288,7 +292,9 @@
                     span.innerText = app.translator.translations[id];
                     a.appendChild(span);
 
-                    li.addEventListener('click', () => a.click());
+                    li.addEventListener('click', (e) => {
+                        if (!e.ctrlKey) a.click();
+                    });
 
                     li.addEventListener('mouseenter', () => {
                         setTimeout(() => {
@@ -333,12 +339,14 @@
                                 item.appendChild(a);
                             }
 
-                            item.addEventListener('click', () => {
-                                Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
-                                item.classList.add('active');
+                            item.addEventListener('click', (e) => {
+                                if (!e.ctrlKey) {
+                                    Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
+                                    item.classList.add('active');
 
-                                item.querySelector('a').click();
-                                tagItem.hide();
+                                    item.querySelector('a').click();
+                                    tagItem.hide();
+                                }
                             });
 
                             item.addEventListener('mouseenter', (e) => {
@@ -355,11 +363,15 @@
                                 if (tag.style.display != 'none') {
                                     item.classList.remove('active');
                                     tag.classList.add('active');
-                                    tag.addEventListener('click', () => tag.querySelector('a').click());
+                                    tag.addEventListener('click', (e) => {
+                                        if (!e.ctrlKey) tag.querySelector('a').click();
+                                    });
                                 }
                             }
                         }
-                        else item.addEventListener('click', () => tagItem.set(item));
+                        else item.addEventListener('click', (e) => {
+                            if (!e.ctrlKey) tagItem.set(item);
+                        });
                     });
                     setFocusOut();
                 })();
@@ -388,10 +400,12 @@
                         const childs = userMenu.childNodes;
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
-                            child.addEventListener('click', () => {
-                                Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
-                                child.classList.add('active');
-                                child.querySelector('a').click();
+                            child.addEventListener('click', (e) => {
+                                if (!e.ctrlKey) {
+                                    Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
+                                    child.classList.add('active');
+                                    child.querySelector('a').click();
+                                }
                             });
 
                             child.addEventListener('mouseenter', () => {
@@ -563,7 +577,9 @@
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    child.addEventListener('click', () => clientUrl.click());
+                    child.addEventListener('click', (e) => {
+                        if (!e.ctrlKey) clientUrl.click();
+                    });
                 }
                 itemSession.appendChild(child);
             };
@@ -571,7 +587,9 @@
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-        client.addEventListener('click', () => clientUrl.click());
+        client.addEventListener('click', (e) => {
+            if (!e.ctrlKey) clientUrl.click();
+        });
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
@@ -610,10 +628,6 @@
 
                 discussion.classList.remove('DiscussionListItem');
                 discussion.classList.add('BH_DiscussionListItem');
-                discussion.addEventListener('click', () => {
-                    const a = discussion.querySelector('a.DiscussionListItem-main');
-                    a.click();
-                });
                 try {
                     const id = discussion.parentNode.dataset.id;
                     setPreviewImage(discussion, id);
@@ -654,7 +668,7 @@
             const previewContent = document.createElement('div');
             previewContent.className = 'BH_previewContent';
             previewContent.innerText = content;
-            element.querySelector('.DiscussionListItem-content').appendChild(previewContent);
+            element.querySelector('.DiscussionListItem-main').appendChild(previewContent);
         }
     })();
 
@@ -708,6 +722,10 @@
         const notificationsTable = document.createElement('div');
         notificationsTable.id = 'BH_notificationsTable';
 
+        const notificationsTableBorder = document.createElement('div');
+        notificationsTableBorder.id = 'BH_notificationsTableBorder';
+        notificationsTableBorder.appendChild(notificationsTable);
+
         const notificationBtn = document.createElement('li');
         notificationBtn.id = 'BH_notificationBtn';
         notificationBtn.appendChild(notificationNoreadNum);
@@ -715,7 +733,7 @@
         const notificationsLi = document.createElement('li');
         notificationsLi.id = 'BH_notificationLi';
         notificationsLi.appendChild(notificationBtn);
-        notificationsLi.appendChild(notificationsTable);
+        notificationsLi.appendChild(notificationsTableBorder);
 
         originalNotifications.parentNode.insertBefore(notificationsLi, originalNotifications);
         originalNotifications.parentNode.removeChild(originalNotifications);
@@ -747,7 +765,7 @@
 
         notificationBtn.addEventListener('click', () => {
             Object.values(notifications_list).map(item => item.updateTime());
-            setTimeout(() => notificationsTable.style.display = 'block', 10);
+            setTimeout(() => notificationsTableBorder.style.display = 'block', 10);
             if (notifications_num > 0) allRead();
             notifications_num = 0;
             notificationNoreadNum.style.display = 'none';
@@ -762,8 +780,8 @@
         }
 
         document.addEventListener('click', () => {
-            if (notificationsTable.style.display == 'block') {
-                notificationsTable.style.display = 'none';
+            if (notificationsTableBorder.style.display == 'block') {
+                notificationsTableBorder.style.display = 'none';
                 (function removeNoRead() {
                     const item = notificationsTable.querySelector('.BH_noRead');
                     if (item) {
