@@ -474,7 +474,7 @@
         img.className = "BH_welcomeImage";
         img.width = 1100;
         img.height = 320;
-        img.src = "https://p2.bahamut.com.tw/FORUM/welcome/60076_1_1668294299.GIF?v=1668294300";
+        img.src = "https://123ldkop.github.io/kater-baha/welcomeImage.webp";
 
         return {
             append: () => {
