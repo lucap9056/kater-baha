@@ -722,6 +722,10 @@
         const notificationsTable = document.createElement('div');
         notificationsTable.id = 'BH_notificationsTable';
 
+        const notificationsTableBorder = document.createElement('div');
+        notificationsTableBorder.id = 'BH_notificationsTableBorder';
+        notificationsTableBorder.appendChild(notificationsTable);
+
         const notificationBtn = document.createElement('li');
         notificationBtn.id = 'BH_notificationBtn';
         notificationBtn.appendChild(notificationNoreadNum);
@@ -729,7 +733,7 @@
         const notificationsLi = document.createElement('li');
         notificationsLi.id = 'BH_notificationLi';
         notificationsLi.appendChild(notificationBtn);
-        notificationsLi.appendChild(notificationsTable);
+        notificationsLi.appendChild(notificationsTableBorder);
 
         originalNotifications.parentNode.insertBefore(notificationsLi, originalNotifications);
         originalNotifications.parentNode.removeChild(originalNotifications);
@@ -761,7 +765,7 @@
 
         notificationBtn.addEventListener('click', () => {
             Object.values(notifications_list).map(item => item.updateTime());
-            setTimeout(() => notificationsTable.style.display = 'block', 10);
+            setTimeout(() => notificationsTableBorder.style.display = 'block', 10);
             if (notifications_num > 0) allRead();
             notifications_num = 0;
             notificationNoreadNum.style.display = 'none';
@@ -776,8 +780,8 @@
         }
 
         document.addEventListener('click', () => {
-            if (notificationsTable.style.display == 'block') {
-                notificationsTable.style.display = 'none';
+            if (notificationsTableBorder.style.display == 'block') {
+                notificationsTableBorder.style.display = 'none';
                 (function removeNoRead() {
                     const item = notificationsTable.querySelector('.BH_noRead');
                     if (item) {
