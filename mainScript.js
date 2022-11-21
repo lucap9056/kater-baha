@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/20 08:35";
+    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 10:00";
     try {
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
@@ -474,7 +474,7 @@
         img.className = "BH_welcomeImage";
         img.width = 1100;
         img.height = 320;
-        img.src = "https://p2.bahamut.com.tw/FORUM/welcome/60076_1_1668294299.GIF?v=1668294300";
+        img.src = "https://123ldkop.github.io/kater-baha/welcomeImage.webp";
 
         return {
             append: () => {
@@ -842,6 +842,10 @@
             notificationText.className = 'BH_notificationText';
             notificationItem.appendChild(notificationText);
 
+            const notificationTitleText = document.createElement('p');
+            notificationTitleText.className = 'BH_notificationTitleText';
+            notificationText.appendChild(notificationTitleText);
+
             var url = "";
             var post;
             var discussion;
@@ -864,13 +868,17 @@
                     const div = document.createElement('div');
                     div.innerHTML = post.data.attributes.contentHtml;
 
-                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
+                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br>`;
+                    const notificationContentText = document.createElement('p');
+                    notificationContentText.className = 'BH_notificationContentText';
+                    notificationContentText.innerText = div.innerText.replace(/\n/g, '');
+                    notificationText.appendChild(notificationContentText);
                     break;
                 case "newPost":
-                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
+                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
                     break;
                 case "postMentioned":
-                    notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
+                    notificationTitleText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
                     break;
             }
 

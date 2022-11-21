@@ -665,6 +665,7 @@ div.BH_previewImage {
     box-shadow: 0 0 20px 4px #0008;
     border-radius: 3px;
     margin-left: -50px;
+    border: solid transparent 10px;
 }
 
 #BH_notificationNoreadNum {
@@ -682,7 +683,9 @@ div.BH_previewImage {
 .BH_notificationItem {
     position: relative;
     width: 100%;
-    height: 64px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 7px;
 }
 
 .BH_noRead {
@@ -697,18 +700,21 @@ div.BH_previewImage {
     content: "";
     position: absolute;
     top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 1px;
-    background-color: #FFF3;
+    left: 10px;
+    right: 10px;
+    bottom: 0px;
+    border-style: solid;
+    border-color: #FFF3;
+    border-width: 1px 0;
 }
 
 .BH_notificationFromUser {
     position: relative;
     width: 44px;
     height: 44px;
-    margin: 10px;
+    margin: 15px 10px;
     border-radius: 100%;
+    float: left;
 }
 
 .BH_notificationLinkText {
@@ -716,28 +722,39 @@ div.BH_previewImage {
     color: #4CC;
 }
 
-.BH_notificationContentText {
-    color: #AAA;
-}
-
 .BH_notificationText {
-    position: absolute;
-    top: 5px;
-    left: 60px;
-    right: 10px;
-    bottom: 5px;
+    position: relative;
+    width: 316px;
     color: #EEE;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 14px;
     line-height: 18px;
     cursor: default;
+    float: left;
+    margin: 8px 0;
+}
+
+.BH_notificationTitleText {
+    max-height: 36px;
+    margin-bottom: 0;
+}
+
+.BH_notificationContentText {
+    color: #AAA;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    margin-right: 45px;
+    margin-bottom: 0;
 }
 
 .BH_notificationTime {
     color: #777;
     font-size: 12px;
-    bottom: 2px;
+    bottom: 6px;
     position: absolute;
     line-height: 14px;
     right: 6px;
@@ -783,6 +800,6 @@ div.BH_previewImage::before {
 }
 
 .item-imgur-multi-upload svg {
-	width: 20px;
-	margin: -6px;
+    width: 20px;
+    margin: -6px;
 }
