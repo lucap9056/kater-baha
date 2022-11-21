@@ -842,6 +842,10 @@
             notificationText.className = 'BH_notificationText';
             notificationItem.appendChild(notificationText);
 
+            const notificationTitleText = document.createElement('p');
+            notificationTitleText.className = 'BH_notificationTitleText';
+            notificationText.appendChild(notificationTitleText);
+
             var url = "";
             var post;
             var discussion;
@@ -864,13 +868,13 @@
                     const div = document.createElement('div');
                     div.innerHTML = post.data.attributes.contentHtml;
 
-                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><span class="BH_notificationContentText">${div.innerText}</span>`;
+                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中獲得了推<br><p class="BH_notificationContentText">${div.innerText}</p>`;
                     break;
                 case "newPost":
-                    notificationText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
+                    notificationTitleText.innerHTML = `在 <span class="BH_notificationLinkText">${discussionTitle}</span> 中有了新的回應`;
                     break;
                 case "postMentioned":
-                    notificationText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
+                    notificationTitleText.innerHTML = `<span class="BH_notificationLinkText">${fromUser.data.attributes.displayName}</span> 在回覆中提到了你`;
                     break;
             }
 
