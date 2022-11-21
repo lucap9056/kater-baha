@@ -88,7 +88,10 @@
                 a.innerText = user.attributes.username;
                 a.href = `/u/${user.attributes.username}`;
                 userId.appendChild(a);
-                userAvatar.addEventListener('click', () => a.click());
+                userAvatar.addEventListener('click', (e) => {
+                    if (e.ctrlKey) window.open(a.href);
+                    else a.click();
+                });
 
                 admin_list.appendChild(div);
             });
@@ -221,7 +224,10 @@
                 },
                 set: (element) => {
                     const clone = element.cloneNode(true);
-                    clone.addEventListener('click', () => clone.querySelector('a').click());
+                    clone.addEventListener('click', (e) => {
+                        if (e.ctrlKey) window.open(clone.querySelector('a').href);
+                        else clone.querySelector('a').click();
+                    });
                     menu.replaceChild(clone, li);
                     li = clone;
                     li.style.display = 'block';
@@ -288,7 +294,10 @@
                     span.innerText = app.translator.translations[id];
                     a.appendChild(span);
 
-                    li.addEventListener('click', () => a.click());
+                    li.addEventListener('click', (e) => {
+                        if (e.ctrlKey) window.open(a.href);
+                        else a.click();
+                    });
 
                     li.addEventListener('mouseenter', () => {
                         setTimeout(() => {
@@ -333,12 +342,15 @@
                                 item.appendChild(a);
                             }
 
-                            item.addEventListener('click', () => {
-                                Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
-                                item.classList.add('active');
+                            item.addEventListener('click', (e) => {
+                                if (e.ctrlKey) window.open(item.querySelector('a').href);
+                                else {
+                                    Array.prototype.slice.call(menu.childNodes).map(i => i.classList.remove('active'));
+                                    item.classList.add('active');
 
-                                item.querySelector('a').click();
-                                tagItem.hide();
+                                    item.querySelector('a').click();
+                                    tagItem.hide();
+                                }
                             });
 
                             item.addEventListener('mouseenter', (e) => {
@@ -355,11 +367,17 @@
                                 if (tag.style.display != 'none') {
                                     item.classList.remove('active');
                                     tag.classList.add('active');
-                                    tag.addEventListener('click', () => tag.querySelector('a').click());
+                                    tag.addEventListener('click', (e) => {
+                                        if (e.ctrlKey) window.open(tag.querySelector('a').href);
+                                        else tag.querySelector('a').click();
+                                    });
                                 }
                             }
                         }
-                        else item.addEventListener('click', () => tagItem.set(item));
+                        else item.addEventListener('click', (e) => {
+                            if (e.ctrlKey) window.open(item.querySelector('a').href);
+                            else tagItem.set(item);
+                        });
                     });
                     setFocusOut();
                 })();
@@ -388,10 +406,13 @@
                         const childs = userMenu.childNodes;
                         for (let i = 0; i < childs.length; i++) {
                             const child = childs[i];
-                            child.addEventListener('click', () => {
-                                Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
-                                child.classList.add('active');
-                                child.querySelector('a').click();
+                            child.addEventListener('click', (e) => {
+                                if (e.ctrlKey) window.open(child.querySelector('a').href);
+                                else {
+                                    Array.prototype.slice.call(childs).map(i => i.classList.remove('active'));
+                                    child.classList.add('active');
+                                    child.querySelector('a').click();
+                                }
                             });
 
                             child.addEventListener('mouseenter', () => {
@@ -563,7 +584,10 @@
             itemSessionBtn.removeChild(child);
             if (child.className != 'Button-label') {
                 if (child.className.trim() == 'Avatar' && window.app.session.user) {
-                    child.addEventListener('click', () => clientUrl.click());
+                    child.addEventListener('click', (e) => {
+                        if (e.ctrlKey) window.open(clientUrl.href);
+                        else clientUrl.click();
+                    });
                 }
                 itemSession.appendChild(child);
             };
@@ -571,7 +595,10 @@
 
         const client = document.createElement('div');
         client.className = "BH_Client";
-        client.addEventListener('click', () => clientUrl.click());
+        client.addEventListener('click', (e) => {
+            if (e.ctrlKey) window.open(clientUrl.href);
+            else clientUrl.click();
+        });
 
         const clientAvatar = document.createElement('img');
         clientAvatar.className = 'BH_ClientAvatar';
@@ -610,9 +637,10 @@
 
                 discussion.classList.remove('DiscussionListItem');
                 discussion.classList.add('BH_DiscussionListItem');
-                discussion.addEventListener('click', () => {
+                discussion.addEventListener('click', (e) => {
                     const a = discussion.querySelector('a.DiscussionListItem-main');
-                    a.click();
+                    if (e.ctrlKey) window.open(a.href);
+                    else a.click();
                 });
                 try {
                     const id = discussion.parentNode.dataset.id;
