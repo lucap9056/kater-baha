@@ -1,14 +1,14 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 最後更新時間:2022/11/21 23:50";
+    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2022/11/22 06:00";
     try {
-        var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
             "core.forum.composer_discussion.title": "發文",
             "core.forum.index.all_discussions_link": "文章列表",
             "core.forum.index.start_discussion_button": "發文",
             "kabamut.name": "卡巴姆特",
             "kabamut.nav.froum_rule": '站規',
+            "kabamut.settings.beta_version": "beta測試版",
             "kabamut.settings.bala_cursor": "拔辣滑鼠游標",
             "kabamut.settings.preview": "顯示文章預覽",
             "kabamut.settings.notification": "卡特原版通知欄"
@@ -20,6 +20,7 @@
     }
 
     var config = {
+        beta_version: false,
         bala_cursor: false,
         preview: true,
         notification: false
@@ -29,6 +30,12 @@
     }
     catch {
     }
+
+    const style = document.createElement('link');
+    style.rel = 'stylesheet';
+    style.href = 'https://123ldkop.github.io/kater-baha/betaStyle.css';
+    document.head.appendChild(style);
+
 
     var BH_store = {
         data: {
