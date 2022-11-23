@@ -654,25 +654,25 @@ div.BH_previewImage {
 }
 
 #BH_notificationsTableBorder {
-	display: none;
-	position: absolute;
-	width: 400px;
-	height: 480px;
-	overflow: hidden;
-	background-color: #222;
-	padding-left: 0;
-	z-index: 1;
-	box-shadow: 0 0 20px 4px #0008;
-	border-radius: 3px;
-	margin-left: -50px;
-	border: solid transparent 10px;
+    display: none;
+    position: absolute;
+    width: 400px;
+    height: 480px;
+    overflow: hidden;
+    background-color: #222;
+    padding-left: 0;
+    z-index: 1;
+    box-shadow: 0 0 20px 4px #0008;
+    border-radius: 3px;
+    margin-left: -50px;
+    border: solid transparent 10px;
 }
 
 #BH_notificationsTable {
-	width: 420px;
-	height: 460px;
-	overflow-x: hidden;
-	overflow-y: scroll;
+    width: 420px;
+    height: 460px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 #BH_notificationNoreadNum {
@@ -688,11 +688,11 @@ div.BH_previewImage {
 }
 
 .BH_notificationItem {
-	position: relative;
-	width: 380px;
-	height: 72px;
-	overflow: hidden;
-	border-radius: 7px;
+    position: relative;
+    width: 380px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 7px;
 }
 
 .BH_noRead {
@@ -722,6 +722,11 @@ div.BH_previewImage {
     margin: 15px 10px;
     border-radius: 100%;
     float: left;
+    line-height: 44px;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    pointer-events: none;
 }
 
 .BH_notificationLinkText {
@@ -748,14 +753,14 @@ div.BH_previewImage {
 }
 
 .BH_notificationContentText {
-	color: #AAA;
-	height: 20px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	position: relative;
-	margin-right: 60px;
-	margin-bottom: 0;
+    color: #AAA;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    margin-right: 60px;
+    margin-bottom: 0;
 }
 
 .BH_notificationTime {
@@ -772,8 +777,8 @@ div.BH_previewImage::before {
 }
 
 .BH_previewContent {
-	margin: 5px 0 0 -45px;
-	height: 60px;
+    margin: 5px 0 0 -45px;
+    height: 60px;
 }
 
 #BH_fullScreenImageBorder {

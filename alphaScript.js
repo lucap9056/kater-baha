@@ -170,7 +170,7 @@
 
             function load() {
                 const singleImage = document.querySelector('.item-imgur-upload');
-                if (!singleImage == null) {
+                if (singleImage == null) {
                     setTimeout(load, 1000);
                     return;
                 }
@@ -660,16 +660,12 @@
                     previewImg.className = 'BH_previewImage';
                     previewImg.src = img.src;
                     element.appendChild(previewImg);
+                    img.addEventListener('error', () => {
+                        element.removeChild(img);
+                        setPreviewTag(element, discussion);
+                    })
                 }
-                else {
-                    const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
-                    const previewImg = document.createElement('div');
-                    previewImg.className = 'BH_previewImage';
-                    previewImg.dataset.text = tag.data.attributes.name;
-                    previewImg.style.color = tag.data.attributes.color;
-                    previewImg.style.borderColor = tag.data.attributes.color;
-                    element.appendChild(previewImg);
-                }
+                else setPreviewTag(element, discussion);
 
                 var content = div.innerText.replace(/\n/g, '');
                 if (content.length > 100) content = content.substring(0, 100) + '...';
@@ -677,6 +673,16 @@
                 previewContent.className = 'BH_previewContent';
                 previewContent.innerText = content;
                 element.querySelector('.DiscussionListItem-main').appendChild(previewContent);
+            }
+
+            async function setPreviewTag(element, discussion) {
+                const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
+                const previewImg = document.createElement('div');
+                previewImg.className = 'BH_previewImage';
+                previewImg.dataset.text = tag.data.attributes.name;
+                previewImg.style.color = tag.data.attributes.color;
+                previewImg.style.borderColor = tag.data.attributes.color;
+                element.appendChild(previewImg);
             }
         })();
 
@@ -863,6 +869,15 @@
                 notificationFromUser.className = 'BH_notificationFromUser';
                 notificationFromUser.src = fromUser.data.attributes.avatarUrl;
                 notificationItem.appendChild(notificationFromUser);
+                notificationFromUser.addEventListener('error', () => {
+                    const notificationFromUserText = document.createElement('div');
+                    notificationFromUserText.className = 'BH_notificationFromUser';
+                    var bgColor = parseInt(fromUser.data.id).toString(16);
+                    while (bgColor.length < 6) bgColor += 'f';
+                    notificationFromUserText.style.backgroundColor = `#${bgColor}`;
+                    notificationFromUserText.innerText = fromUser.data.attributes.displayName[0];
+                    notificationItem.replaceChild(notificationFromUserText, notificationFromUser);
+                });
 
                 const notificationText = document.createElement('div');
                 notificationText.className = 'BH_notificationText';
