@@ -820,3 +820,48 @@ div.BH_previewImage::before {
     width: 20px;
     margin: -6px;
 }
+
+
+/*====  ===*/
+#header {
+    background-image: linear-gradient(to right, #923 0%, #924 35%, #C25 80%);
+}
+
+#BH_header {
+    background-color: #300;
+}
+
+#BH_headerMenu li.active .Button-label {
+    color: #FFF;
+}
+
+#BH_headerMenu li.active .Button-label,
+#BH_headerMenu li:hover .Button-label {
+    color: #F33;
+}
+
+#BH_headerMenuFocus {
+    background-color: #F33;
+    box-shadow: 0 0 5px 2px #F33;
+}
+
+#BH_headerMenu li.item-newDiscussion {
+    background-color: #A33;
+}
+
+#BH_notificationBtn {
+    filter: brightness(20);
+}
+
+.Search-input::before {
+    color: #734;
+}
+
+:root {
+    --body-bg: #1c1642;
+    --button-bg: #0007;
+    --button-bg-hover: #0009;
+    --button-bg-active: #0009;
+    --button-bg-disabled: #0009;
+    --button-color: #FFF;
+}
