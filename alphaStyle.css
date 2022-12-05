@@ -915,4 +915,7 @@ body::before {
     --button-bg-active: #0009;
     --button-bg-disabled: #0009;
     --button-color: #FFF;
+    --control-bg: #1b1c48;
+    --control-bg-light: #1b1c48;
+    --control-bg-shaded: #1b1c48;
 }
