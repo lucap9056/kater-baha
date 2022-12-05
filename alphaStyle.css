@@ -848,14 +848,18 @@ body::before {
 }
 body::after {
 	content: "";
-	background-image: url("https://img-bsy.txrpic.com/preview/Element/00/00/18/73/E-187309-46CAD7E4.png");
+	background-image: url("https://i.imgur.com/h9glVNe.png");
 	position: fixed;
-	top: -310px;
-	right: calc(50% + 540px);
-	width: 500px;
-	height: 500px;
+	top: 0px;
+	left: 0px;
 	background-size: cover;
 	z-index: 1000;
+	width: 410px;
+	height: 190px;
+}
+body::after:hover{
+    opacity: 0;
+    pointer-events: none;
 }
 #header {
     background-image: linear-gradient(to right, #923 0%, #924 35%, #C25 80%);
