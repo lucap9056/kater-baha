@@ -823,6 +823,34 @@ div.BH_previewImage::before {
 
 
 /*====  ===*/
+body {
+	background-image: url("https://i.imgur.com/plJjSkl.png");
+	background-attachment: fixed;
+	background-position: 50%;
+}
+body::before {
+	content: "";
+	position: fixed;
+	top: 0px;
+	left: calc(50% - 550px);
+	width: 1100px;
+	bottom: 0px;
+	background-image: url("https://i.imgur.com/plJjSkl.png");
+	filter: blur(3px);
+	background-color: var(--body-bg);
+	background-position: 50%;
+}
+body::after {
+	content: "";
+	background-image: url("https://img-bsy.txrpic.com/preview/Element/00/00/18/73/E-187309-46CAD7E4.png");
+	position: fixed;
+	top: -310px;
+	right: calc(50% + 540px);
+	width: 500px;
+	height: 500px;
+	background-size: cover;
+	z-index: 1000;
+}
 #header {
     background-image: linear-gradient(to right, #923 0%, #924 35%, #C25 80%);
 }
