@@ -830,7 +830,8 @@ div.BH_previewImage::before {
 body {
 	background-image: var(--body-bg-img);
 	background-attachment: fixed;
-	background-position: 50%;
+	background-position-x: 50%;
+    animation: move 60s linear infinite;
 }
 body::before {
 	content: "";
@@ -842,7 +843,8 @@ body::before {
 	background-image: var(--body-bg-img);
 	filter: blur(3px);
 	background-color: var(--body-bg);
-	background-position: 50%;
+	background-position-x: 50%;
+    animation: move 60s linear infinite;
 }
 body::after {
 	content: "";
