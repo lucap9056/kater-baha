@@ -868,7 +868,8 @@ body::before {
     box-shadow: 0 0 5px 1px #F33;
 }
 
-#BH_headerMenu li.item-newDiscussion {
+#BH_headerMenu li.item-newDiscussion,
+#BH_headerMenu li#BH-replay {
     background-color: #A33;
 }
 
