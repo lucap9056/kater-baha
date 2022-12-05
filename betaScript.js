@@ -31,11 +31,6 @@
     catch {
     }
 
-    const style = document.createElement('link');
-    style.rel = 'stylesheet';
-    style.href = 'https://123ldkop.github.io/kater-baha/alphaStyle.css';
-    document.head.appendChild(style);
-
     (() => {
         var BH_store = {
             data: {
