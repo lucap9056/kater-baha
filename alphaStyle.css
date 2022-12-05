@@ -857,7 +857,7 @@ body::before {
 #BH_headerMenu li.active .Button-label {
     color: #FFF;
 }
-
+#BH_headerMenu .item-allDiscussions .Button-label,
 #BH_headerMenu li.active .Button-label,
 #BH_headerMenu li:hover .Button-label {
     color: #F33;
