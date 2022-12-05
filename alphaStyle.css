@@ -846,21 +846,6 @@ body::before {
 	background-position-x: 50%;
     animation: move 60s linear infinite;
 }
-body::after {
-	content: "";
-	background-image: url("https://i.imgur.com/h9glVNe.png");
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	background-size: cover;
-	z-index: 1000;
-	width: 410px;
-	height: 190px;
-}
-body::after:hover{
-    opacity: 0;
-    pointer-events: none;
-}
 #header {
     background-image: linear-gradient(to right, #923 0%, #924 35%, #C25 80%);
 }
