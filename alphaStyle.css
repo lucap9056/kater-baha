@@ -819,6 +819,14 @@ div.BH_previewImage::before {
 
 
 /*====  ===*/
+@keyframes move{
+    from{
+        background-position-y: 0px;
+    }
+    to{
+        background-position-y: 1054px;
+    }
+}
 body {
 	background-image: var(--body-bg-img);
 	background-attachment: fixed;
