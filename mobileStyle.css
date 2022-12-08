@@ -134,3 +134,16 @@ li.Dropdown-separator {
 	line-height: 16px;
 	display: none;
 }
+
+/* ==== */
+:root {
+	--header-bg: #923;
+	--header-control-bg: #923;
+	--header-colored-control-bg: #A45;
+	--primary-color: #A45;
+	--header-colored-control-bg-shaded: #A45;
+	--header-colored-control-bg-fadedin: #A45;
+}
+li.Dropdown-separator {
+	background-color: #C66;
+}

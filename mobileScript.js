@@ -176,6 +176,14 @@
             xhr.send();
         })();
 
+        notificationBtn.addEventListener('click',() => {
+            try {
+                document.querySelector('#app-navigation button').click();
+                document.querySelector('.item-notifications button').click();
+                notificationNum.style.display = 'none';
+            }
+            catch {}
+        });
     })();
 
     function Timer(call, t) {
