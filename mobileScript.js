@@ -14,10 +14,17 @@
         return;
     }
 
+    (() => {
+        const style = document.createElement('link');
+        style.rel = 'stylesheet';
+        style.href = 'https://123ldkop.github.io/kater-baha/mobileStyle.css';
+        document.head.appendChild(style);
+    })();
+
     const welcomeImage = (() => {
         const img = document.createElement('img');
         img.className = "BH_welcomeImage";
-        img.src = "https://p2.bahamut.com.tw/FORUM/welcome/60076_1_1668294299.GIF?v=1668294300";
+        img.src = "https://123ldkop.github.io/kater-baha/welcomeImage.webp";
 
         return {
             append: () => {
@@ -29,32 +36,42 @@
         }
     })();
 
-    var temp;
-    (function pageCheck() {
-        Timer(pageCheck, 1000);
-        var path = location.pathname;
-        welcomeImage.append();
-        if (path == temp) return;
-        const url = location.pathname.split('/');
-        switch (url[1]) {
-            case "t":
-            case "":
+    (function PreviewImage() {
+        (function getItems() {
+            Timer(getItems,5000);
+            console.log('check');
+            if (document.querySelector('.DiscussionListItem')) {
+                const items = Array.prototype.slice.call(document.getElementsByClassName('DiscussionListItem'));
+                items.map(item => {
+                    item.classList.remove('DiscussionListItem');
+                    item.classList.add('BH_DiscussionListItem');
+                    setPreviewImage(item);
+                });
+            }
+        })();
 
-                break;
-            case "u":
-
-                break;
-            case "d":
-
-                break;
-            case "settings":
-
-                break;
+        async function setPreviewImage(element) {
+            const id = element.parentNode.dataset.id;
+            const discussion = app.store.data.discussions[id];
+            const post = discussion.data.relationships.firstPost.data.id;
+            const content = app.store.data.posts[post].data.attributes.contentHtml;
+            const temp = document.createElement('div');
+            temp.innerHTML = content;
+            const img = temp.querySelector('img');
+            if (img) {
+                const previewImg = document.createElement('img');
+                previewImg.className = 'BH_previewImg';
+                previewImg.src = img.src;
+                previewImg.addEventListener('error',() => {
+                    previewImg.style.display = 'none';
+                });
+                element.appendChild(previewImg);
+            }
         }
-        temp = path;
+        
     })();
 
-    (function Session() {
+    const Session = (() => {
         var header;
         try {
             header = document.getElementById('header-secondary').getElementsByClassName('Header-controls')[0];
@@ -72,11 +89,46 @@
         const sessionMenu = sessionItem.querySelector('.Dropdown-menu');
         sessionMenu.className = 'BH_item-session';
 
-        const itemNav = document.querySelector('.item-nav .ButtonGroup .Dropdown-menu');
-        itemNav.className = 'item-select';
-        header.appendChild(itemNav);
+        const items = document.createElement('div');
+        header.appendChild(items);
         header.appendChild(sessionMenu);
 
+        return {
+            load:() => {
+                const itemNav = document.querySelector('.item-nav .ButtonGroup .Dropdown-menu');
+
+                if (itemNav) {
+                    items.innerHTML = "";
+                    itemNav.className = 'BH_item-select';
+                    items.appendChild(itemNav);
+                }
+            }
+        }
+    })();
+
+    var temp;
+    (function pageCheck() {
+        Timer(pageCheck, 1000);
+        var path = location.pathname;
+        welcomeImage.append();
+        if (path == temp) return;
+        const url = location.pathname.split('/');
+        switch (url[1]) {
+            case "t":
+            case "":
+            Session.load();
+                break;
+            case "u":
+                Session.load();
+                break;
+            case "d":
+
+                break;
+            case "settings":
+
+                break;
+        }
+        temp = path;
     })();
 
     function Timer(call, t) {
