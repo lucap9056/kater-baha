@@ -118,37 +118,7 @@
         }
     })();
 
-    var temp;
-    (function pageCheck() {
-        Timer(pageCheck, 1000);
-        var path = location.pathname;
-        welcomeImage.append();
-        if (path == temp) return;
-        const url = location.pathname.split('/');
-        switch (url[1]) {
-            case "t":
-            case "":
-                NewDiscussion.visible(true);
-                Session.load();
-                break;
-            case "u":
-                Session.load();
-                NewDiscussion.visible(false);
-                break;
-            case "d":
-                NewDiscussion.visible(true);
-                break;
-            case "settings":
-                NewDiscussion.visible(false);
-                break;
-            default:
-                NewDiscussion.visible(false);
-                break;
-        }
-        temp = path;
-    })();
-
-    (function Notification() {
+    const Notification = (() => {
         const notificationBtn = document.createElement('div');
         notificationBtn.className = 'BH_item-notification';
 
@@ -184,6 +154,45 @@
             }
             catch {}
         });
+
+        return {
+            visible:(v) => notificationBtn.style.display = (v)? 'block':'none';
+        }
+    })();
+
+    var temp;
+    (function pageCheck() {
+        Timer(pageCheck, 1000);
+        var path = location.pathname;
+        welcomeImage.append();
+        if (path == temp) return;
+        const url = location.pathname.split('/');
+        switch (url[1]) {
+            case "t":
+            case "":
+                NewDiscussion.visible(true);
+                Notification.visible(true);
+                Session.load();
+                break;
+            case "u":
+                Session.load();
+                NewDiscussion.visible(false);
+                Notification.visible(true);
+                break;
+            case "d":
+                NewDiscussion.visible(true);
+                Notification.visible(false);
+                break;
+            case "settings":
+                NewDiscussion.visible(false);
+                Notification.visible(true);
+                break;
+            default:
+                NewDiscussion.visible(false);
+                Notification.visible(false);
+                break;
+        }
+        temp = path;
     })();
 
     function Timer(call, t) {
