@@ -899,6 +899,11 @@ body::before {
     color: #734;
 }
 
+.BH_previewContent {
+	color: #CCC;
+	text-shadow: 0 0 4px black;
+}
+
 .PostStream {
 	margin-top: 10px;
 }

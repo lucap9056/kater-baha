@@ -156,7 +156,7 @@
         });
 
         return {
-            visible:(v) => notificationBtn.style.display = (v)? 'block':'none';
+            visible:(v) => notificationBtn.style.display = (v)? 'block':'none'
         }
     })();
 
