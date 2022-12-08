@@ -99,3 +99,38 @@ li.Dropdown-separator {
 	margin: 12px;
 	line-height: 48px;
 }
+
+.BH_item-notification {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	width: 48px;
+	height: 48px;
+	background-color: var(--header-control-bg);
+	border-radius: 100%;
+	overflow: hidden;
+	box-shadow: 2px 2px 5px 0 black;
+}
+
+.BH_item-notification::before {
+	content: "\f0f3";
+	font-weight: bold;
+	font-size: 24px;
+	font-family: 'font awesome 5 free';
+	margin: 14px;
+	line-height: 48px;
+}
+
+.BH_notificationNum {
+	position: absolute;
+	top: 8px;
+	right: 7px;
+	color: white;
+	background-color: #F46;
+	border-radius: 3px;
+	padding: 0 2px;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 16px;
+	display: none;
+}

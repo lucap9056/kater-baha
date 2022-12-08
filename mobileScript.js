@@ -5,8 +5,6 @@
         var test = app.translator.translations["fof-gamification.forum.ranking.amount"];
         flarum.core.app.translator.addTranslations({
             "kabamut.name": "卡巴姆特",
-            "kabamut.settings.preview": "顯示文章預覽",
-            "kabamut.settings.notification": "卡特原版通知欄"
         });
     }
     catch {
@@ -39,7 +37,6 @@
     (function PreviewImage() {
         (function getItems() {
             Timer(getItems,1000);
-            console.log('check');
             if (document.querySelector('.DiscussionListItem')) {
                 const items = Array.prototype.slice.call(document.getElementsByClassName('DiscussionListItem'));
                 items.map(item => {
@@ -109,10 +106,12 @@
     const NewDiscussion = (() => {
         const btn = document.createElement('div');
         btn.className = 'BH_item-newDiscussion';
-        document.body.appendChild(btn);
+        document.querySelector('#app').appendChild(btn);
         btn.addEventListener('click',() => {
             const newDiscussion = document.querySelector('.item-newDiscussion');
-            if (newDiscussion) newDiscussion.click();
+            
+            if (newDiscussion) newDiscussion.querySelector('button').click();
+            
         });
         return {
             visible:(v) => btn.style.display = (v)? 'block':'none'
@@ -147,6 +146,36 @@
                 break;
         }
         temp = path;
+    })();
+
+    (function Notification() {
+        const notificationBtn = document.createElement('div');
+        notificationBtn.className = 'BH_item-notification';
+
+        const notificationNum = document.createElement('span');
+        notificationNum.className = 'BH_notificationNum';
+
+        document.querySelector('#app').appendChild(notificationBtn);
+        notificationBtn.appendChild(notificationNum);
+        
+        (function getNotification() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET','https://kater.me/api/notifications?page%5Boffset%5D=0&include');
+            xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+            xhr.onload = () => {
+                const res = JSON.parse(xhr.response);
+                var num = 0;
+                Object.values(res.data).map(notification => {
+                    if (notification.attributes.isRead == false) num++;
+                });
+                if (num != 0) {
+                    notificationNum.innerText = num;
+                    notificationNum.style.display = 'block';
+                }
+            };
+            xhr.send();
+        })();
+
     })();
 
     function Timer(call, t) {
