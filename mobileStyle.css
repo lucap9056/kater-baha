@@ -79,6 +79,23 @@ li.Dropdown-separator {
 	border-radius: 3px;
 }
 
-.BH_item-nav {
-	padding: 10px;
+.BH_item-newDiscussion {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	width: 48px;
+	height: 48px;
+	background-color: var(--header-control-bg);
+	border-radius: 100%;
+    overflow: hidden;
+    box-shadow: 2px 2px 5px 0 black;
+}
+
+.BH_item-newDiscussion::before {
+	content: "\f044";
+	font-weight: 900;
+	font-size: 24px;
+	font-family: 'font awesome 5 free';
+	margin: 12px;
+	line-height: 48px;
 }

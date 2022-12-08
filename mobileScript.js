@@ -38,7 +38,7 @@
 
     (function PreviewImage() {
         (function getItems() {
-            Timer(getItems,5000);
+            Timer(getItems,1000);
             console.log('check');
             if (document.querySelector('.DiscussionListItem')) {
                 const items = Array.prototype.slice.call(document.getElementsByClassName('DiscussionListItem'));
@@ -106,6 +106,19 @@
         }
     })();
 
+    const NewDiscussion = (() => {
+        const btn = document.createElement('div');
+        btn.className = 'BH_item-newDiscussion';
+        document.body.appendChild(btn);
+        btn.addEventListener('click',() => {
+            const newDiscussion = document.querySelector('.item-newDiscussion');
+            if (newDiscussion) newDiscussion.click();
+        });
+        return {
+            visible:(v) => btn.style.display = (v)? 'block':'none'
+        }
+    })();
+
     var temp;
     (function pageCheck() {
         Timer(pageCheck, 1000);
@@ -116,16 +129,21 @@
         switch (url[1]) {
             case "t":
             case "":
-            Session.load();
+                NewDiscussion.visible(true);
+                Session.load();
                 break;
             case "u":
                 Session.load();
+                NewDiscussion.visible(false);
                 break;
             case "d":
-
+                NewDiscussion.visible(true);
                 break;
             case "settings":
-
+                NewDiscussion.visible(false);
+                break;
+            default:
+                NewDiscussion.visible(false);
                 break;
         }
         temp = path;
