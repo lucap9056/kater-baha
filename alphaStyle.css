@@ -834,7 +834,6 @@ body {
     animation: move 60s linear infinite;
 }
 body::before {
-	content: "";
 	position: fixed;
 	top: 0px;
 	left: calc(50% - 550px);
