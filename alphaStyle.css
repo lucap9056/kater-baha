@@ -881,12 +881,14 @@ i.icon{
 	font-size: 20px;
 }
 
-.BH_alonePosts-postStreamBorder{
-    position: relative;
-    width: 880px;
-    height: calc(100% - 184px);
-    margin: 0 auto;
-    overflow: hidden;
+.BH_alonePosts-postStreamBorder {
+	position: relative;
+	width: 880px;
+	height: calc(100% - 184px);
+	margin: 0 auto;
+	overflow: hidden;
+	background-color: var(--body-bg-faded);
+	border-radius: 5px;
 }
 
 .BH_alonePosts-postStream{
@@ -896,6 +898,24 @@ i.icon{
     right: -20px;
     bottom: 0px;
     overflow: hidden scroll;
+}
+
+.BH_alonePosts-item {
+	position: relative;
+	width: 860px;
+	margin: 10px;
+	font-size: 16px;
+	padding-top: 15px;
+}
+
+.BH_alonePosts-item + .BH_alonePosts-item {
+	border-top: solid var(--control-color) 1px;
+}
+
+.BH_alonePosts-number {
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }
 
 /*====  ===*/

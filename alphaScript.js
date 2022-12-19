@@ -1127,6 +1127,7 @@
                     postStreamBorder.appendChild(postStream);
 
                     var nextUrl = "";
+                    var discussionID = "";
 
                     function appendPosts(url) {
                         const xhr = new XMLHttpRequest();
@@ -1142,6 +1143,25 @@
 
                     function PostItem(post) {
                         console.log(post);
+                        const postItem = document.createElement('div');
+                        postItem.className = 'BH_alonePosts-item';
+
+                        const content = document.createElement('div');
+                        content.className = 'BH_alonePosts-content';
+                        content.innerHTML = post.attributes.contentHtml;
+                        postItem.appendChild(content);
+
+                        const a = document.createElement('a');
+                        a.className = 'BH_alonePosts-link';
+                        a.href = `https://kater.me/d/${discussionID}/${post.attributes.number}`;
+                        postItem.appendChild(a);
+
+                        const num = document.createElement('span');
+                        num.className = 'BH_alonePosts-number';
+                        num.innerText = post.attributes.number;
+                        a.appendChild(num);
+
+                        postStream.appendChild(postItem);
                     }
 
                     function close() {
@@ -1151,7 +1171,6 @@
 
                     function setUser(uid) {
                         const user = app.store.data.users[uid].data.attributes;
-                        console.log(user);
                         postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
                         
                         var bgColor = parseInt(uid).toString(16);
@@ -1169,7 +1188,7 @@
                             postStream.innerHTML = "";
                             const userName = e.target.dataset.id;
                             const userUID = e.target.dataset.uid;
-                            const discussionID = location.href.split('/d/')[1].split('/')[0];
+                            discussionID = location.href.split('/d/')[1].split('/')[0];
                             setUser(userUID);
                             appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userName}&page[offset]=0&page[limit]=50`);
                             document.body.appendChild(alonePosts);
