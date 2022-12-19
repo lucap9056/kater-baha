@@ -1084,6 +1084,10 @@
             const AlonePostsElement = (() => {
 
                 const AlonePosts = (() => {
+                    
+                    var state = "";
+                    var nextUrl = "";
+                    var discussionID = "";
 
                     const alonePosts = document.createElement('div');
                     alonePosts.className = 'BH_alonePosts';
@@ -1125,9 +1129,11 @@
                     const postStream = document.createElement('div');
                     postStream.className = 'BH_alonePosts-postStream';
                     postStreamBorder.appendChild(postStream);
-
-                    var nextUrl = "";
-                    var discussionID = "";
+                    postStream.addEventListener('scroll',() => {
+                        if (postStream.scrollTop != postStream.scrollTopMax || state != "") return;
+                        state = 'loading';
+                        appendPosts(nextUrl);
+                    });
 
                     function appendPosts(url) {
                         const xhr = new XMLHttpRequest();
@@ -1135,14 +1141,15 @@
                         xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
                         xhr.onload = () => {
                             const res = JSON.parse(xhr.response);
-                            nextUrl = res.links.next || "";
+                            nextUrl = res.links.next || null;
+                            if (nextUrl) state = "";
                             res.data.map(PostItem);
                         }
                         xhr.send();
                     }
 
                     function PostItem(post) {
-                        console.log(post);
+                        if (post.attributes.contentType != "comment") return;
                         const postItem = document.createElement('div');
                         postItem.className = 'BH_alonePosts-item';
 
@@ -1158,7 +1165,7 @@
 
                         const num = document.createElement('span');
                         num.className = 'BH_alonePosts-number';
-                        num.innerText = post.attributes.number;
+                        num.innerText = post.attributes.number + flarum.core.app.translator.translations["kater-gamificationextend.forum.louceng"];
                         a.appendChild(num);
 
                         postStream.appendChild(postItem);
@@ -1171,7 +1178,11 @@
 
                     function setUser(uid) {
                         const user = app.store.data.users[uid].data.attributes;
-                        postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
+                        if (user.avatarUrl == "") postUserAvatar.innerText = user.displayName[0];
+                        else {
+                            postUserAvatar.innerHTML = "";
+                            postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
+                        }
                         
                         var bgColor = parseInt(uid).toString(16);
                         while (bgColor.length < 6) bgColor += 'f';
@@ -1185,6 +1196,7 @@
                     return {
                         setUser: (e) => {
                             document.body.style.overflowY = 'hidden';
+                            state = "";
                             postStream.innerHTML = "";
                             const userName = e.target.dataset.id;
                             const userUID = e.target.dataset.uid;

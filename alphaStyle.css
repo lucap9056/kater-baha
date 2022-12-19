@@ -872,7 +872,11 @@ i.icon{
 	height: 100px;
 	margin: 2px;
 	border-radius: 100%;
-    overflow: hidden;
+	overflow: hidden;
+	color: white;
+	text-align: center;
+	line-height: 100px;
+	font-size: 60px;
 }
 
 .BH_alonePosts-userName {
@@ -916,6 +920,10 @@ i.icon{
 	position: absolute;
 	top: 0px;
 	right: 0px;
+}
+
+.BH_alonePosts-item img{
+    max-width: 100%;
 }
 
 /*====  ===*/
