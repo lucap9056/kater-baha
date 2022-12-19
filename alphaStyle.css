@@ -825,6 +825,49 @@ i.icon{
 .fa-alonePosts::before {
 	content: "\f007";
 }
+
+.BH_alonePosts {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #000A;
+	z-index: 1000;
+}
+
+.BH_alonePosts-close {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+.BH_alonePosts-user{
+    position: relative;
+    width: 550px;
+    height: 144px;
+    margin: 15px auto;
+}
+
+.BH_alonePosts-postStreamBorder{
+    position: relative;
+    width: 880px;
+    height: calc(100% - 184px);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.BH_alonePosts-postStream{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: -20px;
+    bottom: 0px;
+    overflow: hidden scroll;
+}
+
 /*====  ===*/
 @keyframes move{
     from{

@@ -975,7 +975,7 @@
         })();
 
         (function DiscussionElement() {
-            const DiscussionImage = (() => {
+            const DiscussionImageElement = (() => {
                 const fullScreenImageBorder = document.createElement('div');
                 fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
 
@@ -1085,10 +1085,70 @@
 
                 const AlonePosts = (() => {
 
+                    const alonePosts = document.createElement('div');
+                    alonePosts.className = 'BH_alonePosts';
+
+                    const alonePostsClose = document.createElement('div');
+                    alonePostsClose.className = 'BH_alonePosts-close';
+                    alonePostsClose.addEventListener('click',close);
+                    alonePosts.appendChild(alonePostsClose);
+
+                    
+                    const postUser = document.createElement('div');
+                    postUser.className = 'BH_alonePosts-user'
+                    alonePosts.appendChild(postUser);
+                    
+                    const postUserBackground = document.createElement('img');
+                    postUserBackground.className = 'BH_alonePosts-userBackground';
+                    postUser.appendChild(postUserBackground);
+                    
+                    const postUserAvatar = document.createElement('div');
+                    postUserAvatar.className = 'BH_alonePosts-userAvatar';
+                    postUser.appendChild(postUserAvatar);
+
+                    const postUserName = document.createElement('div');
+                    postUserName.className = 'BH_alonePosts-userName';
+                    postUser.appendChild(postUserName);
+
+                    const postStreamBorder = document.createElement('div');
+                    postStreamBorder.className = 'BH_alonePosts-postStreamBorder';
+                    alonePosts.appendChild(postStreamBorder);
+
+                    const postStream = document.createElement('div');
+                    postStream.className = 'BH_alonePosts-postStream';
+                    postStreamBorder.appendChild(postStream);
+
+                    var nextUrl = "";
+
+                    function appendPosts(url) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("GET",url);
+                        xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                        xhr.onload = () => {
+                            const res = JSON.parse(xhr.response);
+                            nextUrl = res.links.next || "";
+                            res.data.map(PostItem);
+                        }
+                        xhr.send();
+                    }
+
+                    function PostItem(post) {
+                        console.log(post);
+                    }
+
+                    function close() {
+                        document.body.removeChild(alonePosts);
+                        document.body.style.overflowY = 'scroll';
+                    }
 
                     return {
                         setUser: (e) => {
-                            console.log(e);
+                            document.body.style.overflowY = 'hidden';
+                            postStream.innerHTML = "";
+                            const userUID = e.target.dataset.id;
+                            const discussionID = location.href.split('/d/')[1].split('/')[0];
+                            appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userUID}&page[offset]=0&page[limit]=50`);
+                            document.body.appendChild(alonePosts);
                         }
                     }
                 })();
@@ -1137,11 +1197,8 @@
                 return {
                     set: (button) => {
                         const menu = MenuCheck(button);
-                        console.log(menu);
                         if (!menu) return;
-
                         const author = getUserUID(menu);
-                        console.log(author);
                         menu.appendChild(alonePostsButton(author));
                     }
                 }
@@ -1161,7 +1218,7 @@
                     switch (e.target.tagName) {
                         case "IMG":
                             e.preventDefault();
-                            DiscussionImage.load(e.target);
+                            DiscussionImageElement.load(e.target);
                             break;
                         case "A":
                             e.preventDefault();
