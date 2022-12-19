@@ -968,7 +968,7 @@
         })();
 
         (function DiscussionElement() {
-            const DiscussionImage = (() => {
+            const DiscussionImageElement = (() => {
                 const fullScreenImageBorder = document.createElement('div');
                 fullScreenImageBorder.id = 'BH_fullScreenImageBorder';
 
@@ -1074,18 +1074,206 @@
                 }
             })();
 
+            const AlonePostsElement = (() => {
+
+                const AlonePosts = (() => {
+                    
+                    var state = "";
+                    var nextUrl = "";
+                    var discussionID = "";
+
+                    const alonePosts = document.createElement('div');
+                    alonePosts.className = 'BH_alonePosts';
+
+                    const alonePostsClose = document.createElement('div');
+                    alonePostsClose.className = 'BH_alonePosts-close';
+                    alonePostsClose.addEventListener('click',close);
+                    alonePosts.appendChild(alonePostsClose);
+
+                    
+                    const postUser = document.createElement('div');
+                    postUser.className = 'BH_alonePosts-user'
+                    alonePosts.appendChild(postUser);
+
+                    const postUserBackgroundColor = document.createElement('div');
+                    postUserBackgroundColor.className = 'BH_alonePosts-userBackground';
+                    postUser.appendChild(postUserBackgroundColor);
+                    
+                    const postUserBackground = document.createElement('img');
+                    postUserBackground.className = 'BH_alonePosts-userBackground';
+                    postUserBackground.addEventListener('load',() => {
+                        postUserBackground.style.display = 'block';
+                        postUserBackgroundColor.style.backgroundColor = 'transparent';
+                    });
+                    postUser.appendChild(postUserBackground);
+                    
+                    const postUserAvatar = document.createElement('div');
+                    postUserAvatar.className = 'BH_alonePosts-userAvatar';
+                    postUser.appendChild(postUserAvatar);
+
+                    const postUserName = document.createElement('li');
+                    postUserName.className = 'BH_alonePosts-userName';
+                    postUser.appendChild(postUserName);
+
+                    const postStreamBorder = document.createElement('div');
+                    postStreamBorder.className = 'BH_alonePosts-postStreamBorder';
+                    alonePosts.appendChild(postStreamBorder);
+
+                    const postStream = document.createElement('div');
+                    postStream.className = 'BH_alonePosts-postStream';
+                    postStreamBorder.appendChild(postStream);
+                    postStream.addEventListener('scroll',() => {
+                        if (postStream.scrollTop != postStream.scrollTopMax || state != "") return;
+                        state = 'loading';
+                        appendPosts(nextUrl);
+                    });
+
+                    function appendPosts(url) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("GET",url);
+                        xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                        xhr.onload = () => {
+                            const res = JSON.parse(xhr.response);
+                            nextUrl = res.links.next || null;
+                            if (nextUrl) state = "";
+                            res.data.map(PostItem);
+                        }
+                        xhr.send();
+                    }
+
+                    function PostItem(post) {
+                        if (post.attributes.contentType != "comment") return;
+                        const postItem = document.createElement('div');
+                        postItem.className = 'BH_alonePosts-item';
+
+                        const content = document.createElement('div');
+                        content.className = 'BH_alonePosts-content Post-body';
+                        content.innerHTML = post.attributes.contentHtml;
+                        postItem.appendChild(content);
+
+                        const a = document.createElement('a');
+                        a.className = 'BH_alonePosts-link';
+                        a.href = `/d/${discussionID}/${post.attributes.number}`;
+                        postItem.appendChild(a);
+
+                        const num = document.createElement('span');
+                        num.className = 'BH_alonePosts-number';
+                        num.innerText = post.attributes.number + flarum.core.app.translator.translations["kater-gamificationextend.forum.louceng"];
+                        a.appendChild(num);
+
+                        postStream.appendChild(postItem);
+                    }
+
+                    function close() {
+                        document.body.removeChild(alonePosts);
+                        document.body.style.overflowY = 'scroll';
+                    }
+
+                    function setUser(uid) {
+                        const user = app.store.data.users[uid].data.attributes;
+                        if (user.avatarUrl == "") postUserAvatar.innerText = user.displayName[0];
+                        else {
+                            postUserAvatar.innerHTML = "";
+                            postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
+                        }
+                        
+                        var bgColor = parseInt(uid).toString(16);
+                        while (bgColor.length < 6) bgColor += 'f';
+                        postUserBackgroundColor.style.backgroundColor = `#${bgColor}`;
+
+                        postUserBackground.style.display = 'none';
+                        postUserBackground.src = user.cover_thumbnail || user.cover;
+                        postUserName.innerText = user.displayName;
+                    }
+
+                    return {
+                        setUser: (e) => {
+                            document.body.style.overflowY = 'hidden';
+                            state = "";
+                            postStream.innerHTML = "";
+                            const userName = e.target.dataset.id;
+                            const userUID = e.target.dataset.uid;
+                            discussionID = location.href.split('/d/')[1].split('/')[0];
+                            setUser(userUID);
+                            appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userName}&page[offset]=0&page[limit]=50`);
+                            document.body.appendChild(alonePosts);
+                        }
+                    }
+                })();
+
+
+                function MenuCheck(button) {
+                    const menu = button.parentNode.querySelector('.Dropdown-menu');
+                    if (menu.querySelector('.item-alonePosts')) return null;
+                    return menu;
+                }
+
+                function getUser(menu) {
+                    const postElement = menu.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+                    const postID = postElement.dataset.id;
+                    const post = app.store.data.posts[postID];
+                    const userID = post.data.relationships.user.data.id;
+                    return app.store.data.users[userID].data;
+                }
+
+                function alonePostsButton(author) {
+                    const element = document.createElement('li');
+                    element.className = 'item-alonePosts';
+
+                    const button = document.createElement('button');
+                    button.className = 'hasIcon';
+                    button.type = 'button';
+                    button.dataset.id = author.attributes.slug;
+                    button.dataset.uid = author.id;
+                    element.appendChild(button);
+
+                    const icon = document.createElement('i');
+                    icon.className = 'icon fas fa-alonePosts Button-icon';
+                    button.appendChild(icon);
+
+                    const span = document.createElement('span');
+                    span.className = 'Button-Label';
+                    span.innerText = "看他的文";
+                    button.appendChild(span);
+
+                    button.addEventListener('click', AlonePosts.setUser);
+
+                    return element;
+                }
+
+
+
+                return {
+                    set: (button) => {
+                        const menu = MenuCheck(button);
+                        if (!menu) return;
+                        const author = getUser(menu);
+                        menu.appendChild(alonePostsButton(author));
+                    }
+                }
+            })();
+
             document.addEventListener('click', (e) => {
                 if (!/^\/d\//.test(location.pathname)) return;
-                if (e.target.id != "" || e.target.className != "") return;
-                switch (e.target.tagName) {
-                    case "IMG":
-                        e.preventDefault();
-                        DiscussionImage.load(e.target);
-                        break;
-                    case "A":
-                        e.preventDefault();
-                        window.open(e.target.href);
-                        break;
+                if (e.target.id != "" || e.target.className != "") {
+                    switch (e.target.tagName) {
+                        case "BUTTON":
+                            if (/Post-controls/.test(e.target.parentNode.className)) AlonePostsElement.set(e.target);
+                            break;
+                    }
+
+                }
+                else {
+                    switch (e.target.tagName) {
+                        case "IMG":
+                            e.preventDefault();
+                            DiscussionImageElement.load(e.target);
+                            break;
+                        case "A":
+                            e.preventDefault();
+                            window.open(e.target.href);
+                            break;
+                    }
                 }
             });
         })();

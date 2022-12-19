@@ -817,6 +817,113 @@ div.BH_previewImage::before {
     margin: -6px;
 }
 
+.Button-Label,
+i.icon{
+    pointer-events: none;
+}
+
+.fa-alonePosts::before {
+	content: "\f007";
+}
+
+.BH_alonePosts {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #000A;
+	z-index: 1000;
+}
+
+.BH_alonePosts-close {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+.BH_alonePosts-user {
+	position: relative;
+	width: 550px;
+	height: 144px;
+	margin: 10px auto;
+	background-color: #000;
+	border-radius: 3px;
+	overflow: hidden;
+	padding: 20px;
+    list-style: none;
+}
+
+.BH_alonePosts-userBackground {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+    opacity: 0.5;
+}
+
+.BH_alonePosts-userAvatar {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	margin: 2px;
+	border-radius: 100%;
+	overflow: hidden;
+	color: white;
+	text-align: center;
+	line-height: 100px;
+	font-size: 60px;
+}
+
+.BH_alonePosts-userName {
+    position: relative;
+	margin: 10px 0 10px 144px;
+	font-size: 20px;
+}
+
+.BH_alonePosts-postStreamBorder {
+	position: relative;
+	width: 880px;
+	height: calc(100% - 184px);
+	margin: 0 auto;
+	overflow: hidden;
+	background-color: var(--body-bg-faded);
+	border-radius: 5px;
+}
+
+.BH_alonePosts-postStream{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: -20px;
+    bottom: 0px;
+    overflow: hidden scroll;
+}
+
+.BH_alonePosts-item {
+	position: relative;
+	width: 860px;
+	margin: 10px;
+	padding-top: 25px;
+}
+
+.BH_alonePosts-item + .BH_alonePosts-item {
+	border-top: solid var(--control-color) 1px;
+}
+
+.BH_alonePosts-number {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.BH_alonePosts-item img{
+    max-width: 100%;
+}
 
 /*====  ===*/
 @keyframes move{
