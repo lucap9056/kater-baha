@@ -1135,7 +1135,8 @@
                         xhr.onload = () => {
                             const res = JSON.parse(xhr.response);
                             nextUrl = res.links.next || null;
-                            if (nextUrl) state = "";
+                            if (nextUrl == null) state = 'end';
+                            else state = "";
                             res.data.map(PostItem);
                         }
                         xhr.send();
@@ -1195,7 +1196,7 @@
                             const userUID = e.target.dataset.uid;
                             discussionID = location.href.split('/d/')[1].split('/')[0];
                             setUser(userUID);
-                            appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userName}&page[offset]=0&page[limit]=50`);
+                            appendPosts(`/api/posts?filter[discussion]=${discussionID}&filter[author]=${userName}&page[offset]=0&page[limit]=50`);
                             document.body.appendChild(alonePosts);
                         }
                     }
