@@ -32,6 +32,13 @@
     }
 
     (() => {
+        const style = document.createElement('link');
+        style.rel = 'stylesheet';
+        style.href = 'https://123ldkop.github.io/kater-baha/alphaStyle.css';
+        document.head.appendChild(style);
+    })();
+
+    (() => {
         var BH_store = {
             data: {
                 notifications: {},
@@ -1074,18 +1081,93 @@
                 }
             })();
 
+            const AlonePostsElement = (() => {
+
+                const AlonePosts = (() => {
+
+
+                    return {
+                        setUser: (e) => {
+                            console.log(e);
+                        }
+                    }
+                })();
+
+
+                function MenuCheck(button) {
+                    const menu = button.parentNode.querySelector('.Dropdown-menu');
+                    if (menu.querySelector('.item-alonePosts')) return null;
+                    return menu;
+                }
+
+                function getUserUID(menu) {
+                    const postElement = menu.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+                    const postID = postElement.dataset.id;
+                    const post = app.store.data.posts[postID];
+                    const userID = post.data.relationships.user.data.id;
+                    return app.store.data.users[userID].data.attributes.slug;
+                }
+
+                function alonePostsButton(author) {
+                    const element = document.createElement('li');
+                    element.className = 'item-alonePosts';
+
+                    const button = document.createElement('button');
+                    button.className = 'hasIcon';
+                    button.type = 'button';
+                    button.dataset.id = author;
+                    element.appendChild(button);
+
+                    const icon = document.createElement('i');
+                    icon.className = 'icon fas fa-alonePosts Button-icon';
+                    button.appendChild(icon);
+
+                    const span = document.createElement('span');
+                    span.className = 'Button-Label';
+                    span.innerText = "看他的文";
+                    button.appendChild(span);
+
+                    button.addEventListener('click', AlonePosts.setUser);
+
+                    return element;
+                }
+
+
+
+                return {
+                    set: (button) => {
+                        const menu = MenuCheck(button);
+                        console.log(menu);
+                        if (!menu) return;
+
+                        const author = getUserUID(menu);
+                        console.log(author);
+                        menu.appendChild(alonePostsButton(author));
+                    }
+                }
+            })();
+
             document.addEventListener('click', (e) => {
                 if (!/^\/d\//.test(location.pathname)) return;
-                if (e.target.id != "" || e.target.className != "") return;
-                switch (e.target.tagName) {
-                    case "IMG":
-                        e.preventDefault();
-                        DiscussionImage.load(e.target);
-                        break;
-                    case "A":
-                        e.preventDefault();
-                        window.open(e.target.href);
-                        break;
+                if (e.target.id != "" || e.target.className != "") {
+                    switch (e.target.tagName) {
+                        case "BUTTON":
+                            if (/Post-controls/.test(e.target.parentNode.className)) AlonePostsElement.set(e.target);
+                            break;
+                    }
+
+                }
+                else {
+                    switch (e.target.tagName) {
+                        case "IMG":
+                            e.preventDefault();
+                            DiscussionImage.load(e.target);
+                            break;
+                        case "A":
+                            e.preventDefault();
+                            window.open(e.target.href);
+                            break;
+                    }
                 }
             });
         })();

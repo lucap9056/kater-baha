@@ -817,8 +817,13 @@ div.BH_previewImage::before {
     margin: -6px;
 }
 
+.Button-Label,
 i.icon{
     pointer-events: none;
+}
+
+.fa-alonePosts::before {
+	content: "\f007";
 }
 /*====  ===*/
 @keyframes move{
