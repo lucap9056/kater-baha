@@ -1154,7 +1154,7 @@
                         postItem.className = 'BH_alonePosts-item';
 
                         const content = document.createElement('div');
-                        content.className = 'BH_alonePosts-content';
+                        content.className = 'BH_alonePosts-content Post-body';
                         content.innerHTML = post.attributes.contentHtml;
                         postItem.appendChild(content);
 
