@@ -1160,7 +1160,7 @@
 
                         const a = document.createElement('a');
                         a.className = 'BH_alonePosts-link';
-                        a.href = `https://kater.me/d/${discussionID}/${post.attributes.number}`;
+                        a.href = `/d/${discussionID}/${post.attributes.number}`;
                         postItem.appendChild(a);
 
                         const num = document.createElement('span');
