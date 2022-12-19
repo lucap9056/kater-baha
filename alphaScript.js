@@ -1106,7 +1106,7 @@
                     postUserBackground.className = 'BH_alonePosts-userBackground';
                     postUserBackground.addEventListener('load',() => {
                         postUserBackground.style.display = 'block';
-                        postUserBackgroundColor.style.color = 'transparent';
+                        postUserBackgroundColor.style.backgroundColor = 'transparent';
                     });
                     postUser.appendChild(postUserBackground);
                     

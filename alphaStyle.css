@@ -876,6 +876,7 @@ i.icon{
 }
 
 .BH_alonePosts-userName {
+    position: relative;
 	margin: 10px 0 10px 144px;
 	font-size: 20px;
 }
