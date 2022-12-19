@@ -1097,9 +1097,17 @@
                     const postUser = document.createElement('div');
                     postUser.className = 'BH_alonePosts-user'
                     alonePosts.appendChild(postUser);
+
+                    const postUserBackgroundColor = document.createElement('div');
+                    postUserBackgroundColor.className = 'BH_alonePosts-userBackground';
+                    postUser.appendChild(postUserBackgroundColor);
                     
                     const postUserBackground = document.createElement('img');
                     postUserBackground.className = 'BH_alonePosts-userBackground';
+                    postUserBackground.addEventListener('load',() => {
+                        postUserBackground.style.display = 'block';
+                        postUserBackgroundColor.style.color = 'transparent';
+                    });
                     postUser.appendChild(postUserBackground);
                     
                     const postUserAvatar = document.createElement('div');
@@ -1142,9 +1150,17 @@
                     }
 
                     function setUser(uid) {
-                        const user = app.store.data.users[uid];
-
+                        const user = app.store.data.users[uid].data.attributes;
                         console.log(user);
+                        postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
+                        
+                        var bgColor = parseInt(uid).toString(16);
+                        while (bgColor.length < 6) bgColor += 'f';
+                        postUserBackgroundColor.style.backgroundColor = `#${bgColor}`;
+
+                        postUserBackground.style.display = 'none';
+                        postUserBackground.src = user.cover_thumbnail || user.cover;
+                        postUserName.innerText = user.displayName;
                     }
 
                     return {
@@ -1184,7 +1200,7 @@
                     button.className = 'hasIcon';
                     button.type = 'button';
                     button.dataset.id = author.attributes.slug;
-                    button.dataset.uid = author.id.
+                    button.dataset.uid = author.id;
                     element.appendChild(button);
 
                     const icon = document.createElement('i');

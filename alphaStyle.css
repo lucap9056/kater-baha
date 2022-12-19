@@ -875,6 +875,11 @@ i.icon{
     overflow: hidden;
 }
 
+.BH_alonePosts-userName {
+	margin: 10px 0 10px 144px;
+	font-size: 20px;
+}
+
 .BH_alonePosts-postStreamBorder{
     position: relative;
     width: 880px;
