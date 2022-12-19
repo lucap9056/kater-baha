@@ -1106,7 +1106,7 @@
                     postUserAvatar.className = 'BH_alonePosts-userAvatar';
                     postUser.appendChild(postUserAvatar);
 
-                    const postUserName = document.createElement('div');
+                    const postUserName = document.createElement('li');
                     postUserName.className = 'BH_alonePosts-userName';
                     postUser.appendChild(postUserName);
 
@@ -1141,13 +1141,21 @@
                         document.body.style.overflowY = 'scroll';
                     }
 
+                    function setUser(uid) {
+                        const user = app.store.data.users[uid];
+
+                        console.log(user);
+                    }
+
                     return {
                         setUser: (e) => {
                             document.body.style.overflowY = 'hidden';
                             postStream.innerHTML = "";
-                            const userUID = e.target.dataset.id;
+                            const userName = e.target.dataset.id;
+                            const userUID = e.target.dataset.uid;
                             const discussionID = location.href.split('/d/')[1].split('/')[0];
-                            appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userUID}&page[offset]=0&page[limit]=50`);
+                            setUser(userUID);
+                            appendPosts(`https://kater.me/api/posts?filter[discussion]=${discussionID}&filter[author]=${userName}&page[offset]=0&page[limit]=50`);
                             document.body.appendChild(alonePosts);
                         }
                     }
@@ -1160,12 +1168,12 @@
                     return menu;
                 }
 
-                function getUserUID(menu) {
+                function getUser(menu) {
                     const postElement = menu.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
                     const postID = postElement.dataset.id;
                     const post = app.store.data.posts[postID];
                     const userID = post.data.relationships.user.data.id;
-                    return app.store.data.users[userID].data.attributes.slug;
+                    return app.store.data.users[userID].data;
                 }
 
                 function alonePostsButton(author) {
@@ -1175,7 +1183,8 @@
                     const button = document.createElement('button');
                     button.className = 'hasIcon';
                     button.type = 'button';
-                    button.dataset.id = author;
+                    button.dataset.id = author.attributes.slug;
+                    button.dataset.uid = author.id.
                     element.appendChild(button);
 
                     const icon = document.createElement('i');
@@ -1198,7 +1207,7 @@
                     set: (button) => {
                         const menu = MenuCheck(button);
                         if (!menu) return;
-                        const author = getUserUID(menu);
+                        const author = getUser(menu);
                         menu.appendChild(alonePostsButton(author));
                     }
                 }

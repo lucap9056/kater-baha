@@ -844,11 +844,35 @@ i.icon{
 	bottom: 0px;
 }
 
-.BH_alonePosts-user{
-    position: relative;
-    width: 550px;
-    height: 144px;
-    margin: 15px auto;
+.BH_alonePosts-user {
+	position: relative;
+	width: 550px;
+	height: 144px;
+	margin: 10px auto;
+	background-color: #000;
+	border-radius: 3px;
+	overflow: hidden;
+	padding: 20px;
+    list-style: none;
+}
+
+.BH_alonePosts-userBackground {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+    opacity: 0.5;
+}
+
+.BH_alonePosts-userAvatar {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	margin: 2px;
+	border-radius: 100%;
+    overflow: hidden;
 }
 
 .BH_alonePosts-postStreamBorder{
