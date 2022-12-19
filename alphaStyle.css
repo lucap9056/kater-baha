@@ -817,7 +817,9 @@ div.BH_previewImage::before {
     margin: -6px;
 }
 
-
+i.icon{
+    pointer-events: none;
+}
 /*====  ===*/
 @keyframes move{
     from{
