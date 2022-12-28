@@ -748,7 +748,7 @@ div.BH_previewImage {
 .BH_notificationText {
     position: relative;
     width: 316px;
-    color: #EEE;
+    color: var(--text-color);
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 14px;
