@@ -226,8 +226,8 @@ img.Header-logo {
 
 .sideNav .Dropdown--select .Dropdown-menu li {
     float: left;
-    border: solid 1px #222;
-    background: #22272C;
+    border: solid 1px var(--shadow-color);
+    background: var(--button-toggled-color);
     margin: 2px;
     width: calc(12.5% - 4px);
     height: 38px;
@@ -240,7 +240,7 @@ img.Header-logo {
 
 .sideNav .Dropdown--select .Dropdown-menu>li>a {
     padding-left: 0px;
-    color: #A6ACC7;
+    color: var(--text-color);
     text-align: center;
 }
 
@@ -260,8 +260,9 @@ img.Header-logo {
 #BH_header {
     position: relative;
     height: 40px;
-    background-color: #1C1C1C;
     width: 100%;
+    background-color: var(--body-bg);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22);
 }
 
 #BH_headerMenu {
@@ -315,7 +316,7 @@ img.Header-logo {
 }
 
 #BH_headerMenu .Button-label {
-    color: #CCC;
+    color: var(--text-color);
 }
 
 #BH_headerMenu .item-allDiscussions .Button-label {
@@ -454,10 +455,10 @@ ul.affix-top {
     top: 80px;
     left: calc(50% + 550px);
     padding: 4px 8px;
-    color: white;
+    color: var(--text-color);
     text-align: left;
-    background: #1b2028;
-    border: solid 1px #333;
+    background: var(--button-toggled-color);
+    border: solid 1px var(--shadow-color);
     border-radius: 3px;
 }
 
@@ -606,7 +607,7 @@ ul.affix-top {
 }
 
 div.BH_previewImage {
-    background-color: #21272A;
+    background-color: var(--button-bg);
     border: dashed 2px white;
     text-align: center;
     font-size: 20px;
@@ -641,26 +642,26 @@ div.BH_previewImage {
 }
 
 #BH_notificationBtn {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	width: 36px;
-	height: 36px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 36px;
+    height: 36px;
     cursor: pointer;
 }
 
 #BH_notificationBtn::before {
-	content: "";
-	filter: brightness(20);
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 36px;
-	height: 36px;
-	background-image: url("https://i2.bahamut.com.tw/navicon_notification_dark.png");
-	background-size: 24px;
-	background-repeat: no-repeat;
-	background-position: 50%;
+    content: "";
+    filter: brightness(20);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 36px;
+    height: 36px;
+    background-image: url("https://i2.bahamut.com.tw/navicon_notification_dark.png");
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: 50%;
 }
 
 #BH_notificationsTableBorder {
@@ -669,7 +670,7 @@ div.BH_previewImage {
     width: 400px;
     height: 480px;
     overflow: hidden;
-    background-color: #222;
+    background-color: var(--button-bg);
     padding-left: 0;
     z-index: 1;
     box-shadow: 0 0 20px 4px #0008;
@@ -706,11 +707,11 @@ div.BH_previewImage {
 }
 
 .BH_noRead {
-    background-color: #343537;
+    background-color: var(--button-bg-active);
 }
 
 .BH_notificationItem:hover {
-    background-color: #15171A;
+    background-color: var(--button-bg-hover);
 }
 
 .BH_notificationItem::before {
@@ -741,7 +742,7 @@ div.BH_previewImage {
 
 .BH_notificationLinkText {
     margin: 0 2px;
-    color: #4CC;
+    color: var(--link-color);
 }
 
 .BH_notificationText {
@@ -832,84 +833,84 @@ div.BH_previewImage::before {
 }
 
 .Button-Label,
-i.icon{
+i.icon {
     pointer-events: none;
 }
 
 .fa-alonePosts::before {
-	content: "\f007";
+    content: "\f007";
 }
 
 .BH_alonePosts {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	background-color: #000A;
-	z-index: 1000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: #000A;
+    z-index: 1000;
 }
 
 .BH_alonePosts-close {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
 
 .BH_alonePosts-user {
-	position: relative;
-	width: 550px;
-	height: 144px;
-	margin: 10px auto;
-	background-color: #000;
-	border-radius: 3px;
-	overflow: hidden;
-	padding: 20px;
+    position: relative;
+    width: 550px;
+    height: 144px;
+    margin: 10px auto;
+    background-color: #000;
+    border-radius: 3px;
+    overflow: hidden;
+    padding: 20px;
     list-style: none;
 }
 
 .BH_alonePosts-userBackground {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     opacity: 0.5;
 }
 
 .BH_alonePosts-userAvatar {
-	position: absolute;
-	width: 100px;
-	height: 100px;
-	margin: 2px;
-	border-radius: 100%;
-	overflow: hidden;
-	color: white;
-	text-align: center;
-	line-height: 100px;
-	font-size: 60px;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    margin: 2px;
+    border-radius: 100%;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+    line-height: 100px;
+    font-size: 60px;
 }
 
 .BH_alonePosts-userName {
     position: relative;
-	margin: 10px 0 10px 144px;
-	font-size: 20px;
+    margin: 10px 0 10px 144px;
+    font-size: 20px;
 }
 
 .BH_alonePosts-postStreamBorder {
-	position: relative;
-	width: 880px;
-	height: calc(100% - 184px);
-	margin: 0 auto;
-	overflow: hidden;
-	background-color: var(--body-bg-faded);
-	border-radius: 5px;
+    position: relative;
+    width: 880px;
+    height: calc(100% - 184px);
+    margin: 0 auto;
+    overflow: hidden;
+    background-color: var(--body-bg-faded);
+    border-radius: 5px;
 }
 
-.BH_alonePosts-postStream{
+.BH_alonePosts-postStream {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -919,22 +920,22 @@ i.icon{
 }
 
 .BH_alonePosts-item {
-	position: relative;
-	width: 860px;
-	margin: 10px;
-	padding-top: 25px;
+    position: relative;
+    width: 860px;
+    margin: 10px;
+    padding-top: 25px;
 }
 
-.BH_alonePosts-item + .BH_alonePosts-item {
-	border-top: solid var(--control-color) 1px;
+.BH_alonePosts-item+.BH_alonePosts-item {
+    border-top: solid var(--control-color) 1px;
 }
 
 .BH_alonePosts-number {
-	position: absolute;
-	top: 0px;
-	right: 0px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 
-.BH_alonePosts-item img{
+.BH_alonePosts-item img {
     max-width: 100%;
 }
