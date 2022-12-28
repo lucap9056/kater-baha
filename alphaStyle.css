@@ -186,7 +186,7 @@ img.Header-logo {
 
 .BH_ClientName {
     float: left;
-    color: #F7F7F7;
+    color: var(--text-color);
     display: block;
     margin-left: 10px;
     max-width: 168px;
