@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         卡巴姆特
 // @namespace    https://github.com/123ldkop/kater-baha
-// @version      1.2
+// @version      1.3
 // @description  將卡特介面改成類巴哈
 // @match        https://kater.me/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kater.me
@@ -20,7 +20,7 @@
 
     (function BHload() {
         'use strict';
-        const updateTime = "卡巴姆特 最後更新時間:2022/12/29 23:46";
+        const updateTime = "卡巴姆特";
         try {
             flarum.core.app.translator.addTranslations({
                 "core.forum.composer_discussion.title": "發文",
