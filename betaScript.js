@@ -1,5 +1,6 @@
 (function BHload() {
     'use strict';
+
     const updateTime = "卡巴姆特 v.Beta 最後更新時間:2022/11/24 02:50";
     try {
         flarum.core.app.translator.addTranslations({
@@ -30,6 +31,13 @@
     }
     catch {
     }
+    
+    (() => {
+        const style = document.createElement('link');
+        style.rel = 'stylesheet';
+        style.href = 'https://123ldkop.github.io/kater-baha/betaStyle.css';
+        document.head.appendChild(style);
+    })();
 
     (() => {
         var BH_store = {
