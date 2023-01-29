@@ -403,7 +403,7 @@
                     mode = 'u';
                     menu.appendChild(menu_focus);
                     (function setMenu() {
-                        var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix');
+                        var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix') || document.querySelector('.item-nav');
                         if (userMenu) {
                             userMenu = userMenu.querySelector('.Dropdown-menu');
                             menu.appendChild(userMenu);
@@ -439,8 +439,8 @@
             const ul = document.createElement('ul');
 
             Object.keys(config).map(configName => {
+                if (!app.translator.translations[`kabamut.settings.${configName}`]) return;
                 const text = document.createTextNode(app.translator.translations[`kabamut.settings.${configName}`]);
-                if (text == null) return;
 
                 const inputDisplay = document.createElement('div');
                 inputDisplay.className = 'Checkbox-display';
@@ -506,10 +506,7 @@
                 const tagsSelectClose = document.createElement('div');
                 tagsSelectClose.className = 'BH_tagsSelectClose';
                 tagsSelect.appendChild(tagsSelectClose);
-                tagsSelectClose.addEventListener('click', () => {
-                    document.body.style.overflowY = 'auto';
-                    document.body.removeChild(tagsSelect);
-                });
+                tagsSelectClose.addEventListener('click', hide);
 
                 const tagsSelectMain = document.createElement('div');
                 tagsSelectMain.className = 'BH_tagsSelectMain';
@@ -523,6 +520,8 @@
                 tagsSelectNav.className = 'BH_tagsSelectNav';
                 tagsSelectNavBorder.appendChild(tagsSelectNav);
 
+                const nowTags = (config.customTags) ? `,${config.customTags},` : '';
+
                 Object.values(app.store.data.tags).map(tag => {
                     const tagItem = document.createElement('div');
                     tagItem.className = 'tagsSelectItem';
@@ -530,6 +529,7 @@
                     const tagCheckbox = document.createElement('input');
                     tagCheckbox.type = 'checkbox';
                     tagCheckbox.dataset.tagName = tag.data.attributes.slug;
+                    if (nowTags.indexOf(tag.data.attributes.slug) > -1) tagCheckbox.checked = true;
                     tagItem.appendChild(tagCheckbox);
 
                     const tagCheck = document.createElement('div');
@@ -556,6 +556,9 @@
                     const input_list = Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input'))
                     const slugs = input_list.filter(input => input.checked).map(input => input.dataset.tagName).toString();
                     config.customTags = (slugs == "") ? null : slugs;
+                    settings.save();
+                    hide();
+                    CustomTags.discussions();
                 });
 
                 const tagsSelectClear = document.createElement('button');
@@ -566,12 +569,17 @@
                     Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input')).forEach(input => input.checked = false);
                 });
 
+                function hide() {
+                    document.body.style.overflowY = 'auto';
+                    document.body.removeChild(tagsSelect);
+                }
 
                 return {
                     show: () => {
                         document.body.style.overflowY = 'hidden';
                         document.body.appendChild(tagsSelect);
-                    }
+                    },
+                    hide: hide
                 }
             })();
 
@@ -596,7 +604,12 @@
                     document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
                 },
                 discussions: () => {
-
+                    app.discussions.refreshParams({
+                        include: 'user,lastPostedUser,tags,tags.parent,firstPost',
+                        tags: config.customTags,
+                        onFollowing: false,
+                        bookmarked: false
+                    });
                 }
             }
         })();
@@ -619,30 +632,25 @@
             }
         })();
 
-        var temp;
         setInterval(() => {
-            var path = location.pathname;
+            var route = app.current.data.routeName;
             welcomeImage.append();
-            if (path == temp) return;
-            const url = location.pathname.split('/');
-            switch (url[1]) {
-                case "t":
-                    BHmenu.setTag(url[2]);
-                case "":
+            if (route == 'kabamut') return;
+            app.current.data.routeName = 'kabamut';
+            switch (route.replace(/\..*/g, '')) {
+                case "tag":
+                case "index":
                     BHmenu.clear();
                     BHmenu.discussions();
                     CustomTags.append();
                     admin.append();
-                    if (config.customTags) {
-                        app.discussions.clear();
-                        
-                    }
+                    if (config.customTags) CustomTags.discussions();
                     break;
-                case "u":
+                case "user":
                     BHmenu.clear();
                     BHmenu.user();
                     break;
-                case "d":
+                case "discussion":
                     if (BHmenu.get() != 'd') {
                         BHmenu.clear();
                         BHmenu.create();
@@ -651,10 +659,10 @@
                     admin.append();
                     break;
                 case "settings":
+                    BHmenu.user();
                     settings.load();
                     break;
             }
-            temp = path;
         }, 1000);
 
 
