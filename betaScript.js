@@ -1,7 +1,6 @@
 (function BHload() {
     'use strict';
-
-    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2022/11/24 02:50";
+    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2023/01/29 23:50";
     try {
         flarum.core.app.translator.addTranslations({
             "core.forum.composer_discussion.title": "發文",
@@ -24,7 +23,8 @@
         beta_version: false,
         bala_cursor: false,
         preview: true,
-        notification: false
+        notification: false,
+        customTags: null
     };
     try {
         config = Object.assign(config, JSON.parse(document.cookie.split('kabamut=')[1].split(';')[0]));
@@ -403,7 +403,7 @@
                     mode = 'u';
                     menu.appendChild(menu_focus);
                     (function setMenu() {
-                        var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix');
+                        var userMenu = document.querySelector('ul.affix-top') || document.querySelector('ul.affix') || document.querySelector('.item-nav');
                         if (userMenu) {
                             userMenu = userMenu.querySelector('.Dropdown-menu');
                             menu.appendChild(userMenu);
@@ -439,8 +439,8 @@
             const ul = document.createElement('ul');
 
             Object.keys(config).map(configName => {
+                if (!app.translator.translations[`kabamut.settings.${configName}`]) return;
                 const text = document.createTextNode(app.translator.translations[`kabamut.settings.${configName}`]);
-                if (text == null) return;
 
                 const inputDisplay = document.createElement('div');
                 inputDisplay.className = 'Checkbox-display';
@@ -489,6 +489,127 @@
             return {
                 load: () => {
                     document.querySelector('.SettingsPage > ul').appendChild(item_li);
+                },
+                save: saveSettings
+            }
+        })();
+
+        const CustomTags = (() => {
+
+
+
+            const CustomTagsSelect = (() => {
+                //app.discussions.addDiscussion(app.store.data.discussions[59316])
+                const tagsSelect = document.createElement('div');
+                tagsSelect.className = 'BH_tagsSelect';
+
+                const tagsSelectClose = document.createElement('div');
+                tagsSelectClose.className = 'BH_tagsSelectClose';
+                tagsSelect.appendChild(tagsSelectClose);
+                tagsSelectClose.addEventListener('click', hide);
+
+                const tagsSelectMain = document.createElement('div');
+                tagsSelectMain.className = 'BH_tagsSelectMain';
+                tagsSelect.appendChild(tagsSelectMain);
+
+                const tagsSelectNavBorder = document.createElement('div');
+                tagsSelectNavBorder.className = 'BH_tagsSelectNavBorder';
+                tagsSelectMain.appendChild(tagsSelectNavBorder);
+
+                const tagsSelectNav = document.createElement('div');
+                tagsSelectNav.className = 'BH_tagsSelectNav';
+                tagsSelectNavBorder.appendChild(tagsSelectNav);
+
+                const nowTags = (config.customTags) ? `,${config.customTags},` : '';
+
+                Object.values(app.store.data.tags).map(tag => {
+                    const tagItem = document.createElement('div');
+                    tagItem.className = 'tagsSelectItem';
+
+                    const tagCheckbox = document.createElement('input');
+                    tagCheckbox.type = 'checkbox';
+                    tagCheckbox.dataset.tagName = tag.data.attributes.slug;
+                    if (nowTags.indexOf(tag.data.attributes.slug) > -1) tagCheckbox.checked = true;
+                    tagItem.appendChild(tagCheckbox);
+
+                    const tagCheck = document.createElement('div');
+                    tagCheck.className = 'tagsSelectItemCheck';
+                    tagItem.appendChild(tagCheck);
+
+                    const tagIcon = document.createElement('i');
+                    tagIcon.className = tag.data.attributes.icon;
+                    tagIcon.classList.add("Button-icon", "icon");
+                    tagItem.appendChild(tagIcon);
+
+                    const tagName = document.createElement('span');
+                    tagName.innerText = tag.data.attributes.name;
+                    tagItem.appendChild(tagName);
+
+                    tagsSelectNav.appendChild(tagItem);
+                });
+
+                const tagsSelectConfirm = document.createElement('button');
+                tagsSelectConfirm.className = 'tagsSelectButton';
+                tagsSelectConfirm.innerText = "確認";
+                tagsSelectMain.appendChild(tagsSelectConfirm);
+                tagsSelectConfirm.addEventListener('click', () => {
+                    const input_list = Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input'))
+                    const slugs = input_list.filter(input => input.checked).map(input => input.dataset.tagName).toString();
+                    config.customTags = (slugs == "") ? null : slugs;
+                    settings.save();
+                    hide();
+                    CustomTags.discussions();
+                });
+
+                const tagsSelectClear = document.createElement('button');
+                tagsSelectClear.className = 'tagsSelectButton';
+                tagsSelectClear.innerText = "清除";
+                tagsSelectMain.appendChild(tagsSelectClear);
+                tagsSelectClear.addEventListener('click', () => {
+                    Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input')).forEach(input => input.checked = false);
+                });
+
+                function hide() {
+                    document.body.style.overflowY = 'auto';
+                    document.body.removeChild(tagsSelect);
+                }
+
+                return {
+                    show: () => {
+                        document.body.style.overflowY = 'hidden';
+                        document.body.appendChild(tagsSelect);
+                    },
+                    hide: hide
+                }
+            })();
+
+
+            const span = document.createElement('span');
+            span.className = 'Button-label';
+            span.innerText = '自訂';
+
+            const a = document.createElement('a');
+            a.appendChild(span);
+
+            const li = document.createElement('li');
+            li.className = 'item-tagCustom';
+            li.appendChild(a);
+            li.addEventListener('click', CustomTagsSelect.show);
+
+
+
+            return {
+                append: async () => {
+                    if (document.querySelector('.item-tagCustom')) return;
+                    document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
+                },
+                discussions: () => {
+                    app.discussions.refreshParams({
+                        include: 'user,lastPostedUser,tags,tags.parent,firstPost',
+                        tags: config.customTags,
+                        onFollowing: false,
+                        bookmarked: false
+                    });
                 }
             }
         })();
@@ -511,26 +632,25 @@
             }
         })();
 
-        var temp;
-        (function pageCheck() {
-            Timer(pageCheck, 1000);
-            var path = location.pathname;
+        setInterval(() => {
+            var route = app.current.data.routeName;
             welcomeImage.append();
-            if (path == temp) return;
-            const url = location.pathname.split('/');
-            switch (url[1]) {
-                case "t":
-                    BHmenu.setTag(url[2]);
-                case "":
+            if (route == 'kabamut') return;
+            app.current.data.routeName = 'kabamut';
+            switch (route.replace(/\..*/g, '')) {
+                case "tag":
+                case "index":
                     BHmenu.clear();
                     BHmenu.discussions();
+                    CustomTags.append();
                     admin.append();
+                    if (config.customTags) CustomTags.discussions();
                     break;
-                case "u":
+                case "user":
                     BHmenu.clear();
                     BHmenu.user();
                     break;
-                case "d":
+                case "discussion":
                     if (BHmenu.get() != 'd') {
                         BHmenu.clear();
                         BHmenu.create();
@@ -539,11 +659,11 @@
                     admin.append();
                     break;
                 case "settings":
+                    BHmenu.user();
                     settings.load();
                     break;
             }
-            temp = path;
-        })();
+        }, 1000);
 
 
         (function setLang() {
@@ -1085,7 +1205,7 @@
             const AlonePostsElement = (() => {
 
                 const AlonePosts = (() => {
-                    
+
                     var state = "";
                     var nextUrl = "";
                     var discussionID = "";
@@ -1095,10 +1215,10 @@
 
                     const alonePostsClose = document.createElement('div');
                     alonePostsClose.className = 'BH_alonePosts-close';
-                    alonePostsClose.addEventListener('click',close);
+                    alonePostsClose.addEventListener('click', close);
                     alonePosts.appendChild(alonePostsClose);
 
-                    
+
                     const postUser = document.createElement('div');
                     postUser.className = 'BH_alonePosts-user'
                     alonePosts.appendChild(postUser);
@@ -1106,15 +1226,15 @@
                     const postUserBackgroundColor = document.createElement('div');
                     postUserBackgroundColor.className = 'BH_alonePosts-userBackground';
                     postUser.appendChild(postUserBackgroundColor);
-                    
+
                     const postUserBackground = document.createElement('img');
                     postUserBackground.className = 'BH_alonePosts-userBackground';
-                    postUserBackground.addEventListener('load',() => {
+                    postUserBackground.addEventListener('load', () => {
                         postUserBackground.style.display = 'block';
                         postUserBackgroundColor.style.backgroundColor = 'transparent';
                     });
                     postUser.appendChild(postUserBackground);
-                    
+
                     const postUserAvatar = document.createElement('div');
                     postUserAvatar.className = 'BH_alonePosts-userAvatar';
                     postUser.appendChild(postUserAvatar);
@@ -1130,7 +1250,7 @@
                     const postStream = document.createElement('div');
                     postStream.className = 'BH_alonePosts-postStream';
                     postStreamBorder.appendChild(postStream);
-                    postStream.addEventListener('scroll',() => {
+                    postStream.addEventListener('scroll', () => {
                         if (postStream.scrollTop != postStream.scrollTopMax || state != "") return;
                         state = 'loading';
                         appendPosts(nextUrl);
@@ -1138,8 +1258,8 @@
 
                     function appendPosts(url) {
                         const xhr = new XMLHttpRequest();
-                        xhr.open("GET",url);
-                        xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                        xhr.open("GET", url);
+                        xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
                         xhr.onload = () => {
                             const res = JSON.parse(xhr.response);
                             nextUrl = res.links.next || null;
@@ -1185,7 +1305,7 @@
                             postUserAvatar.innerHTML = "";
                             postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
                         }
-                        
+
                         var bgColor = parseInt(uid).toString(16);
                         while (bgColor.length < 6) bgColor += 'f';
                         postUserBackgroundColor.style.backgroundColor = `#${bgColor}`;
