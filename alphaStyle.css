@@ -939,3 +939,52 @@ i.icon {
 .BH_alonePosts-item img {
     max-width: 100%;
 }
+
+.BH_tagsSelect {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	height: 100vh;
+	background-color: #000A;
+	z-index: 1000;
+}
+
+.BH_tagsSelectClose {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+.BH_tagsSelectMain {
+	position: absolute;
+	top: calc(50% - 250px);
+	left: calc(50% - 300px);
+	width: 600px;
+	height: 500px;
+	background-color: var(--body-bg-faded);
+	border-radius: 7px;
+	border: solid 3px var(--button-primary-bg-active);
+}
+
+.BH_tagsSelectNav {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: 540px;
+	height: 420px;
+	margin: 10px auto;
+	overflow: scroll hidden;
+}
+
+.tagsSelectConfirm {
+	position: relative;
+	width: 120px;
+	height: 32px;
+	margin: 12px;
+	background-color: var(--button-bg);
+	border: none;
+	border-radius: var(--border-radius);
+}

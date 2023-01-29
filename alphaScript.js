@@ -34,7 +34,7 @@
     (() => {
         const style = document.createElement('link');
         style.rel = 'stylesheet';
-        style.href = 'https://123ldkop.github.io/kater-baha/alphaStyle.css';
+        style.href = 'https://123ldkop.github.io/kater-baha/betaStyle.css';
         document.head.appendChild(style);
     })();
 
@@ -433,6 +433,87 @@
             }
         })();
 
+        const CustomTags = (() => {
+
+
+
+            const CustomTagsSelect = (() => {
+                //app.discussions.addDiscussion(app.store.data.discussions[59316])
+                const tagsSelect = document.createElement('div');
+                tagsSelect.className = 'BH_tagsSelect';
+
+                const tagsSelectClose = document.createElement('div');
+                tagsSelectClose.className = 'BH_tagsSelectClose';
+                tagsSelect.appendChild(tagsSelectClose);
+                tagsSelectClose.addEventListener('click', () => {
+                    document.body.style.overflowY = 'auto';
+                    document.body.removeChild(tagsSelect);
+                });
+
+                const tagsSelectMain = document.createElement('div');
+                tagsSelectMain.className = 'BH_tagsSelectMain';
+                tagsSelect.appendChild(tagsSelectMain);
+
+                const tagsSelectNav = document.createElement('div');
+                tagsSelectNav.className = 'BH_tagsSelectNav';
+                tagsSelectMain.appendChild(tagsSelectNav);
+
+                Object.values(app.store.data.tags).map(tag => {
+                    const tagItem = document.createElement('div');
+
+                    const tagCheck = document.createElement('input');
+                    tagCheck.type = 'checkbox';
+                    tagCheck.dataset.tagName = tag.data.slug;
+                    tagItem.appendChild(tagCheck);
+
+                    const tagIcon = document.createElement('i');
+                    tagIcon.className = tag.data.attributes.icon;
+                    tagIcon.classList.add("Button-icon", "icon");
+                    tagItem.appendChild(tagIcon);
+
+                    const tagName = document.createElement('span');
+                    tagName.innerText = tag.data.attributes.name;
+                    tagItem.appendChild(tagName);
+
+                    tagsSelectNav.appendChild(tagItem);
+                });
+
+                const tagsSelectConfirm = document.createElement('button');
+                tagsSelectConfirm.className = 'tagsSelectConfirm';
+                tagsSelectMain.appendChild(tagsSelectConfirm);
+                tagsSelectConfirm.addEventListener('click', () => {
+
+                });
+
+
+                return {
+                    show: () => {
+                        document.body.style.overflowY = 'hidden';
+                        document.body.appendChild(tagsSelect);
+                    }
+                }
+            })();
+
+
+            const span = document.createElement('span');
+            span.className = 'Button-label';
+            span.innerText = '自訂';
+
+            const a = document.createElement('a');
+            a.appendChild(span);
+
+            const li = document.createElement('li');
+            li.className = 'item-tagCustom';
+            li.appendChild(a);
+            li.addEventListener('click', CustomTagsSelect.show);
+            return {
+                append: async () => {
+                    if (document.querySelector('.item-tagCustom')) return;
+                    document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
+                }
+            }
+        })();
+
         const settings = (() => {
 
             const ul = document.createElement('ul');
@@ -511,8 +592,7 @@
         })();
 
         var temp;
-        (function pageCheck() {
-            Timer(pageCheck, 1000);
+        setInterval(() => {
             var path = location.pathname;
             welcomeImage.append();
             if (path == temp) return;
@@ -523,6 +603,7 @@
                 case "":
                     BHmenu.clear();
                     BHmenu.discussions();
+                    CustomTags.append();
                     admin.append();
                     break;
                 case "u":
@@ -542,7 +623,7 @@
                     break;
             }
             temp = path;
-        })();
+        }, 1000);
 
 
         (function setLang() {
@@ -1084,7 +1165,7 @@
             const AlonePostsElement = (() => {
 
                 const AlonePosts = (() => {
-                    
+
                     var state = "";
                     var nextUrl = "";
                     var discussionID = "";
@@ -1094,10 +1175,10 @@
 
                     const alonePostsClose = document.createElement('div');
                     alonePostsClose.className = 'BH_alonePosts-close';
-                    alonePostsClose.addEventListener('click',close);
+                    alonePostsClose.addEventListener('click', close);
                     alonePosts.appendChild(alonePostsClose);
 
-                    
+
                     const postUser = document.createElement('div');
                     postUser.className = 'BH_alonePosts-user'
                     alonePosts.appendChild(postUser);
@@ -1105,15 +1186,15 @@
                     const postUserBackgroundColor = document.createElement('div');
                     postUserBackgroundColor.className = 'BH_alonePosts-userBackground';
                     postUser.appendChild(postUserBackgroundColor);
-                    
+
                     const postUserBackground = document.createElement('img');
                     postUserBackground.className = 'BH_alonePosts-userBackground';
-                    postUserBackground.addEventListener('load',() => {
+                    postUserBackground.addEventListener('load', () => {
                         postUserBackground.style.display = 'block';
                         postUserBackgroundColor.style.backgroundColor = 'transparent';
                     });
                     postUser.appendChild(postUserBackground);
-                    
+
                     const postUserAvatar = document.createElement('div');
                     postUserAvatar.className = 'BH_alonePosts-userAvatar';
                     postUser.appendChild(postUserAvatar);
@@ -1129,7 +1210,7 @@
                     const postStream = document.createElement('div');
                     postStream.className = 'BH_alonePosts-postStream';
                     postStreamBorder.appendChild(postStream);
-                    postStream.addEventListener('scroll',() => {
+                    postStream.addEventListener('scroll', () => {
                         if (postStream.scrollTop != postStream.scrollTopMax || state != "") return;
                         state = 'loading';
                         appendPosts(nextUrl);
@@ -1137,8 +1218,8 @@
 
                     function appendPosts(url) {
                         const xhr = new XMLHttpRequest();
-                        xhr.open("GET",url);
-                        xhr.setRequestHeader('X-CSRF-Token',app.session.csrfToken);
+                        xhr.open("GET", url);
+                        xhr.setRequestHeader('X-CSRF-Token', app.session.csrfToken);
                         xhr.onload = () => {
                             const res = JSON.parse(xhr.response);
                             nextUrl = res.links.next || null;
@@ -1184,7 +1265,7 @@
                             postUserAvatar.innerHTML = "";
                             postUserAvatar.style.backgroundImage = `url("${user.avatarUrl}")`;
                         }
-                        
+
                         var bgColor = parseInt(uid).toString(16);
                         while (bgColor.length < 6) bgColor += 'f';
                         postUserBackgroundColor.style.backgroundColor = `#${bgColor}`;
