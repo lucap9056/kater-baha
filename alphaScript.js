@@ -23,7 +23,8 @@
         beta_version: false,
         bala_cursor: false,
         preview: true,
-        notification: false
+        notification: false,
+        customTags: null
     };
     try {
         config = Object.assign(config, JSON.parse(document.cookie.split('kabamut=')[1].split(';')[0]));
@@ -433,87 +434,6 @@
             }
         })();
 
-        const CustomTags = (() => {
-
-
-
-            const CustomTagsSelect = (() => {
-                //app.discussions.addDiscussion(app.store.data.discussions[59316])
-                const tagsSelect = document.createElement('div');
-                tagsSelect.className = 'BH_tagsSelect';
-
-                const tagsSelectClose = document.createElement('div');
-                tagsSelectClose.className = 'BH_tagsSelectClose';
-                tagsSelect.appendChild(tagsSelectClose);
-                tagsSelectClose.addEventListener('click', () => {
-                    document.body.style.overflowY = 'auto';
-                    document.body.removeChild(tagsSelect);
-                });
-
-                const tagsSelectMain = document.createElement('div');
-                tagsSelectMain.className = 'BH_tagsSelectMain';
-                tagsSelect.appendChild(tagsSelectMain);
-
-                const tagsSelectNav = document.createElement('div');
-                tagsSelectNav.className = 'BH_tagsSelectNav';
-                tagsSelectMain.appendChild(tagsSelectNav);
-
-                Object.values(app.store.data.tags).map(tag => {
-                    const tagItem = document.createElement('div');
-
-                    const tagCheck = document.createElement('input');
-                    tagCheck.type = 'checkbox';
-                    tagCheck.dataset.tagName = tag.data.slug;
-                    tagItem.appendChild(tagCheck);
-
-                    const tagIcon = document.createElement('i');
-                    tagIcon.className = tag.data.attributes.icon;
-                    tagIcon.classList.add("Button-icon", "icon");
-                    tagItem.appendChild(tagIcon);
-
-                    const tagName = document.createElement('span');
-                    tagName.innerText = tag.data.attributes.name;
-                    tagItem.appendChild(tagName);
-
-                    tagsSelectNav.appendChild(tagItem);
-                });
-
-                const tagsSelectConfirm = document.createElement('button');
-                tagsSelectConfirm.className = 'tagsSelectConfirm';
-                tagsSelectMain.appendChild(tagsSelectConfirm);
-                tagsSelectConfirm.addEventListener('click', () => {
-
-                });
-
-
-                return {
-                    show: () => {
-                        document.body.style.overflowY = 'hidden';
-                        document.body.appendChild(tagsSelect);
-                    }
-                }
-            })();
-
-
-            const span = document.createElement('span');
-            span.className = 'Button-label';
-            span.innerText = '自訂';
-
-            const a = document.createElement('a');
-            a.appendChild(span);
-
-            const li = document.createElement('li');
-            li.className = 'item-tagCustom';
-            li.appendChild(a);
-            li.addEventListener('click', CustomTagsSelect.show);
-            return {
-                append: async () => {
-                    if (document.querySelector('.item-tagCustom')) return;
-                    document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
-                }
-            }
-        })();
-
         const settings = (() => {
 
             const ul = document.createElement('ul');
@@ -569,6 +489,102 @@
             return {
                 load: () => {
                     document.querySelector('.SettingsPage > ul').appendChild(item_li);
+                },
+                save:saveSettings()
+            }
+        })();
+
+        const CustomTags = (() => {
+
+
+
+            const CustomTagsSelect = (() => {
+                //app.discussions.addDiscussion(app.store.data.discussions[59316])
+                const tagsSelect = document.createElement('div');
+                tagsSelect.className = 'BH_tagsSelect';
+
+                const tagsSelectClose = document.createElement('div');
+                tagsSelectClose.className = 'BH_tagsSelectClose';
+                tagsSelect.appendChild(tagsSelectClose);
+                tagsSelectClose.addEventListener('click', () => {
+                    document.body.style.overflowY = 'auto';
+                    document.body.removeChild(tagsSelect);
+                });
+
+                const tagsSelectMain = document.createElement('div');
+                tagsSelectMain.className = 'BH_tagsSelectMain';
+                tagsSelect.appendChild(tagsSelectMain);
+
+                const tagsSelectNav = document.createElement('div');
+                tagsSelectNav.className = 'BH_tagsSelectNav';
+                tagsSelectMain.appendChild(tagsSelectNav);
+
+                Object.values(app.store.data.tags).map(tag => {
+                    const tagItem = document.createElement('div');
+
+                    const tagCheck = document.createElement('input');
+                    tagCheck.type = 'checkbox';
+                    tagCheck.dataset.tagName = tag.data.slug;
+                    tagItem.appendChild(tagCheck);
+
+                    const tagIcon = document.createElement('i');
+                    tagIcon.className = tag.data.attributes.icon;
+                    tagIcon.classList.add("Button-icon", "icon");
+                    tagItem.appendChild(tagIcon);
+
+                    const tagName = document.createElement('span');
+                    tagName.innerText = tag.data.attributes.name;
+                    tagItem.appendChild(tagName);
+
+                    tagsSelectNav.appendChild(tagItem);
+                });
+
+                const tagsSelectConfirm = document.createElement('button');
+                tagsSelectConfirm.className = 'tagsSelectButton';
+                tagsSelectMain.appendChild(tagsSelectConfirm);
+                tagsSelectConfirm.addEventListener('click', () => {
+
+                });
+
+                const tagsSelectClear = document.createElement('button');
+                tagsSelectClear.className = 'tagsSelectButton';
+                tagsSelectMain.appendChild(tagsSelectClear);
+                tagsSelectClear.addEventListener('click', () => {
+                    config.customTags = null;
+                    settings.save();
+                });
+
+
+                return {
+                    show: () => {
+                        document.body.style.overflowY = 'hidden';
+                        document.body.appendChild(tagsSelect);
+                    }
+                }
+            })();
+
+
+            const span = document.createElement('span');
+            span.className = 'Button-label';
+            span.innerText = '自訂';
+
+            const a = document.createElement('a');
+            a.appendChild(span);
+
+            const li = document.createElement('li');
+            li.className = 'item-tagCustom';
+            li.appendChild(a);
+            li.addEventListener('click', CustomTagsSelect.show);
+
+
+
+            return {
+                append: async () => {
+                    if (document.querySelector('.item-tagCustom')) return;
+                    document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
+                },
+                discussions:() => {
+
                 }
             }
         })();
