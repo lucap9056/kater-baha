@@ -35,7 +35,7 @@
     (() => {
         const style = document.createElement('link');
         style.rel = 'stylesheet';
-        style.href = 'https://123ldkop.github.io/kater-baha/betaStyle.css';
+        style.href = 'https://123ldkop.github.io/kater-baha/alphaStyle.css';
         document.head.appendChild(style);
     })();
 
@@ -515,16 +515,25 @@
                 tagsSelectMain.className = 'BH_tagsSelectMain';
                 tagsSelect.appendChild(tagsSelectMain);
 
+                const tagsSelectNavBorder = document.createElement('div');
+                tagsSelectNavBorder.className = 'BH_tagsSelectNavBorder';
+                tagsSelectMain.appendChild(tagsSelectNavBorder);
+
                 const tagsSelectNav = document.createElement('div');
                 tagsSelectNav.className = 'BH_tagsSelectNav';
-                tagsSelectMain.appendChild(tagsSelectNav);
+                tagsSelectNavBorder.appendChild(tagsSelectNav);
 
                 Object.values(app.store.data.tags).map(tag => {
                     const tagItem = document.createElement('div');
+                    tagItem.className = 'tagsSelectItem';
 
-                    const tagCheck = document.createElement('input');
-                    tagCheck.type = 'checkbox';
-                    tagCheck.dataset.tagName = tag.data.slug;
+                    const tagCheckbox = document.createElement('input');
+                    tagCheckbox.type = 'checkbox';
+                    tagCheckbox.dataset.tagName = tag.data.attributes.slug;
+                    tagItem.appendChild(tagCheckbox);
+
+                    const tagCheck = document.createElement('div');
+                    tagCheck.className = 'tagsSelectItemCheck';
                     tagItem.appendChild(tagCheck);
 
                     const tagIcon = document.createElement('i');
@@ -541,6 +550,7 @@
 
                 const tagsSelectConfirm = document.createElement('button');
                 tagsSelectConfirm.className = 'tagsSelectButton';
+                tagsSelectConfirm.innerText = "確認";
                 tagsSelectMain.appendChild(tagsSelectConfirm);
                 tagsSelectConfirm.addEventListener('click', () => {
 
@@ -548,6 +558,7 @@
 
                 const tagsSelectClear = document.createElement('button');
                 tagsSelectClear.className = 'tagsSelectButton';
+                tagsSelectClear.innerText = "清除";
                 tagsSelectMain.appendChild(tagsSelectClear);
                 tagsSelectClear.addEventListener('click', () => {
                     config.customTags = null;
