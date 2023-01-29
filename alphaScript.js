@@ -490,7 +490,7 @@
                 load: () => {
                     document.querySelector('.SettingsPage > ul').appendChild(item_li);
                 },
-                save:saveSettings()
+                save: saveSettings
             }
         })();
 
@@ -553,7 +553,9 @@
                 tagsSelectConfirm.innerText = "確認";
                 tagsSelectMain.appendChild(tagsSelectConfirm);
                 tagsSelectConfirm.addEventListener('click', () => {
-
+                    const input_list = Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input'))
+                    const slugs = input_list.filter(input => input.checked).map(input => input.dataset.tagName).toString();
+                    config.customTags = (slugs == "") ? null : slugs;
                 });
 
                 const tagsSelectClear = document.createElement('button');
@@ -561,8 +563,7 @@
                 tagsSelectClear.innerText = "清除";
                 tagsSelectMain.appendChild(tagsSelectClear);
                 tagsSelectClear.addEventListener('click', () => {
-                    config.customTags = null;
-                    settings.save();
+                    Array.prototype.slice.call(tagsSelectNav.getElementsByTagName('input')).forEach(input => input.checked = false);
                 });
 
 
@@ -594,7 +595,7 @@
                     if (document.querySelector('.item-tagCustom')) return;
                     document.querySelector('.item-nav .Dropdown-menu').appendChild(li);
                 },
-                discussions:() => {
+                discussions: () => {
 
                 }
             }
@@ -632,6 +633,10 @@
                     BHmenu.discussions();
                     CustomTags.append();
                     admin.append();
+                    if (config.customTags) {
+                        app.discussions.clear();
+                        
+                    }
                     break;
                 case "u":
                     BHmenu.clear();

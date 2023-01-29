@@ -1010,7 +1010,18 @@ i.icon {
 	z-index: 1;
 }
 
+.tagsSelectItemCheck {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
 
+.tagsSelectItem input:checked + .tagsSelectItemCheck {
+	border: solid 2px #4B6;
+	border-radius: 7px;
+}
 
 .tagsSelectButton {
 	position: relative;
