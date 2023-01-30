@@ -639,6 +639,11 @@
             app.current.data.routeName = 'kabamut';
             switch (route.replace(/\..*/g, '')) {
                 case "tag":
+                    BHmenu.clear();
+                    BHmenu.discussions();
+                    CustomTags.append();
+                    admin.append();
+                    break;
                 case "index":
                     BHmenu.clear();
                     BHmenu.discussions();
