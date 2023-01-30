@@ -495,11 +495,8 @@
         })();
 
         const CustomTags = (() => {
-
-
-
+            
             const CustomTagsSelect = (() => {
-                //app.discussions.addDiscussion(app.store.data.discussions[59316])
                 const tagsSelect = document.createElement('div');
                 tagsSelect.className = 'BH_tagsSelect';
 
@@ -633,10 +630,11 @@
         })();
 
         setInterval(() => {
+            if (app.current.data.kabamut) return;
             var route = app.current.data.routeName;
+            app.current.data.kabamut = route;
             welcomeImage.append();
             if (route == 'kabamut') return;
-            app.current.data.routeName = 'kabamut';
             switch (route.replace(/\..*/g, '')) {
                 case "tag":
                     BHmenu.clear();
