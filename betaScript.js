@@ -643,11 +643,12 @@
                     admin.append();
                     break;
                 case "index":
+                    if (/[?&]q=/.test(location.search)) app.current.data.kabamut = 'search';
                     BHmenu.clear();
                     BHmenu.discussions();
                     CustomTags.append();
                     admin.append();
-                    if (config.customTags && !/[?&]q=/.test(location.search)) CustomTags.discussions();
+                    if (config.customTags && app.current.data.kabamut != 'search') CustomTags.discussions();
                     break;
                 case "user":
                     BHmenu.clear();
@@ -746,9 +747,8 @@
 
         (function PreviewImage() {
             (function getDiscussionTimer() {
-                const path = location.pathname;
                 const discussion = document.querySelector('.DiscussionListItem');
-                if ((!/^\/t\//.test(path) && path != "/") || discussion == null || !config.preview) {
+                if (!/index|search|following/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
                     Timer(getDiscussionTimer, 1000);
                     return;
                 }
@@ -792,7 +792,7 @@
                     })
                 }
                 else setPreviewTag(element, discussion);
-
+                if (app.current.data.kabamut == 'search') return;
                 var content = div.innerText.replace(/\n/g, '');
                 if (content.length > 100) content = content.substring(0, 100) + '...';
                 const previewContent = document.createElement('div');
