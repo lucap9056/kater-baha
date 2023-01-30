@@ -647,7 +647,7 @@
                     BHmenu.discussions();
                     CustomTags.append();
                     admin.append();
-                    if (config.customTags) CustomTags.discussions();
+                    if (config.customTags && !/[?&]q=/.test(location.search)) CustomTags.discussions();
                     break;
                 case "user":
                     BHmenu.clear();
