@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2023/01/29 23:50";
+    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2023/01/31 01:20";
     try {
         flarum.core.app.translator.addTranslations({
             "core.forum.composer_discussion.title": "發文",
