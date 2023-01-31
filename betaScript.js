@@ -31,7 +31,7 @@
     }
     catch {
     }
-    
+
     (() => {
         const style = document.createElement('link');
         style.rel = 'stylesheet';
@@ -495,7 +495,7 @@
         })();
 
         const CustomTags = (() => {
-            
+
             const CustomTagsSelect = (() => {
                 const tagsSelect = document.createElement('div');
                 tagsSelect.className = 'BH_tagsSelect';
@@ -663,6 +663,7 @@
                     admin.append();
                     break;
                 case "settings":
+                    BHmenu.clear();
                     BHmenu.user();
                     settings.load();
                     break;

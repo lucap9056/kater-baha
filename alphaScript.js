@@ -663,6 +663,7 @@
                     admin.append();
                     break;
                 case "settings":
+                    BHmenu.clear();
                     BHmenu.user();
                     settings.load();
                     break;
