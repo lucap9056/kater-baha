@@ -627,8 +627,6 @@
                 catch {
                     mode = (document.querySelector('.nightmode-dark')) ? 'dark' : 'light';
                 }
-                if (img.dataset.mode == mode) return;
-                img.dataset.mode = mode;
                 img.src = `https://123ldkop.github.io/kater-baha/welcomeImage-${mode}.webp`;
             }
 
@@ -761,7 +759,15 @@
             clientMenu.querySelector('a').innerHTML = "";
             clientMenu.appendChild(client);
 
-            itemSession.querySelector('.Dropdown-menu .item-nightmode button').addEventListener('click', welcomeImage.selectMode);
+            (function setSelectModeEvent() {
+                const modeItem = itemSession.querySelector('.Dropdown-menu .item-nightmode') || itemSession.querySelector('.Dropdown-menu .item-daymode');
+                modeItem.querySelector('button').addEventListener('click', () => {
+                    setTimeout(() => {
+                        welcomeImage.selectMode();
+                        setSelectModeEvent();
+                    }, 10)
+                });
+            })()
         })();
 
         (function PreviewImage() {
