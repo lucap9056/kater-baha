@@ -640,7 +640,8 @@
                     const home = document.querySelector('.IndexPage .container');
                     if (home == null || home.querySelector('.BH_welcomeImage')) return;
                     home.insertBefore(BH_welcomeImage, home.querySelector('div'));
-                }
+                },
+                selectMode: selectMode
             }
         })();
 
@@ -759,6 +760,8 @@
 
             clientMenu.querySelector('a').innerHTML = "";
             clientMenu.appendChild(client);
+
+            itemSession.querySelector('.Dropdown-menu .item-nightmode button').addEventListener('click', welcomeImage.selectMode);
         })();
 
         (function PreviewImage() {
