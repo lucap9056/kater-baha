@@ -613,9 +613,12 @@
 
 
         const welcomeImage = (() => {
+            const imgBorder = document.createElement('div');
+            imgBorder.className = "BH_welcomeImage";
+
             const img = document.createElement('img');
-            img.className = "BH_welcomeImage";
-            img.width = 1100;
+            imgBorder.appendChild(img);
+            img.width = 1070;
             img.height = 320;
 
             function selectMode() {
@@ -638,7 +641,7 @@
                     if (location.pathname.replace(/\//, '') != "") return;
                     const home = document.querySelector('.IndexPage .container');
                     if (home == null || home.querySelector('.BH_welcomeImage')) return;
-                    home.insertBefore(img, home.querySelector('div'));
+                    home.insertBefore(imgBorder, home.querySelector('div'));
                 }
             }
         })();
