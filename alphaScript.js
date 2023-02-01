@@ -613,13 +613,11 @@
 
 
         const welcomeImage = (() => {
-            const imgBorder = document.createElement('div');
-            imgBorder.className = "BH_welcomeImage";
+            const BH_welcomeImage = document.createElement('div');
+            BH_welcomeImage.className = "BH_welcomeImage";
 
             const img = document.createElement('img');
-            imgBorder.appendChild(img);
-            img.width = 1070;
-            img.height = 320;
+            BH_welcomeImage.appendChild(img);
 
             function selectMode() {
                 var mode;
@@ -641,7 +639,7 @@
                     if (location.pathname.replace(/\//, '') != "") return;
                     const home = document.querySelector('.IndexPage .container');
                     if (home == null || home.querySelector('.BH_welcomeImage')) return;
-                    home.insertBefore(imgBorder, home.querySelector('div'));
+                    home.insertBefore(BH_welcomeImage, home.querySelector('div'));
                 }
             }
         })();
