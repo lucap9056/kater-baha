@@ -640,18 +640,33 @@
 
 
             const welcomeImage = (() => {
+                const BH_welcomeImage = document.createElement('div');
+                BH_welcomeImage.className = "BH_welcomeImage";
+
                 const img = document.createElement('img');
-                img.className = "BH_welcomeImage";
-                img.width = 1100;
-                img.height = 320;
-                img.src = "https://123ldkop.github.io/kater-baha/welcomeImage.webp";
+                BH_welcomeImage.appendChild(img);
+
+                function selectMode() {
+                    var mode;
+                    try {
+                        mode = /dark/.test(document.querySelector('.nightmode').href) ? 'dark' : 'light';
+                    }
+                    catch {
+                        mode = (document.querySelector('.nightmode-dark')) ? 'dark' : 'light';
+                    }
+                    if (img.dataset.mode == mode) return;
+                    img.dataset.mode = mode;
+                    img.src = `https://123ldkop.github.io/kater-baha/welcomeImage-${mode}.webp`;
+                }
+
 
                 return {
                     append: () => {
+                        selectMode();
                         if (location.pathname.replace(/\//, '') != "") return;
                         const home = document.querySelector('.IndexPage .container');
                         if (home == null || home.querySelector('.BH_welcomeImage')) return;
-                        home.insertBefore(img, home.querySelector('div'));
+                        home.insertBefore(BH_welcomeImage, home.querySelector('div'));
                     }
                 }
             })();
