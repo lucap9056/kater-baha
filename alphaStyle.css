@@ -607,12 +607,15 @@ ul.affix-top {
     width: 240px;
     height: 120px;
     object-fit: cover;
+}
+
+img.BH_previewImage {
     border-radius: 7px;
 }
 
 div.BH_previewImage {
     background-color: var(--button-bg);
-    border: dashed 2px white;
+    border: solid 2px white;
     text-align: center;
     font-size: 20px;
     line-height: 116px;

@@ -827,12 +827,32 @@
             }
 
             async function setPreviewTag(element, discussion) {
-                const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
+                console.log(discussion.relationships.tags);
+                const tags = discussion.relationships.tags.data.map(tag => app.store.data.tags[tag.id].data.attributes);
+
                 const previewImg = document.createElement('div');
                 previewImg.className = 'BH_previewImage';
-                previewImg.dataset.text = tag.data.attributes.name;
-                previewImg.style.color = tag.data.attributes.color;
-                previewImg.style.borderColor = tag.data.attributes.color;
+                if (tags.length > 1) {
+                    var text = "";
+
+                    const max = tags.length - 1;
+                    var borderColor = "";
+                    tags.map((tag, i) => {
+                        borderColor += `,${tag.color} ${Math.floor(100 * (i / max))}%`;
+                        text += ` <span style="color:${tag.color}">${tag.name}</span>`;
+                    });
+
+                    previewImg.innerHTML = text;
+
+                    previewImg.style.borderImage = `linear-gradient(135deg${borderColor})`;
+                    previewImg.style.borderImageSlice = '1';
+                }
+                else {
+                    previewImg.dataset.text = tags[0].name;
+                    previewImg.style.color = tags[0].color;
+                    previewImg.style.borderColor = tags[0].color;
+                }
+
                 element.appendChild(previewImg);
             }
         })();
