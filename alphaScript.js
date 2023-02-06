@@ -838,12 +838,12 @@
                     const max = tags.length - 1;
                     var borderColor = "";
                     tags.map((tag, i) => {
-                        borderColor += `,${tag.color} ${Math.floor(100 * (i / max))}%`;
-                        text += ` <span style="color:${tag.color}">${tag.name}</span>`;
+                        const color = (tag.color != "") ? tag.color : "#FFFFFF";
+                        borderColor += `,${color} ${Math.floor(100 * (i / max))}%`;
+                        text += ` <span style="color:${color}">${tag.name}</span>`;
                     });
 
                     previewImg.innerHTML = text;
-
                     previewImg.style.borderImage = `linear-gradient(135deg${borderColor})`;
                     previewImg.style.borderImageSlice = '1';
                 }
