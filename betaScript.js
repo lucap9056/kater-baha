@@ -773,7 +773,7 @@
         (function PreviewImage() {
             (function getDiscussionTimer() {
                 const discussion = document.querySelector('.DiscussionListItem');
-                if (!/index|search|following/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
+                if (!/index|search|following|tag/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
                     Timer(getDiscussionTimer, 1000);
                     return;
                 }
@@ -827,7 +827,7 @@
             }
 
             async function setPreviewTag(element, discussion) {
-                console.log(discussion.relationships.tags);
+                
                 const tags = discussion.relationships.tags.data.map(tag => app.store.data.tags[tag.id].data.attributes);
 
                 const previewImg = document.createElement('div');
