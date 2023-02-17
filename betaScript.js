@@ -839,7 +839,7 @@
             }
 
             function r18Check(discussion) {
-                if (app.current.data.kabamut.routeName == 'tag') return false;
+                if (app.current.data.routeName == 'tag') return false;
                 const tags = discussion.relationships.tags.data.filter(tag => /^7$|10|19|22|38|39|44|45|46/.test(tag.id));
                 return (tags.length > 0);
             }
