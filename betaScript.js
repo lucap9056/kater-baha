@@ -801,22 +801,23 @@
             async function setPreviewImage(element, id) {
                 const discussion = app.store.data.discussions[id].data;
                 const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
-
+                const contentHTML = post.data.attributes.contentHtml;
                 const div = document.createElement('div');
-                div.innerHTML = post.data.attributes.contentHtml;
-                const img = div.querySelector('img');
+                div.innerHTML = contentHTML;
 
-                if (img) {
+                const previewTag = setPreviewTag(element, discussion);
+                if (/<img/.test(contentHTML)) {
+                    const img = div.querySelector('img');
                     const previewImg = document.createElement('img');
                     previewImg.className = 'BH_previewImage';
                     previewImg.src = img.src;
-                    element.appendChild(previewImg);
+                    if (detailsCheck(div) || r18Check(discussion)) previewImg.dataset.blur = true;
+                    previewTag.appendChild(previewImg);
                     img.addEventListener('error', () => {
-                        element.removeChild(img);
-                        setPreviewTag(element, discussion);
+                        previewTag.removeChild(img);
                     })
                 }
-                else setPreviewTag(element, discussion);
+
                 if (app.current.data.kabamut == 'search') return;
                 var content = div.innerText.replace(/\n/g, '');
                 if (content.length > 100) content = content.substring(0, 100) + '...';
@@ -826,8 +827,25 @@
                 element.querySelector('.DiscussionListItem-main').appendChild(previewContent);
             }
 
-            async function setPreviewTag(element, discussion) {
-                
+            function detailsCheck(body) {
+                if (/<details .*<img.*<\/details>/.test(body.innerHTML)) {
+                    return (function perntNode(element) {
+                        if (element.tagName == 'DETAILS') return true;
+                        if (element.parentNode) return perntNode(element.parentNode);
+                        return false;
+                    })(body.querySelector('img'));
+                }
+                else false;
+            }
+
+            function r18Check(discussion) {
+                if (app.current.data.kabamut.routeName == 'tag') return false;
+                const tags = discussion.relationships.tags.data.filter(tag => /^7$|10|19|22|38|39|44|45|46/.test(tag.id));
+                return (tags.length > 0);
+            }
+
+            function setPreviewTag(element, discussion) {
+
                 const tags = discussion.relationships.tags.data.map(tag => app.store.data.tags[tag.id].data.attributes);
 
                 const previewImg = document.createElement('div');
@@ -854,6 +872,7 @@
                 }
 
                 element.appendChild(previewImg);
+                return previewImg;
             }
         })();
 
