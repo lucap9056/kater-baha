@@ -771,9 +771,21 @@
         })();
 
         (function PreviewImage() {
+            if (!config.preview) return;
+
+            (function setStyle() {
+                const previewImgStyle = document.createElement('style');
+                previewImgStyle.innerHTML = `
+                .DiscussionListItem {
+                    height: 130px;
+                }
+                `;
+                document.body.appendChild(previewImgStyle);
+            })();
+
             (function getDiscussionTimer() {
                 const discussion = document.querySelector('.DiscussionListItem');
-                if (!/index|search|following|tag/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
+                if (!/index|search|following|tag/.test(app.current.data.kabamut) || discussion == null) {
                     Timer(getDiscussionTimer, 1000);
                     return;
                 }
