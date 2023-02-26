@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         卡巴姆特
 // @namespace    https://github.com/123ldkop/kater-baha
-// @version      1.4
+// @version      1.4.1
 // @description  將卡特介面改成類巴哈
 // @match        https://kater.me/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kater.me
@@ -59,10 +59,7 @@
             return;
         }
         else {
-            const style = document.createElement('link');
-            style.rel = 'stylesheet';
-            style.href = 'https://123ldkop.github.io/kater-baha/gaStyle.css';
-            document.head.appendChild(style);
+            BH_style();
         }
 
 
@@ -654,8 +651,6 @@
                     catch {
                         mode = (document.querySelector('.nightmode-dark')) ? 'dark' : 'light';
                     }
-                    if (img.dataset.mode == mode) return;
-                    img.dataset.mode = mode;
                     img.src = `https://123ldkop.github.io/kater-baha/welcomeImage-${mode}.webp`;
                 }
 
@@ -667,7 +662,8 @@
                         const home = document.querySelector('.IndexPage .container');
                         if (home == null || home.querySelector('.BH_welcomeImage')) return;
                         home.insertBefore(BH_welcomeImage, home.querySelector('div'));
-                    }
+                    },
+                    selectMode: selectMode
                 }
             })();
 
@@ -786,12 +782,22 @@
 
                 clientMenu.querySelector('a').innerHTML = "";
                 clientMenu.appendChild(client);
+
+                (function setSelectModeEvent() {
+                    const modeItem = itemSession.querySelector('.Dropdown-menu .item-nightmode') || itemSession.querySelector('.Dropdown-menu .item-daymode');
+                    modeItem.querySelector('button').addEventListener('click', () => {
+                        setTimeout(() => {
+                            welcomeImage.selectMode();
+                            setSelectModeEvent();
+                        }, 10)
+                    });
+                })()
             })();
 
             (function PreviewImage() {
                 (function getDiscussionTimer() {
                     const discussion = document.querySelector('.DiscussionListItem');
-                    if (!/index|search|following/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
+                    if (!/index|search|following|tag/.test(app.current.data.kabamut) || discussion == null || !config.preview) {
                         Timer(getDiscussionTimer, 1000);
                         return;
                     }
@@ -819,22 +825,23 @@
                 async function setPreviewImage(element, id) {
                     const discussion = app.store.data.discussions[id].data;
                     const post = app.store.data.posts[discussion.relationships.firstPost.data.id];
-
+                    const contentHTML = post.data.attributes.contentHtml;
                     const div = document.createElement('div');
-                    div.innerHTML = post.data.attributes.contentHtml;
-                    const img = div.querySelector('img');
+                    div.innerHTML = contentHTML;
 
-                    if (img) {
+                    const previewTag = setPreviewTag(element, discussion);
+                    if (/<img/.test(contentHTML)) {
+                        const img = div.querySelector('img');
                         const previewImg = document.createElement('img');
                         previewImg.className = 'BH_previewImage';
                         previewImg.src = img.src;
-                        element.appendChild(previewImg);
+                        if (detailsCheck(div) || r18Check(discussion)) previewImg.dataset.blur = true;
+                        previewTag.appendChild(previewImg);
                         img.addEventListener('error', () => {
-                            element.removeChild(img);
-                            setPreviewTag(element, discussion);
+                            previewTag.removeChild(img);
                         })
                     }
-                    else setPreviewTag(element, discussion);
+
                     if (app.current.data.kabamut == 'search') return;
                     var content = div.innerText.replace(/\n/g, '');
                     if (content.length > 100) content = content.substring(0, 100) + '...';
@@ -844,14 +851,52 @@
                     element.querySelector('.DiscussionListItem-main').appendChild(previewContent);
                 }
 
-                async function setPreviewTag(element, discussion) {
-                    const tag = app.store.data.tags[discussion.relationships.tags.data[0].id];
+                function detailsCheck(body) {
+                    if (/<details .*<img.*<\/details>/.test(body.innerHTML)) {
+                        return (function perntNode(element) {
+                            if (element.tagName == 'DETAILS') return true;
+                            if (element.parentNode) return perntNode(element.parentNode);
+                            return false;
+                        })(body.querySelector('img'));
+                    }
+                    else false;
+                }
+
+                function r18Check(discussion) {
+                    if (app.current.data.routeName == 'tag') return false;
+                    const tags = discussion.relationships.tags.data.filter(tag => /^7$|10|19|22|38|39|44|45|46/.test(tag.id));
+                    return (tags.length > 0);
+                }
+
+                function setPreviewTag(element, discussion) {
+
+                    const tags = discussion.relationships.tags.data.map(tag => app.store.data.tags[tag.id].data.attributes);
+
                     const previewImg = document.createElement('div');
                     previewImg.className = 'BH_previewImage';
-                    previewImg.dataset.text = tag.data.attributes.name;
-                    previewImg.style.color = tag.data.attributes.color;
-                    previewImg.style.borderColor = tag.data.attributes.color;
+                    if (tags.length > 1) {
+                        var text = "";
+
+                        const max = tags.length - 1;
+                        var borderColor = "";
+                        tags.map((tag, i) => {
+                            const color = (tag.color != "") ? tag.color : "#FFFFFF";
+                            borderColor += `,${color} ${Math.floor(100 * (i / max))}%`;
+                            text += ` <span style="color:${color}">${tag.name}</span>`;
+                        });
+
+                        previewImg.innerHTML = text;
+                        previewImg.style.borderImage = `linear-gradient(135deg${borderColor})`;
+                        previewImg.style.borderImageSlice = '1';
+                    }
+                    else {
+                        previewImg.dataset.text = tags[0].name;
+                        previewImg.style.color = tags[0].color;
+                        previewImg.style.borderColor = tags[0].color;
+                    }
+
                     element.appendChild(previewImg);
+                    return previewImg;
                 }
             })();
 
@@ -1490,5 +1535,1074 @@
             }
         })();
     })();
+
+    function BH_style() {
+        const style = document.createElement('style');
+        document.body.appendChild(style);
+        style.innerHTML = `
+        #cursor {
+            position: fixed;
+            width: 0px;
+            height: 0px;
+            border-radius: 100%;
+            background-color: #FFF;
+            pointer-events: none;
+            z-index: 1002;
+        }
+        
+        #cursor::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 32px;
+            height: 32px;
+            background-image: url('data:image/png;base64,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');
+        }
+        
+        .App {
+            padding-top: 72px;
+        }
+        
+        #header {
+            background-image: linear-gradient(to right, #117e96 0%, #116b80 35%, #125b6b 80%);
+            height: 35px;
+            padding: 0;
+        }
+        
+        .App-header .container {
+            max-width: 1250px;
+            padding: 0;
+        }
+        
+        .item-search {
+            float: left;
+            position: relative;
+            margin-left: 20px;
+            list-style: none;
+        }
+        
+        .Search {
+            width: 208px;
+        }
+        
+        .Search.focused {
+            margin-left: 0;
+        }
+        
+        .Search.focused input {
+            width: 208px;
+        }
+        
+        .Search-input::before {
+            float: right;
+            margin-right: 0;
+            right: 4px;
+            position: absolute;
+            color: #117e96;
+            width: 28px;
+            height: 30px;
+            line-height: 36px;
+            padding: 0;
+            font-size: 20px;
+        }
+        
+        .App-header .FormControl {
+            background-color: #FFF;
+            height: 28px;
+            margin: 3px 0;
+            color: black;
+            width: 208px;
+            padding-left: 10px;
+        }
+        
+        .App-header .FormControl:focus {
+            background-color: #FFF;
+            height: 28px;
+            margin: 3px 0;
+            color: black;
+            width: 208px;
+            padding-left: 10px;
+        }
+        
+        .LoadingIndicator-container.LoadingIndicator-container--inline.LoadingIndicator-container--small,
+        .icon .fas .fa-times-circle {
+            display: none;
+        }
+        
+        .item-session {
+            height: 36px;
+        }
+        
+        .item-session .Avatar {
+            float: right;
+            width: 25px;
+            height: 25px;
+            margin-top: 5px;
+        }
+        
+        .item-session .ButtonGroup {
+            float: right;
+        }
+        
+        .item-session .Dropdown-toggle {
+            height: 36px;
+            padding: 12px;
+        }
+        
+        .item-session .Dropdown-toggle::before {
+            content: "";
+            position: absolute;
+            top: 12px;
+            left: 8px;
+            width: 7px;
+            height: 7px;
+            border-style: solid;
+            border-width: 0 0 2px 2px;
+            border-color: transparent transparent white white;
+            transform: rotate(-45deg);
+        }
+        
+        .App-header .Button:active,
+        .App-header .Button.active,
+        .App-header .Button:focus,
+        .App-header .Button.focus,
+        .App-header .open>.Dropdown-toggle.Button {
+            color: #FFF;
+            background: transparent;
+        }
+        
+        .App-header .Button,
+        .App-header .Button:hover {
+            color: #FFF;
+            background: transparent;
+        }
+        
+        img.Header-logo {
+            margin-bottom: 1px;
+        }
+        
+        .Dropdown-menu.dropdown-menu.Dropdown-menu--right {
+            width: 260px;
+        }
+        
+        .fa-bell::before {
+            content: "";
+            background-image: url("https://i2.bahamut.com.tw/navicon_notification_dark.png");
+            background-size: 24px;
+            background-repeat: no-repeat;
+            position: absolute;
+            margin: 6px;
+            width: 24px;
+            height: 24px;
+            top: 0px;
+            left: 0px;
+        }
+        
+        .NotificationsDropdown.open.fa-bell {
+            background: #249db8;
+        }
+        
+        .NotificationsDropdown.open.fa-bell::before {
+            background-image: url(https://i2.bahamut.com.tw/navicon_notification_active.png);
+        }
+        
+        .BH_Client {
+            width: 260px;
+            padding: 8px 12px 6px 12px;
+            height: 72px;
+        }
+        
+        .BH_Client:hover {
+            background-color: var(--control-bg);
+        }
+        
+        .BH_ClientAvatar {
+            width: 54px;
+            height: 54px;
+            border: solid 3px white;
+            border-radius: 100%;
+            margin: 2px;
+            float: left;
+        }
+        
+        .BH_ClientName {
+            float: left;
+            color: var(--text-color);
+            display: block;
+            margin-left: 10px;
+            max-width: 168px;
+            font-size: 15px;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: bold;
+            margin-top: 8px;
+            cursor: default;
+        }
+        
+        .BH_ClientId {
+            color: #33CCCC;
+            font-size: 12px;
+            line-height: 1.2;
+            font-weight: normal;
+            width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-left: 10px;
+            float: left;
+            margin-top: 6px;
+            cursor: default;
+        }
+        
+        .sideNavContainer {
+            display: block;
+        }
+        
+        .sideNav,
+        .sideNav>ul {
+            width: 100%;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu li {
+            float: left;
+            border: solid 1px var(--shadow-color);
+            background: var(--button-toggled-color);
+            margin: 2px;
+            width: calc(12.5% - 4px);
+            height: 38px;
+            border-radius: 5px;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu li.active {
+            background-color: #00B0B6;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu>li>a {
+            padding-left: 0px;
+            color: var(--text-color);
+            text-align: center;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu>li>a .Button-icon {
+            display: none;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu li .Button-label {
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .sideNav .Dropdown--select .Dropdown-menu li.active .Button-label {
+            color: #FFF;
+        }
+        
+        #BH_header {
+            position: relative;
+            height: 40px;
+            width: 100%;
+            background-color: var(--body-bg);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22);
+        }
+        
+        #BH_headerMenu {
+            position: relative;
+            height: 40px;
+            width: 1100px;
+            margin: 0 auto;
+        }
+        
+        #BH_headerMenu li {
+            position: relative;
+            height: 40px;
+            font-size: 15px;
+            list-style: none;
+            float: left;
+            line-height: 40px;
+            text-align: center;
+            padding: 0 12px;
+        }
+        
+        #BH_headerMenu li:hover .Button-label {
+            color: #00B0B6;
+        }
+        
+        #BH_headerMenu li+li::before {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 0px;
+            width: 1px;
+            bottom: 8px;
+            background-color: #555;
+            pointer-events: none;
+        }
+        
+        #BH_headerMenu li.Dropdown-separator {
+            display: none;
+        }
+        
+        #BH_headerMenu li a {
+            pointer-events: none;
+            padding: 0px;
+        }
+        
+        #BH_headerMenu .Dropdown-menu>li.active>a {
+            background: transparent;
+        }
+        
+        #BH_headerMenu .icon {
+            display: none;
+        }
+        
+        #BH_headerMenu .Button-label {
+            color: var(--text-color);
+        }
+        
+        #BH_headerMenu .item-allDiscussions .Button-label {
+            color: #00B0B6;
+        }
+        
+        #BH_headerMenu li.active .Button-label {
+            color: #00B0B6;
+        }
+        
+        #BH_headerMenu li.item-newDiscussion {
+            position: absolute;
+            right: 0px;
+            width: 60px;
+            text-align: center;
+            background-color: #00B0B6;
+            border-radius: 3px;
+            margin: 3px 0;
+            height: 32px;
+            line-height: 32px;
+            color: #FFF;
+            cursor: pointer;
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        #BH_headerMenu li#BH-replay {
+            position: absolute;
+            right: 0px;
+            width: 60px;
+            text-align: center;
+            background-color: #00B0B6;
+            border-radius: 3px;
+            margin: 3px 0;
+            height: 32px;
+            line-height: 32px;
+            color: #FFF;
+            cursor: pointer;
+            overflow: hidden;
+            padding: 0;
+        }
+        
+        #BH_headerMenu li#BH-replay::before {
+            display: none;
+        }
+        
+        .sideNav .ButtonGroup {
+            display: inline-block;
+            width: 100%;
+        }
+        
+        #BH_headerMenu li.item-newDiscussion::before {
+            display: none;
+        }
+        
+        #BH_headerMenu li.item-newDiscussion button {
+            padding: 0;
+        }
+        
+        #BH_headerMenu li.item-newDiscussion .Button-label {
+            color: white;
+        }
+        
+        #BH_headerMenu li.item-newDiscussion:hover .Button-label {
+            color: white;
+        }
+        
+        .item-nav .item-allDiscussions,
+        .item-nav .item-rankings,
+        .item-nav .item-following,
+        .item-nav .item-bookmarks,
+        .item-nav .item-tags,
+        .item-nav .Dropdown-separator,
+        .sideNav .item-newDiscussion {
+            display: none;
+        }
+        
+        .TagsPage-nav.IndexPage-nav.sideNav {
+            display: none;
+        }
+        
+        .Composer:not(.fullScreen) {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        #BH_headerMenuFocus {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 84px;
+            height: 4px;
+            background-color: #00B0B6;
+            transition-duration: 500ms;
+            box-shadow: 0 0 2px 0px #33cccc;
+            pointer-events: none;
+        }
+        
+        #BH_headerMenu .Dropdown-menu {
+            display: block;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+        
+        ul.affix {
+            display: none;
+        }
+        
+        ul.affix-top {
+            display: none;
+        }
+        
+        .BH_welcomeImage {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 1070px;
+            height: 320px;
+            margin: 8px auto -24px auto;
+        }
+        
+        .BH_welcomeImage img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .DiscussionPage-nav>ul {
+            margin-top: 90px;
+        }
+        
+        #BH_adminList {
+            position: absolute;
+            top: 80px;
+            left: calc(50% + 550px);
+            padding: 4px 8px;
+            color: var(--text-color);
+            text-align: left;
+            background: var(--button-toggled-color);
+            border: solid 1px var(--shadow-color);
+            border-radius: 3px;
+        }
+        
+        .Hero #BH_adminList {
+            top: 240px;
+            left: calc(50% + 385px);
+        }
+        
+        #BH_adminList::before {
+            content: "板務人員:";
+            position: relative;
+            float: left;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .BH_adminItem {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            float: left;
+            box-shadow: 0 0 1px white;
+        }
+        
+        .BH_adminItemImg {
+            width: 30px;
+            height: 30px;
+            border-radius: 3px;
+        }
+        
+        .BH_adminItemBlock {
+            position: absolute;
+            top: 100%;
+            right: -20px;
+            width: 500px;
+            height: 0px;
+            background-color: #F9FAFE;
+            border-radius: 7px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition-duration: 150ms;
+            z-index: 3;
+        }
+        
+        .BH_adminItem:hover .BH_adminItemBlock {
+            opacity: 1;
+            pointer-events: all;
+            height: 160px;
+        }
+        
+        .BH_adminItemCover {
+            width: 500px;
+            height: 100px;
+            object-fit: cover;
+        }
+        
+        .BH_adminItemAvatar {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            width: 100px;
+            height: 100px;
+            background-color: #EEE;
+            border: solid 3px white;
+            border-radius: 3px;
+        }
+        
+        .BH_adminItemName {
+            position: absolute;
+            top: 100px;
+            left: 120px;
+            right: 0px;
+            color: black;
+            height: 24px;
+            padding-left: 10px;
+            font-size: 16px;
+            line-height: 24px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+        
+        .BH_adminItemId {
+            position: absolute;
+            top: 120px;
+            left: 120px;
+            right: 0px;
+            color: #00B0B6;
+            height: 18px;
+            padding-left: 10px;
+            font-size: 12px;
+            line-height: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .BH_adminItemId a {
+            color: #00B0B6;
+        }
+        
+        .BH_DiscussionListItem {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 130px;
+            margin: 10px 0;
+            background-color: #5551;
+            border-radius: 7px;
+            cursor: default;
+        }
+        
+        .BH_DiscussionListItem:hover {
+            background-color: #9991;
+        }
+        
+        .BH_DiscussionListItem:hover a {
+            text-decoration: none;
+        }
+        
+        .BH_DiscussionListItem .DiscussionListItem-title {
+            margin-right: 90px;
+        }
+        
+        .IndexPage .BH_DiscussionListItem .item-tags {
+            margin-right: -90px;
+            top: 40px;
+        }
+        
+        .BH_previewImage {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 240px;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        img.BH_previewImage {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        img.BH_previewImage[data-blur="true"] {
+            filter: blur(10px);
+        }
+        
+        div.BH_previewImage {
+            background-color: var(--button-bg);
+            border: solid 2px white;
+            text-align: center;
+            font-size: 20px;
+            line-height: 116px;
+            overflow: hidden;
+        }
+        
+        .BH_DiscussionListItem .DiscussionListItem-content {
+            position: absolute;
+            top: 0px;
+            left: 240px;
+            right: 0px;
+            bottom: 0px;
+            padding-left: 20px;
+            padding-right: 80px;
+        }
+        
+        .BH_DiscussionListItem .DiscussionListItem-author {
+            margin-left: 0px;
+        }
+        
+        .BH_DiscussionListItem .Avatar {
+            margin-right: 10px;
+        }
+        
+        .BH_DiscussionListItem .DiscussionListItem-badges {
+            position: absolute;
+            top: -5px;
+        }
+        
+        .BH_DiscussionListItem .ButtonGroup {
+            display: none;
+        }
+        
+        #BH_notificationBtn {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+        }
+        
+        #BH_notificationBtn::before {
+            content: "";
+            filter: brightness(20);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 36px;
+            height: 36px;
+            background-image: url("https://i2.bahamut.com.tw/navicon_notification_dark.png");
+            background-size: 24px;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+        
+        #BH_notificationsTableBorder {
+            display: none;
+            position: absolute;
+            width: 400px;
+            height: 480px;
+            overflow: hidden;
+            background-color: var(--button-bg);
+            padding-left: 0;
+            z-index: 1;
+            box-shadow: 0 0 20px 4px #0008;
+            border-radius: 3px;
+            margin-left: -50px;
+            border: solid transparent 10px;
+        }
+        
+        #BH_notificationsTable {
+            width: 420px;
+            height: 460px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        #BH_notificationNoreadNum {
+            float: right;
+            background-color: #F34;
+            font-size: 10px;
+            color: white;
+            padding: 0 2px;
+            border-radius: 3px;
+            pointer-events: none;
+            min-width: 15px;
+            text-align: center;
+        }
+        
+        .BH_notificationItem {
+            position: relative;
+            width: 380px;
+            height: 72px;
+            overflow: hidden;
+            border-radius: 7px;
+        }
+        
+        .BH_noRead {
+            background-color: var(--button-bg-active);
+        }
+        
+        .BH_notificationItem:hover {
+            background-color: var(--button-bg-hover);
+        }
+        
+        .BH_notificationItem::before {
+            content: "";
+            position: absolute;
+            top: 0px;
+            left: 10px;
+            right: 10px;
+            bottom: 0px;
+            border-style: solid;
+            border-color: #FFF3;
+            border-width: 1px 0;
+        }
+        
+        .BH_notificationFromUser {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            margin: 15px 10px;
+            border-radius: 100%;
+            float: left;
+            line-height: 44px;
+            text-align: center;
+            font-size: 30px;
+            color: white;
+            pointer-events: none;
+        }
+        
+        .BH_notificationLinkText {
+            margin: 0 2px;
+            color: var(--link-color);
+        }
+        
+        .BH_notificationText {
+            position: relative;
+            width: 316px;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            line-height: 18px;
+            cursor: default;
+            float: left;
+            margin: 8px 0;
+        }
+        
+        .BH_notificationTitleText {
+            max-height: 36px;
+            margin-bottom: 0;
+        }
+        
+        .BH_notificationContentText {
+            color: #AAA;
+            height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            position: relative;
+            margin-right: 60px;
+            margin-bottom: 0;
+        }
+        
+        .BH_notificationTime {
+            color: #777;
+            font-size: 12px;
+            bottom: 6px;
+            position: absolute;
+            line-height: 14px;
+            right: 6px;
+        }
+        
+        div.BH_previewImage::before {
+            content: attr(data-text);
+        }
+        
+        .BH_previewContent {
+            margin: 5px 0 0 -45px;
+            height: 60px;
+        }
+        
+        #BH_fullScreenImageBorder {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0007;
+            z-index: 1001;
+        }
+        
+        #BH_fullScreenImageClose {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #BH_fullScreenImage {
+            position: absolute;
+        }
+        
+        #BH_fullScreenImageUrl {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 36px;
+            line-height: 36px;
+            background-color: #222;
+            font-size: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .item-imgur-multi-upload svg {
+            width: 20px;
+            margin: -6px;
+        }
+        
+        .Button-Label,
+        i.icon {
+            pointer-events: none;
+        }
+        
+        .fa-alonePosts::before {
+            content: "\\f007";
+        }
+        
+        .BH_alonePosts {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            background-color: #000A;
+            z-index: 1000;
+        }
+        
+        .BH_alonePosts-close {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+        
+        .BH_alonePosts-user {
+            position: relative;
+            width: 550px;
+            height: 144px;
+            margin: 10px auto;
+            background-color: #000;
+            border-radius: 3px;
+            overflow: hidden;
+            padding: 20px;
+            list-style: none;
+        }
+        
+        .BH_alonePosts-userBackground {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+        }
+        
+        .BH_alonePosts-userAvatar {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin: 2px;
+            border-radius: 100%;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            line-height: 100px;
+            font-size: 60px;
+        }
+        
+        .BH_alonePosts-userName {
+            position: relative;
+            margin: 10px 0 10px 144px;
+            font-size: 20px;
+        }
+        
+        .BH_alonePosts-postStreamBorder {
+            position: relative;
+            width: 880px;
+            height: calc(100% - 184px);
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: var(--body-bg-faded);
+            border-radius: 5px;
+        }
+        
+        .BH_alonePosts-postStream {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: -20px;
+            bottom: 0px;
+            overflow: hidden scroll;
+        }
+        
+        .BH_alonePosts-item {
+            position: relative;
+            width: 860px;
+            margin: 10px;
+            padding-top: 25px;
+        }
+        
+        .BH_alonePosts-item+.BH_alonePosts-item {
+            border-top: solid var(--control-color) 1px;
+        }
+        
+        .BH_alonePosts-number {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+        
+        .BH_alonePosts-item img {
+            max-width: 100%;
+        }
+        
+        .BH_tagsSelect {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000A;
+            z-index: 1000;
+        }
+        
+        .BH_tagsSelectClose {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+        
+        .BH_tagsSelectMain {
+            position: absolute;
+            top: calc(50% - 250px);
+            left: calc(50% - 300px);
+            width: 600px;
+            height: 500px;
+            background-color: var(--body-bg-faded);
+            border-radius: 7px;
+            border: solid 3px var(--button-primary-bg-active);
+        }
+        
+        .BH_tagsSelectNavBorder {
+            position: relative;
+            height: 420px;
+            margin: 10px;
+            overflow: hidden;
+        }
+        
+        .BH_tagsSelectNav {
+            position: relative;
+            width: calc(100% + 20px);
+            height: 100%;
+            overflow-y: scroll;
+        }
+        
+        .tagsSelectItem {
+            position: relative;
+            width: 181px;
+            height: 42px;
+            margin: 5px;
+            background-color: var(--button-bg);
+            border-radius: var(--border-radius);
+            float: left;
+            line-height: 42px;
+            overflow: hidden;
+        }
+        
+        .tagsSelectItem .icon {
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        
+        .tagsSelectItem input {
+            opacity: 0;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .tagsSelectItemCheck {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+        }
+        
+        .tagsSelectItem input:checked+.tagsSelectItemCheck {
+            border: solid 2px #4B6;
+            border-radius: 7px;
+        }
+        
+        .tagsSelectButton {
+            position: relative;
+            width: 120px;
+            height: 32px;
+            margin: 12px;
+            background-color: var(--button-bg);
+            border: none;
+            border-radius: var(--border-radius);
+        }
+        
+        .tagsSelectItem:hover,
+        .tagsSelectButton:hover {
+            background-color: var(--button-bg-hover);
+        }
+        
+        .tagsSelectItem:active,
+        .tagsSelectButton:active {
+            background-color: var(--button-bg-active);
+        }
+`;
+    }
 })();
 
