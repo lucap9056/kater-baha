@@ -120,8 +120,9 @@
             }
         })();
 
-        const multiImageUpload = (() => {
+        (function multiImageUpload() {
             var loading = false;
+            var loadingNum = 0;
             const imgurClientID = app.forum.data.attributes["imgur-upload.client-id"];
             const input = document.createElement('input');
             input.type = 'file';
@@ -145,14 +146,16 @@
                 uploading = true;
                 multiImage_icon.classList.remove('Button--icon');
                 multiImage_icon.innerText = "Uplaoding...";
-                Imgur(Array.prototype.slice.call(input.files));
+                const files = Array.prototype.slice.call(input.files);
+                loadingNum = files.length;
+                files.map(Imgur);
             });
 
 
 
-            async function Imgur(files) {
+            async function Imgur(file) {
                 const form = new FormData();
-                form.append('image', files.shift());
+                form.append('image', file);
                 const response = await fetch('https://api.imgur.com/3/image', {
                     method: 'POST',
                     headers: {
@@ -161,37 +164,30 @@
                     body: form
                 });
                 var res = await response.json();
-                const textrea = document.querySelector('.TextEditor-editor');
-                if (textrea == null) return;
-                if (res.success) textrea.value += `\n[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`;
-                if (files.length > 0) Imgur(files);
-                else {
+                
+                if (res.success) {
+                    app.composer.editor.focus();
+                    app.composer.editor.insertAtCursor(`[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`);
+                }
+                loadingNum--;
+                if (loadingNum == 0) {
                     multiImage_icon.innerHTML = multiImage_iconSvg;
                     uploading = false;
                 }
             }
 
-            function load() {
-                const singleImage = document.querySelector('.item-imgur-upload');
-                if (singleImage == null) {
-                    setTimeout(load, 1000);
-                    return;
-                }
-
-                if (document.querySelector('.item-imgur-multi-upload')) return;
-                multiImage_icon.classList.add('Button--icon');
-                multiImage_icon.innerHTML = multiImage_iconSvg;
-                singleImage.parentElement.insertBefore(multiImage_li, singleImage);
-                loading = false;
-            }
-
-            return {
-                append: () => {
-                    if (loading) return;
-                    loading = true;
-                    load();
-                }
-            }
+            app.composer.load = (t, e) => {
+                var n = { componentClass: t, attrs: e };
+                app.composer.preventExit() || (app.composer.isVisible() && (app.composer.clear(), m.redraw.sync()), app.composer.body = n)
+                setTimeout(() => {
+                    const singleImage = document.querySelector('.item-imgur-upload');
+                    if (singleImage == null) return;
+                    if (document.querySelector('.item-imgur-multi-upload')) return;
+                    multiImage_icon.classList.add('Button--icon');
+                    multiImage_icon.innerHTML = multiImage_iconSvg;
+                    singleImage.parentElement.insertBefore(multiImage_li, singleImage);
+                }, 100);
+            };
         })();
 
         const BHmenu = (() => {
@@ -248,7 +244,6 @@
             replyBtn.id = 'BH-replay';
             replyBtn.addEventListener('click', () => {
                 document.querySelector('.SplitDropdown-button').click();
-                multiImageUpload.append();
             });
 
             function setFocusOut() {
@@ -391,7 +386,6 @@
                             const postBtn = document.querySelector(".item-newDiscussion.App-primaryControl");
                             postBtn.querySelector('button').style.pointerEvents = 'auto';
                             menu.appendChild(postBtn);
-                            postBtn.addEventListener('click', multiImageUpload.append);
                         }
                         catch {
                             setTimeout(setPostBtn, 1000);
@@ -609,7 +603,6 @@
                 }
             }
         })();
-
 
         const welcomeImage = (() => {
             const BH_welcomeImage = document.createElement('div');
@@ -1164,6 +1157,7 @@
                 xhr.open("GET", url);
                 xhr.onload = () => {
                     const res = JSON.parse(xhr.response);
+                    app.store.pushPayload(res);
                     res.included.map(item => {
                         BH_store.data[item.type][item.id] = { data: item };
                     });
