@@ -593,8 +593,6 @@
             li.appendChild(a);
             li.addEventListener('click', CustomTagsSelect.show);
 
-
-
             return {
                 append: async () => {
                     if (document.querySelector('.item-tagCustom')) return;
@@ -604,6 +602,7 @@
                     app.discussions.refreshParams({
                         include: 'user,lastPostedUser,tags,tags.parent,firstPost',
                         tags: config.customTags,
+                        sort: (/[?&]sort=/.test(location.search)) ? location.search.split(/[?&]sort=/)[1].split('&')[0] : "",
                         onFollowing: false,
                         bookmarked: false
                     });
