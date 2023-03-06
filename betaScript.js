@@ -234,7 +234,7 @@
 
                     if (res.success) {
                         app.composer.editor.focus();
-                        app.composer.editor.insertAtCursor(res.data.link);
+                        app.composer.editor.insertAtCursor(res.data.link.replace(/^https:\/\/i\./,'https://'));
                     }
                     loadingNum--;
                     if (loadingNum == 0) {
