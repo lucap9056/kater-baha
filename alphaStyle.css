@@ -845,7 +845,7 @@ div.BH_previewImage::before {
     cursor: pointer;
 }
 
-.item-video-multi-upload svg,
+.item-imgur-video-multi-upload svg,
 .item-imgur-multi-upload svg {
     width: 20px;
     margin: -6px;
