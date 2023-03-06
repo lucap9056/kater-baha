@@ -1,6 +1,6 @@
 (function BHload() {
     'use strict';
-    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2023/02/27 14:30";
+    const updateTime = "卡巴姆特 v.Beta 最後更新時間:2023/03/06 18:22";
     try {
         flarum.core.app.translator.addTranslations({
             "core.forum.composer_discussion.title": "發文",
@@ -120,72 +120,146 @@
             }
         })();
 
-        (function multiImageUpload() {
-            var loading = false;
-            var loadingNum = 0;
+        (function ExImgur() {
             const imgurClientID = app.forum.data.attributes["imgur-upload.client-id"];
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.multiple = true;
 
-            var uploading = false;
-            const multiImage_iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M432 112V96a48.14 48.14 0 00-48-48H64a48.14 48.14 0 00-48 48v256a48.14 48.14 0 0048 48h16" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M342.15 372.17L255 285.78a30.93 30.93 0 00-42.18-1.21L96 387.64M265.23 464l118.59-117.73a31 31 0 0141.46-1.87L496 402.91" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>`;
-            const multiImage_icon = document.createElement('button');
-            multiImage_icon.className = 'Button hasIcon imgur-multi-upload-button hasIcon';
+            const multiImageUploader = (() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.multiple = true;
 
-            const multiImage_li = document.createElement('li');
-            multiImage_li.className = 'item-imgur-multi-upload';
-            multiImage_li.addEventListener('click', () => {
-                if (uploading) return;
-                input.click();
-            });
-            multiImage_li.appendChild(multiImage_icon);
+                var loadingNum = 0;
+                var uploading = false;
+                const multiImage_iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M432 112V96a48.14 48.14 0 00-48-48H64a48.14 48.14 0 00-48 48v256a48.14 48.14 0 0048 48h16" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M342.15 372.17L255 285.78a30.93 30.93 0 00-42.18-1.21L96 387.64M265.23 464l118.59-117.73a31 31 0 0141.46-1.87L496 402.91" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>`;
+                const multiImage_icon = document.createElement('button');
+                multiImage_icon.className = 'Button hasIcon imgur-multi-upload-button hasIcon';
 
-            input.addEventListener('change', (e) => {
-                uploading = true;
-                multiImage_icon.classList.remove('Button--icon');
-                multiImage_icon.innerText = "Uplaoding...";
-                const files = Array.prototype.slice.call(input.files);
-                loadingNum = files.length;
-                files.map(Imgur);
-            });
-
-
-
-            async function Imgur(file) {
-                const form = new FormData();
-                form.append('image', file);
-                const response = await fetch('https://api.imgur.com/3/image', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Client-ID ${imgurClientID}`
-                    },
-                    body: form
+                const multiImage_li = document.createElement('li');
+                multiImage_li.className = 'item-imgur-multi-upload';
+                multiImage_li.addEventListener('click', () => {
+                    if (uploading) return;
+                    input.click();
                 });
-                var res = await response.json();
-                
-                if (res.success) {
-                    app.composer.editor.focus();
-                    app.composer.editor.insertAtCursor(`[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`);
+                multiImage_li.appendChild(multiImage_icon);
+
+                input.addEventListener('change', (e) => {
+                    uploading = true;
+                    multiImage_icon.classList.remove('Button--icon');
+                    multiImage_icon.innerText = "Uplaoding...";
+                    const files = Array.prototype.slice.call(input.files);
+                    loadingNum = files.length;
+                    files.map(Imgur);
+                });
+
+
+
+                async function Imgur(file) {
+                    const form = new FormData();
+                    form.append('image', file);
+                    const response = await fetch('https://api.imgur.com/3/image', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Client-ID ${imgurClientID}`
+                        },
+                        body: form
+                    });
+                    var res = await response.json();
+
+                    if (res.success) {
+                        app.composer.editor.focus();
+                        app.composer.editor.insertAtCursor(`[URL=${res.data.link}][IMG]${res.data.link}[/IMG][/URL]`);
+                    }
+                    loadingNum--;
+                    if (loadingNum == 0) {
+                        multiImage_icon.innerHTML = multiImage_iconSvg;
+                        uploading = false;
+                    }
                 }
-                loadingNum--;
-                if (loadingNum == 0) {
-                    multiImage_icon.innerHTML = multiImage_iconSvg;
-                    uploading = false;
+                return {
+                    append: () => {
+                        const singleImage = document.querySelector('.item-imgur-upload');
+                        if (singleImage == null) return;
+                        if (document.querySelector('.item-imgur-multi-upload')) return;
+                        multiImage_icon.classList.add('Button--icon');
+                        multiImage_icon.innerHTML = multiImage_iconSvg;
+                        singleImage.parentElement.insertBefore(multiImage_li, singleImage);
+                    }
                 }
-            }
+            })();
+
+
+            const videoUploader = (() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'video/,.mp4,.mov,.avi,.webm,.mpeg,.flv,.mkv,.mpv,.wmv';
+                input.multiple = true;
+
+                var loadingNum = 0;
+                var uploading = false;
+                const multiImage_iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M374.79 308.78L457.5 367a16 16 0 0022.5-14.62V159.62A16 16 0 00457.5 145l-82.71 58.22A16 16 0 00368 216.3v79.4a16 16 0 006.79 13.08z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M268 384H84a52.15 52.15 0 01-52-52V180a52.15 52.15 0 0152-52h184.48A51.68 51.68 0 01320 179.52V332a52.15 52.15 0 01-52 52z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>`;
+                const multiImage_icon = document.createElement('button');
+                multiImage_icon.className = 'Button hasIcon imgur-video-multi-upload-button hasIcon';
+
+                const multiImage_li = document.createElement('li');
+                multiImage_li.className = 'item-imgur-video-multi-upload';
+                multiImage_li.addEventListener('click', () => {
+                    if (uploading) return;
+                    input.click();
+                });
+                multiImage_li.appendChild(multiImage_icon);
+
+                input.addEventListener('change', (e) => {
+                    uploading = true;
+                    multiImage_icon.classList.remove('Button--icon');
+                    multiImage_icon.innerText = "Uplaoding...";
+                    const files = Array.prototype.slice.call(input.files);
+                    loadingNum = files.length;
+                    files.map(Imgur);
+                });
+
+
+
+                async function Imgur(file) {
+                    const form = new FormData();
+                    form.append('video', file);
+                    const response = await fetch('https://api.imgur.com/3/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Client-ID ${imgurClientID}`
+                        },
+                        body: form
+                    });
+                    var res = await response.json();
+
+                    if (res.success) {
+                        app.composer.editor.focus();
+                        app.composer.editor.insertAtCursor(res.data.link);
+                    }
+                    loadingNum--;
+                    if (loadingNum == 0) {
+                        multiImage_icon.innerHTML = multiImage_iconSvg;
+                        uploading = false;
+                    }
+                }
+                return {
+                    append: () => {
+                        const singleImage = document.querySelector('.item-imgur-upload');
+                        if (singleImage == null) return;
+                        if (document.querySelector('.item-imgur-video-multi-upload')) return;
+                        multiImage_icon.classList.add('Button--icon');
+                        multiImage_icon.innerHTML = multiImage_iconSvg;
+                        singleImage.parentElement.insertBefore(multiImage_li, singleImage);
+                    }
+                }
+            })();
 
             app.composer.load = (t, e) => {
                 var n = { componentClass: t, attrs: e };
                 app.composer.preventExit() || (app.composer.isVisible() && (app.composer.clear(), m.redraw.sync()), app.composer.body = n)
                 setTimeout(() => {
-                    const singleImage = document.querySelector('.item-imgur-upload');
-                    if (singleImage == null) return;
-                    if (document.querySelector('.item-imgur-multi-upload')) return;
-                    multiImage_icon.classList.add('Button--icon');
-                    multiImage_icon.innerHTML = multiImage_iconSvg;
-                    singleImage.parentElement.insertBefore(multiImage_li, singleImage);
+                    videoUploader.append();
+                    multiImageUploader.append();
                 }, 100);
             };
         })();
