@@ -234,7 +234,7 @@
 
                     if (res.success) {
                         app.composer.editor.focus();
-                        app.composer.editor.insertAtCursor(res.data.link.replace(/^https:\/\/i\./,'https://'));
+                        app.composer.editor.insertAtCursor(res.data.link.replace(/^https:\/\/i\./, 'https://'));
                     }
                     loadingNum--;
                     if (loadingNum == 0) {
@@ -889,7 +889,7 @@
                     const previewImg = document.createElement('img');
                     previewImg.className = 'BH_previewImage';
                     previewImg.src = img.src;
-                    if (detailsCheck(div) || r18Check(discussion)) previewImg.dataset.blur = true;
+                    if (r18Check(discussion) || detailsCheck(div)) previewImg.dataset.blur = true;
                     previewTag.appendChild(previewImg);
                     img.addEventListener('error', () => {
                         previewTag.removeChild(img);
@@ -917,7 +917,7 @@
             }
 
             function r18Check(discussion) {
-                if (app.current.data.kabamut.routeName == 'tag') return false;
+                if (app.current.data.routeName == 'tag') return false;
                 const tags = discussion.relationships.tags.data.filter(tag => /^7$|10|19|22|38|39|44|45|46/.test(tag.id));
                 return (tags.length > 0);
             }
