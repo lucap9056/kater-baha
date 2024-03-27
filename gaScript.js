@@ -54,7 +54,7 @@
 
         if (Kabamut_beta || (config.beta_version && Kabamut_beta != false)) {
             const betaScript = document.createElement('script');
-            betaScript.src = 'https://123ldkop.github.io/kater-baha/betaScript.js';
+            betaScript.src = 'https://lucap9056.github.io/kater-baha/betaScript.js';
             document.body.appendChild(betaScript);
             return;
         }
@@ -651,7 +651,7 @@
                     catch {
                         mode = (document.querySelector('.nightmode-dark')) ? 'dark' : 'light';
                     }
-                    img.src = `https://123ldkop.github.io/kater-baha/welcomeImage-${mode}.webp`;
+                    img.src = `https://lucap9056.github.io/kater-baha/welcomeImage-${mode}.webp`;
                 }
 
 

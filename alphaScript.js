@@ -35,7 +35,7 @@
     (() => {
         const style = document.createElement('link');
         style.rel = 'stylesheet';
-        style.href = 'https://123ldkop.github.io/kater-baha/alphaStyle.css';
+        style.href = 'https://lucap9056.github.io/kater-baha/alphaStyle.css';
         document.head.appendChild(style);
     })();
 
@@ -693,7 +693,7 @@
                 catch {
                     mode = (document.querySelector('.nightmode-dark')) ? 'dark' : 'light';
                 }
-                img.src = `https://123ldkop.github.io/kater-baha/welcomeImage-${mode}.webp`;
+                img.src = `https://lucap9056.github.io/kater-baha/welcomeImage-${mode}.webp`;
             }
 
 
